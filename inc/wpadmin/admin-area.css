@@ -1,0 +1,77 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    min-height: 100%;
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+}
+body {
+    background: url(//farm6.staticflickr.com/5541/10785702065_591a36db1a_o_d.jpg) no-repeat 50% 50%;
+    -webkit-background-size: cover;
+    -khtml-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover;
+}
+.login form {
+    color: #fff;
+    background: rgba(52, 152, 219, .75);
+    border: 0;
+    -webkit-box-shadow: 0 2px 0 rgba(35, 110, 161, .75);
+    -moz-box-shadow: 0 2px 0 rgba(35, 110, 161, .75);
+    box-shadow: 0 2px 0 rgba(35, 110, 161, .75);
+}
+.login h1 a {
+    background-image: url(wordpress-logo.svg);
+}
+.login label {
+    color: #fff;
+}
+.login p a {
+    border: 1px solid rgba(255, 255, 255, 0);
+    -webkit-box-shadow: 0 9px 18px rgba(69, 34, 75, 0);
+    -moz-box-shadow: 0 9px 18px rgba(69, 34, 75, 0);
+    box-shadow: 0 9px 18px rgba(69, 34, 75, 0);
+    color: #fff !important;
+    display: inline-block;
+    font: 300 13px/20px "Open Sans","Arial",sans-serif;
+    vertical-align: top;
+    text-shadow: none;
+    padding: 0 10px;
+}
+.login p a:hover {
+    background: rgb(46, 204, 113);
+    -webkit-box-shadow: 0 2px 0 rgb(17, 145, 71);
+    -moz-box-shadow: 0 2px 0 rgb(17, 145, 71);
+    box-shadow: 0 2px 0 rgb(17, 145, 71);
+}
+.login .button {
+    float: none;
+    text-shadow: none;
+    background: rgb(46, 204, 113) !important;
+    border: 0 !important;
+    -webkit-box-shadow: 0 2px 0 rgb(35, 110, 161) !important;
+    -moz-box-shadow: 0 2px 0 rgb(35, 110, 161) !important;
+    box-shadow: 0 2px 0 rgb(35, 110, 161) !important;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font: 300 14px/38px "Open Sans","Arial",sans-serif !important;
+    text-align: center;
+    text-transform: uppercase;
+    width: 160px;
+    height: auto !important;
+    margin: 20px auto 0;
+}
+.login .button:hover {opacity: .75}
+.login form .forgetmenot {
+    float: none;
+    text-align: center;
+}
+#login_error, .login .message, .login #login_error {
+    background: rgba(0, 0, 0, 0.25);
+    border-color: #444;
+    color: #fff;
+}

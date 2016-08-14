@@ -1,0 +1,1 @@
+$.fn.donetyping=function(n,t){t||(t=1e3);var i,u=function(t){i&&(i=null,n(t))};return this.each(function(){var n=$(this);n.on("keyup",function(){i&&clearTimeout(i),i=setTimeout(function(){u(n)},t)}).on("blur",function(){u(n)})}),this};

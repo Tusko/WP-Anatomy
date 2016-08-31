@@ -95,7 +95,16 @@ var mob = function(){
 
             var sel_label = el.attr("data-label") !== undefined ? '<label>' + el.attr("data-label") + '</label>' : '';
             if (!el.hasClass('selbel')) { el.addClass('selbel'); }
-            if(el.parent().is('.selbel_w')) { return false; }
+            if(el.parent().is('.selbel_w')) {
+                var txt;
+                if($(':selected', el).length > 0) {
+                    txt = $(':selected', el);
+                } else {
+                    txt = $('option:first', el);
+                }
+                el.next().text( txt.text() );
+                return false;
+            }
             el.each(function() {
                 $(this).wrap("<span class='selbel_w' />")
                     .before(select.label )

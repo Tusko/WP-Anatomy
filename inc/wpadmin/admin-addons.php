@@ -11,51 +11,6 @@ function wp_login_candy() {
 }
 add_action( 'login_enqueue_scripts', 'wp_login_candy', 10 );
 
-add_action( 'admin_enqueue_scripts', 'wpa_media_add_js' );
-
-function wpa_media_add_js($hook) {
-    // Check if we are on upload.php and enqueue script
-    if ( $hook != 'upload.php' ) return;
-    wp_enqueue_script( 'wpa_media_js', theme('inc/wpadmin/admin-area.js'), array('jquery'), 1.0, true );
-
-    // Make enabled languages visible for javascript
-//    global $q_config;
-//    wp_localize_script('jquery', 'qtranxsList', array(
-//        'enabled_languages' => $q_config['enabled_languages'])
-//    );
-}
-
-function wpa_media_field_input( $column ) {
-    // Set inputs to display in column
-    if ( $column == 'wpa_media-column' ) {
-        global $post; ?>
-    <div id="wrapper-<?php echo $post->ID; ?>" class="tt-m-alt">
-        <input type="text" class="large-text" id="alt-<?php echo $post->ID; ?>" value="<?php echo wp_strip_all_tags( __( get_post_meta( $post->ID, '_wp_attachment_image_alt', true ) ) ); ?>" />
-        <img class="waiting" src="<?php echo esc_url( admin_url( "images/loading.gif" ) ); ?>" style="display: none" />
-    </div>
-<?php }
-}
-
-add_action( 'manage_media_custom_column', 'wpa_media_field_input' );
-add_filter( 'manage_media_columns', 'wpa_media_display_column' );
-
-function wpa_media_display_column( $columns ) {
-    // Register the column to display
-    $columns['wpa_media-column'] = 'Alternative Text';
-    return $columns;
-}
-
-function wpa_media_update() {
-    // Update
-    $wpa_media_post_id = absint ( $_POST['post_id'] );
-    $wpa_media_alt_text = wp_strip_all_tags( $_POST['alt_text'] );
-
-    if ( !empty( $_POST['alt_text'] ) ) {
-        update_post_meta( $wpa_media_post_id, '_wp_attachment_image_alt', $wpa_media_alt_text );
-    }
-}
-add_action( 'wp_ajax_wpa_media_alt_update' , 'wpa_media_update' );
-
 // Custom rules for editor
 function wpa_clear_theme_subpages(){
     global $submenu;
@@ -67,6 +22,12 @@ if ( !current_user_can( 'activate_plugins' )) {
     $roleObject = get_role( 'editor' );
     $roleObject->add_cap( 'edit_theme_options' );
     add_action('admin_menu', 'wpa_clear_theme_subpages');
+
+    // Prevent File Modifications
+    if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
+        define( 'DISALLOW_FILE_EDIT', true );
+    }
+
 }
 
 // show post gallery as slideshow
@@ -258,16 +219,3 @@ function wpa__prelicense() {
     }
 }
 add_action( 'after_setup_theme', 'wpa__prelicense' );
-
-if(!function_exists('sticky_admin_sidebar_script')) {
-    function sticky_admin_sidebar_script ( $hook ) {
-        // Only load on new or edit post screen or acf options pages
-        if ( !in_array( $hook, array( 'post.php', 'post-new.php' ) ) && substr($hook, 0, 24) != 'options_page_acf-options' && substr($hook, 0, 25) != 'toplevel_page_acf-options' ) {
-            return;
-        }
-
-        // Load the script
-        wp_enqueue_script( 'sticky_admin_sidebars', theme('inc/wpadmin/sticky-admin-sidebar.min.js'), array( 'jquery' ) );
-    }
-    add_action( 'admin_enqueue_scripts', 'sticky_admin_sidebar_script' );
-}

@@ -1,0 +1,17 @@
+{"vendor":{"plugins/ars-alt-editor":"1.0"},
+"admin-config": {
+"post": {
+    "pages": { "upload.php":"" },
+    "anchors" : {
+        "before": "posts-filter"
+    },
+    "forms" : {
+        "posts-filter": {
+            "fields":{
+                "name": { "jquery": "input[name='wpa_mc_qtx']" }
+            }
+        }
+    }
+}
+}
+}

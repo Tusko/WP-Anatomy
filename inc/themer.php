@@ -4,24 +4,19 @@ require_once 'qtranslate.php';
 require_once 'search_query.php';
 
 // Auto-install recommended plugins
-require_once('plugins/installer.php');
-
-// Include custom assets
-require_once('assets.php');
-
-// Custom admin area functions
-require_once('wpadmin/admin-addons.php');
-
-// Custom shortcodes
-require_once('shortcodes.php');
+require_once 'plugins/installer.php';
 
 // Custom Posts Duplicator
-require_once('duplicator.php');
+require_once 'plugins/duplicator.php';
 
-// Prevent File Modifications
-if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
-    define( 'DISALLOW_FILE_EDIT', true );
-}
+// Include custom assets
+require_once 'assets.php';
+
+// Custom admin area functions
+require_once 'wpadmin/admin-addons.php';
+
+// Custom shortcodes
+require_once 'shortcodes.php';
 
 // Custom theme url
 function theme($filepath = NULL){
@@ -65,16 +60,16 @@ function wpa_activate_theme() {
         include_once('plugins/cyr-to-lat.php');
     }
 
-    if (!function_exists('no_category_base_refresh_rules')) {
-        include_once('plugins/no-category-base.php');
-    }
-
     if (!function_exists('AjaxThumbnailRebuild')) {
         include_once('plugins/ajax-thumbnail-rebuild/ajax-thumbnail-rebuild.php');
     }
 
     if ( ! function_exists( 'smush_activated' ) ) {
         include_once('plugins/wp-smushit/wp-smush.php');
+    }
+
+    if ( ! function_exists( 'wpa_media_field_input' ) ) {
+        include_once('plugins/ars-alt-editor/alt.php');
     }
 
     update_option('image_default_link_type','none');
@@ -86,7 +81,7 @@ function wpa_activate_theme() {
 function tinymce_custom_settings() {
     global $current_screen;
     if ( $current_screen && $current_screen->id == 'settings_page_tinymce-advanced' ) {
-        $json_string = file_get_contents('tinymce-advanced-preconfig.json',TRUE); ?>
+        $json_string = file_get_contents('plugins/tinymce-advanced-preconfig.json',TRUE); ?>
 <script type="text/javascript">jQuery(function($) { var tcs_json = '<?php echo trim($json_string); ?>'; $('textarea#tadv-import').val(tcs_json); });</script>
 <?php }
 }

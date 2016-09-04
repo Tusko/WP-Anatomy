@@ -794,8 +794,20 @@
     }
     .form-row-first,
     .form-row-last,
-    .address-field {
+    .address-field:not(#billing_country_field) {
         @include flex-basis(47.5%)
+    }
+    .woocommerce-invalid {
+        .selbel_w select + span,
+        > input {
+            border-bottom-color: red
+        }
+    }
+    .woocommerce-validated {
+        .selbel_w select + span,
+        > input {
+            border-bottom-color: green
+        }
     }
 }
 

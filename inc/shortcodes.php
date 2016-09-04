@@ -139,15 +139,6 @@ function content_btn($atts,$content){
 }
 add_shortcode("button", "content_btn");
 
-function content_badge($atts){
-    extract(shortcode_atts(array(
-        'icon' => theme('images/new.svg')
-    ), $atts ));
-
-    return '<img data-defer="' .theme('images/' . $icon . '.svg') . '" class="aligncenter badge-icon" />';
-}
-add_shortcode("badge", "content_badge");
-
 function tree_children($absolute = false, $page_id = 0) {
     global $wp_query;
     if ($wp_query->is_posts_page) {

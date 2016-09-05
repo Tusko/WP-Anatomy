@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Quick Alt Editor
-Plugin URI: http://страница_с_описанием_плагина_и_его_обновлений
+Plugin URI: https://wordpress.org/plugins/quick-alt-editor/
 Description: Edit your alt very quick without reloading
 Version: 1.0
 Author: Arsmoon
@@ -28,10 +28,12 @@ Author URI: https://arsmoon.com
 /*
     Add column to Media Page
 */
-global $q_config;
-$i18n = './themes/' . wp_get_theme()->template . '/inc/plugins/ars-alt-editor/i18n-config.json';
-if (!in_array($i18n, $q_config['config_files'])) {
-    $q_config['config_files'][] = $i18n;
+if(defined('QTX_VERSION') && is_admin()){
+    global $q_config;
+    $i18n = './themes/' . wp_get_theme()->template . '/inc/plugins/ars-alt-editor/i18n-config.json';
+    if (!in_array($i18n, $q_config['config_files'])) {
+        $q_config['config_files'][] = $i18n;
+    }
 }
 
 add_action( 'manage_media_custom_column', 'wpa_media_field_input' );
@@ -65,7 +67,7 @@ function wpa_alt_add_js($hook) {
     // Check if we are on upload.php and enqueue script
     if ( $hook != 'upload.php' )
         return;
-    wp_enqueue_script( 'wpa_alt_js', plugin_dir_url( __FILE__ ) . 'alt.js', array('jquery'), 1.0, true );
+    wp_enqueue_script( 'wpa_alt_js', theme('/inc/plugins/ars-alt-editor/alt.js'), array('jquery'), 1.0, true );
 }
 
 /*

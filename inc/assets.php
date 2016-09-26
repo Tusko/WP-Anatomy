@@ -50,27 +50,35 @@ add_action('wp_enqueue_scripts', 'tt_add_jscss');
 function acf_repeater_even() {
     $scheme = get_user_option( 'admin_color' );
     $color = '';
-    if($scheme == 'fresh') {
-        $color = '#0073aa';
-    } else if($scheme == 'light') {
-        $color = '#d64e07';
-    } else if($scheme == 'blue') {
-        $color = '#52accc';
-    } else if($scheme == 'coffee') {
-        $color = '#59524c';
-    } else if($scheme == 'ectoplasm') {
-        $color = '#523f6d';
-    } else if($scheme == 'midnight') {
-        $color = '#e14d43';
-    } else if($scheme == 'ocean') {
-        $color = '#738e96';
-    } else if($scheme == 'sunrise') {
-        $color = '#dd823b';
+    switch ($scheme) {
+        case 'fresh':
+            $color = '#0073aa';
+            break;
+        case 'light':
+            $color = '#d64e07';
+            break;
+        case 'blue':
+            $color = '#52accc';
+            break;
+        case 'coffee':
+            $color = '#59524c';
+            break;
+        case 'ectoplasm':
+            $color = '#523f6d';
+            break;
+        case 'midnight':
+            $color = '#e14d43';
+            break;
+        case 'ocean':
+            $color = '#738e96';
+            break;
+        case 'sunrise':
+            $color = '#dd823b';
+            break;
     }
     echo '<style>.acf-repeater > table > tbody > tr:nth-child(even) > td.order {color: #fff !important;background-color: '.$color.' !important; text-shadow: none}.acf-fc-layout-handle {color: #fff !important;background-color: #23282d!important; text-shadow: none}</style>';
 }
 add_action('admin_footer', 'acf_repeater_even');
-
 
 function getFileExt($path) {
     $pos = strrpos($path, ".");
@@ -81,7 +89,7 @@ function getFileExt($path) {
     }
 }
 
-function fileIgnore($name) {
+function fileNotIgnore($name) {
     if( substr( $name, 0, 1 ) !== "_" ) {
         return $name;
     }
@@ -92,19 +100,11 @@ function directoryToArray( $abs, $directory, $filterMap = NULL ) {
     $dir = $abs . $directory;
     if ($handle = opendir($dir)) {
         while (false !== ($file = readdir($handle))) {
-            if ($file != "." && $file != "..") {
-                if (!is_dir($dir. "/" . $file)) {
-                    if( $filterMap ) {
-                        if ( in_array(getFileExt($file), $filterMap) ){
-                            if(fileIgnore($file)) {
-                                $assets[basename($file)] = get_stylesheet_directory_uri() . $directory . $file;
-                            }
-                        }
-                    } else {
-                        if(fileIgnore($file)) {
-                            $assets[basename($file)] = get_stylesheet_directory_uri() . $directory . $file;
-                        }
-                    }
+            if ($file != "." && $file != ".." && fileNotIgnore($file) && !is_dir($dir. "/" . $file)) {
+                if( $filterMap ) {
+                    if(in_array(getFileExt($file), $filterMap)) $assets[basename($file)] = get_stylesheet_directory_uri() . $directory . $file;
+                } else {
+                    $assets[basename($file)] = get_stylesheet_directory_uri() . $directory . $file;
                 }
             }
         }

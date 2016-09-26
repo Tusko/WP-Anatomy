@@ -51,6 +51,9 @@ $(document).ready(function () {
     });
 
 //  WP AJAX Search
+
+    $('.searchform form[role="search"]').submit(function(){return false;});
+
     $('.search_box input[type="text"]').donetyping(function(){
         var t = $('.search_box input[type="text"]'),
             val = t.val(),

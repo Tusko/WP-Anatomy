@@ -277,7 +277,7 @@ function wpa_widget_title($title) {
 
 //simple function for wp_get_attachment_image_src()
 function image_src($id, $size = 'full', $background_image = false, $height = false) {
-    if ($image = wp_get_attachment_image_src($id, $size, true)) {
+    if ($image = wp_get_attachment_image_src( (get_post_type($id) == 'attachment' ? $id : get_post_thumbnail_id($id) ) , $size, true)) {
         return $background_image ? 'background-image: url('.$image[0].');' . ($height?'height:'.$image[2].'px':'') : $image[0];
     }
 }

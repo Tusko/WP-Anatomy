@@ -375,15 +375,17 @@
     }
 */
 
-@mixin flexGrid($columnNumber, $spacingPercent) {
+@mixin flexGrid($columnNumber, $spacingPercent, $rebuild: null) {
     $contentPercent: 100%;
     $sideMargin: ($spacingPercent/2);
     $marginInt: strip-units($sideMargin);
-    @include justify-content(flex-start);
-    @include flex-flow(wrap);
-    @include transition();
-    @include flexbox();
-    margin: #{0} -$sideMargin;
+    @if $rebuild == null {
+        @include justify-content(flex-start);
+        @include flex-flow(wrap);
+        @include transition();
+        @include flexbox();
+    }
+    margin: #{0} -#{$sideMargin};
     width: $contentPercent + $spacingPercent;
     > * {
         width: ($contentPercent/$columnNumber) - $spacingPercent;

@@ -13,7 +13,7 @@
             echo '<option>Option '.$i.'</option>';
         } ?>
     </select>
-    <div class="flexbox">
+    <div class="flexGrid">
         <div>text-1</div>
         <div>text-2</div>
         <div>text-3</div>

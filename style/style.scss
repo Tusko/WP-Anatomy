@@ -586,11 +586,17 @@ footer {
     }
 }
 
-.flexbox {
+.flexGrid {
     @include flexGrid(3, 3%);
     > div {
         background: #333;
         padding: .8em;
         color: #fff;
+    }
+    @media screen and (max-width: 1024px) {
+        @include flexGrid(2, 2%, true)
+    }
+    @media screen and (max-width: 479px) {
+        @include flexGrid(1, 0, true)
     }
 }

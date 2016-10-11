@@ -48,6 +48,16 @@ hr {
     clear: both
 }
 
+.h100 {
+    height: 100vh;
+}
+
+.cover {
+    @include background-size(cover);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
 .row {
     position: relative;
     width: $container;

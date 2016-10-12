@@ -1,3 +1,9 @@
 {
-    "sass.enabled": false
+    "sass.enabled": false,
+    "brackets-file-tree-exclude.excludeList": [
+        "/.git/",
+        "/inc/plugins/",
+        "/bower_components/",
+        "/node_modules/"
+    ]
 }

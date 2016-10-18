@@ -52,7 +52,7 @@ $font-base: 15px;
     }
 */
 
-@mixin prefixer($property, $value, $prefixes: webkit moz ms o) {
+@mixin prefixer($property, $value, $prefixes: webkit) {
     @each $prefix in $prefixes {
         #{"-" + $prefix + "-" + $property}: $value;
     }

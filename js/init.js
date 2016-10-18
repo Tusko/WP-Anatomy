@@ -1,11 +1,11 @@
 /*jslint browser: true, white: true, plusplus: true, regexp: true, indent: 4, maxerr: 50, es5: true */
 /*jshint multistr: true, latedef: nofunc */
-/*global jQuery, $, Swiper*/
+/*global jQuery, $, CustomEvent, Swiper, is_numeric_input, loadlater*/
 
-(function() {
+(function(window) {
     'use strict';
 
-$(document).ready(function () {
+$(document).ready(function(){
 
     $( 'textarea' ).keyup();
 
@@ -100,20 +100,6 @@ $(document).ready(function () {
 
 $(window).on('load', function(){
 
-    //  WP Gallery extension
-    $('.wpa_slideshow').each(function(){
-        var t = this,
-            WPASwiper = new Swiper( t, {
-                nextButton          : $('.swiper-button-next', t),
-                prevButton          : $('.swiper-button-prev', t),
-                pagination          : $('.swiper-pagination', t),
-                observer            : true,
-                paginationClickable : true,
-                autoHeight          : true,
-                speed               : 500
-            });
-    });
-
     //  fluid video (iframe)
     $('.content article iframe').each(function(i) {
         var t = $(this),
@@ -126,6 +112,24 @@ $(window).on('load', function(){
         $('.mejs-video .mejs-inner', this).addClass('fullframe');
     });
 
+    setTimeout(function(){
+
+        //  WP Gallery extension
+        $('.wpa_slideshow').each(function(){
+            var t = this,
+                WPASwiper = new Swiper( t, {
+                    nextButton          : $('.swiper-button-next', t),
+                    prevButton          : $('.swiper-button-prev', t),
+                    pagination          : $('.swiper-pagination', t),
+                    observer            : true,
+                    paginationClickable : true,
+                    autoHeight          : true,
+                    speed               : 500
+                });
+        });
+
+    }, 500);
+
 })
 .bind('orientationchange resize', function(){
     window.console.log('resize');
@@ -133,4 +137,4 @@ $(window).on('load', function(){
     window.console.log('resizeEnd');
 });
 
-}(jQuery));
+}(window, jQuery));

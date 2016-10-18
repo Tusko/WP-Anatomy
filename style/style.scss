@@ -73,6 +73,7 @@ form {
     input[type="tel"],
     input[type="password"],
     textarea {
+        @include border-radius(0);
         font: 300 14px $font;
         margin: 0 auto 20px;
         background:  none;
@@ -107,7 +108,7 @@ input[type="submit"] {
     font: 400 19px/1 $font;
     @include inline-flex();
     text-decoration: none;
-    padding: 4px 20px 0;
+    padding: 0 20px;
     background: none;
     min-width: 200px;
     color: #000;

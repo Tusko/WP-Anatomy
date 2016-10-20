@@ -395,8 +395,12 @@ add_action( 'init', 'wpa_init', 9999 );
 function wpa_fontbase64($fonthash) {
     $font = get_stylesheet_directory() . '/fonts.css';
     $md5 = filemtime( $font );
+    $md5_cached = get_transient('fonts64_md5');
+    if( $md5_cached !== $md5 ) {
+        set_transient( 'fonts64_md5', $md5, 168 * 3600 );
+    }
     if($fonthash) {
-        echo $md5;
+        echo $md5_cached?$md5_cached:$md5;
     } else {
         $minfont = file_get_contents( $font );
         $minfont = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $minfont);
@@ -404,7 +408,7 @@ function wpa_fontbase64($fonthash) {
         $minfont = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $minfont);
         $minfont = str_replace(';}','}', $minfont);
         $fontpack = array(
-            'md5'      => $md5,
+            'md5'      => $md5_cached,
             'value'    => $minfont
         );
         echo json_encode($fontpack);

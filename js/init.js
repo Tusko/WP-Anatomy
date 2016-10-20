@@ -96,9 +96,11 @@ $(document).ready(function(){
         loadlater();
     });
 
+    $(window).trigger('load');
+
 });
 
-$(window).on('load', function(){
+$(window).on('load pageshow', function(){
 
     //  fluid video (iframe)
     $('.content article iframe').each(function(i) {

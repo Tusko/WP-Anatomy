@@ -4,12 +4,6 @@
  *
  * Make sure to edit md5 and path to your fonts json!
  */
-/**
- * Should be in the head to prevent FOUT on subsequent page views.
- * http://crocodillon.com/blog/non-blocking-web-fonts-using-localstorage
- *
- * Make sure to edit md5 and path to your fonts json!
- */
 (function(window, document) {
     'use strict';
         var isModernBrowser = (

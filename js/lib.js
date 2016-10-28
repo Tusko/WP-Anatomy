@@ -1,23 +1,6 @@
 /*jslint browser: true, white: true, vars: true, plusplus: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, jQuery*/
 
-function aload(nodes) {
-    'use strict';
-    nodes = nodes || window.document.querySelectorAll('[data-aload]');
-    if (nodes.length === undefined) {
-        nodes = [nodes];
-    }
-    var i = 0,
-        len = nodes.length,
-        node;
-    for (i; i < len; i += 1) {
-        node = nodes[i];
-        node[ node.tagName !== 'LINK' ? 'src' : 'href' ] = node.getAttribute('data-aload');
-        node.removeAttribute('data-aload');
-    }
-    return nodes;
-}
-
 var hash = window.location.hash,
     supportsTouch = window.hasOwnProperty('ontouchstart') || window.navigator.msPointerEnabled ? true : false,
     TouchClickEvent = supportsTouch ? 'touchstart' : 'click';
@@ -73,56 +56,6 @@ var mob = function(){
     }
 };
 
-//selbel
-(function($) {
-    'use strict';
-    var select = {};
-    var defaults = {
-        onChange: function () {}
-    };
-    $.fn.selbel = function(options) {
-
-        if (this.length > 1) {
-            this.each(function () {
-                $(this).selbel(options);
-            });
-            return this;
-        }
-        var el = this;
-        var init = function(){
-
-            select.settings = $.extend({}, defaults, options);
-
-            var sel_label = el.attr("data-label") !== undefined ? '<label>' + el.attr("data-label") + '</label>' : '';
-            if (!el.hasClass('selbel')) { el.addClass('selbel'); }
-            if(el.parent().is('.selbel_w')) {
-                var txt;
-                if($(':selected', el).length > 0) {
-                    txt = $(':selected', el);
-                } else {
-                    txt = $('option:first', el);
-                }
-                el.next().text( txt.text() );
-                return false;
-            }
-            el.each(function() {
-                $(this).wrap("<span class='selbel_w' />")
-                    .before(select.label )
-                    .after('<span>' + $('*:selected', this).text() + '</span>');
-            });
-            el.change(function() {
-                $(this).next().text($('*:selected', this).text());
-                select.settings.onChange( el );
-            });
-        };
-
-        init();
-
-        // returns the current jQuery object
-        return this;
-    };
-}(jQuery));
-
 (function($) {
     'use strict';
 
@@ -134,11 +67,6 @@ var mob = function(){
         return result;
     };
 
-//EventSelector
-    jQuery.fn.addEvent = function(type, handler) {
-        this.bind(type, {'selector': this.selector}, handler);
-    };
-
 //find empty paragraphs
     $('p').each(function() {
         var t = $(this);
@@ -146,10 +74,22 @@ var mob = function(){
     });
 }(jQuery));
 
-window.onload = function () {
+function aload(nodes) {
     'use strict';
-    aload();
-};
+    nodes = nodes || window.document.querySelectorAll('[data-aload]');
+    if (nodes.length === undefined) {
+        nodes = [nodes];
+    }
+    var i = 0,
+        len = nodes.length,
+        node;
+    for (i; i < len; i += 1) {
+        node = nodes[i];
+        node[ node.tagName !== 'LINK' ? 'src' : 'href' ] = node.getAttribute('data-aload');
+        node.removeAttribute('data-aload');
+    }
+    return nodes;
+}
 
 function load_defer_img(source) {
     'use strict';
@@ -161,7 +101,7 @@ function load_defer_img(source) {
     }).promise();
 }
 
-(window.loadlater = function() {
+function loadlater() {
     'use strict';
     $('[data-defer]').each(function(){
         var t = $(this),
@@ -180,10 +120,9 @@ function load_defer_img(source) {
             }
         });
     });
-})();
+}
 
-
-(window.is_numeric_input = function() {
+function is_numeric_input() {
     'use strict';
     $('.quantity input').each(function(){
         var t = $(this);
@@ -197,4 +136,11 @@ function load_defer_img(source) {
         }
         t.wrap('<div class="input-number-box" />').after('<i class="input-number-more" /><i class="input-number-less" />');
     });
-})();
+}
+
+window.onload = function () {
+    'use strict';
+    is_numeric_input();
+    loadlater();
+    aload();
+};

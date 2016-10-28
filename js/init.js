@@ -96,8 +96,6 @@ $(document).ready(function(){
         loadlater();
     });
 
-    $(window).trigger('load');
-
 });
 
 $(window).on('load pageshow', function(){
@@ -114,29 +112,25 @@ $(window).on('load pageshow', function(){
         $('.mejs-video .mejs-inner', this).addClass('fullframe');
     });
 
-    setTimeout(function(){
-
-        //  WP Gallery extension
-        $('.wpa_slideshow').each(function(){
-            var t = this,
-                WPASwiper = new Swiper( t, {
-                    nextButton          : $('.swiper-button-next', t),
-                    prevButton          : $('.swiper-button-prev', t),
-                    pagination          : $('.swiper-pagination', t),
-                    observer            : true,
-                    paginationClickable : true,
-                    autoHeight          : true,
-                    speed               : 500
-                });
-        });
-
-    }, 500);
-
 })
 .bind('orientationchange resize', function(){
     window.console.log('resize');
 }).resizeEnd(function(){
     window.console.log('resizeEnd');
 });
+
+    //  WP Gallery extension
+    window.WPASwiper = [];
+    $('.wpa_slideshow').each(function(i){
+        var t = this;
+        window.WPASwiper[i] = new Swiper( t, {
+            nextButton          : $('.swiper-button-next', t)[0],
+            prevButton          : $('.swiper-button-prev', t)[0],
+            pagination          : $('.swiper-pagination', t)[0],
+            paginationClickable : true,
+            autoHeight          : true,
+            speed               : 500
+        });
+    });
 
 }(window, jQuery));

@@ -16,15 +16,6 @@ function addEmailToLogin( $translated_text, $text, $domain ) {
     return $translated_text;
 }
 
-function javascript_escape($str) {
-    $new_str = '';
-    $str_len = strlen($str);
-    for($i = 0; $i < $str_len; $i++) {
-        $new_str .= '\\x' . sprintf('%02x', ord(substr($str, $i, 1)));
-    }
-    return htmlspecialchars($new_str);
-}
-
 if(defined('GOOGLEMAPS')) {
     /* google map shortcode
         *** Using [googlemap id="somemapid" coordinates="1 ,1" zoom="17" height="500px" infobox="<p>Some Infobox Content</p>"]
@@ -71,7 +62,7 @@ if(defined('GOOGLEMAPS')) {
             '.($icon?'icon:"'.$icon.'",':'').'
             animation: google.maps.Animation.DROP
         });
-        '.($infobox?'marker.info = new google.maps.InfoWindow({content: \''.javascript_escape($infobox).'\'});
+        '.($infobox?'marker.info = new google.maps.InfoWindow({content: \''.$infobox.'\'});
         google.maps.event.addListener(marker, "click", function() {marker.info.open('.$mapid.', marker);});':'').'
 
         google.maps.event.addListener('.$mapid.', "center_changed", function() {

@@ -312,6 +312,7 @@ function denied_IE_2_10() {
                        <a target="_blank" href="http://www.apple.com/safari">Safari</a> or
                        <a target="_blank" href="http://www.opera.com">Opera 15+</a> instead.</p>
         </div>
+        <?php wp_footer(); ?>
     </body>
     </html>
     <?php exit(); endif;

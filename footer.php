@@ -2,7 +2,7 @@
 <footer>
     <div class="copyright row">
         <p>Copyright &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. All rights reserved.</p>
-        <p class="dev">Design &amp; Development <a href="http://#" target="_blank">Company Name</a></p>
+        <p class="dev">Design &amp; Development <a href="https://arsmoon.com" target="_blank">Independent developers team</a></p>
     </div>
 </footer>
 <?php wp_footer(); ?>

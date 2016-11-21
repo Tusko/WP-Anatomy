@@ -15,7 +15,7 @@ function tt_add_jscss() {
     }
 
     if(defined('GOOGLEMAPS')) {
-        wp_enqueue_script('googlemaps', '//maps.googleapis.com/maps/api/js?v=3.exp', false, null, false);
+        wp_enqueue_script('googlemaps', '//maps.googleapis.com/maps/api/js?key=' . GOOGLEMAPS, false, null, false);
     }
 
     wp_enqueue_script('jquery', get_stylesheet_directory_uri(). '/js/libs/_jquery.js', false, null, false);

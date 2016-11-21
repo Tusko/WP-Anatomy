@@ -2,10 +2,8 @@
 /*jshint multistr: true, latedef: nofunc */
 /*global jQuery, $, CustomEvent, Swiper, is_numeric_input, loadlater*/
 
-(function(window) {
-    'use strict';
-
 $(document).ready(function(){
+    'use strict';
 
     $( 'textarea' ).keyup();
 
@@ -42,7 +40,6 @@ $(document).ready(function(){
         $(this).fadeOut(250).prev().fadeOut(250).parent().next().find('>div').html('');
         $(this).next().val('');
     });
-
 
 //  hamburger menu
     $('.nav-icon').click(function(){
@@ -96,9 +93,15 @@ $(document).ready(function(){
         loadlater();
     });
 
+    $(this).on("pageshow visibilitychange scrollstop",function(event){
+        $(window).triggerHandler('load');
+    });
+
 });
 
-$(window).on('load pageshow', function(){
+$(window).on('load', function(){
+'use strict';
+$.ready.then(function(){
 
     //  fluid video (iframe)
     $('.content article iframe').each(function(i) {
@@ -108,16 +111,10 @@ $(window).on('load pageshow', function(){
             p.addClass('fullframe');
         }
     });
+
     $('.wp-video').each(function(){
         $('.mejs-video .mejs-inner', this).addClass('fullframe');
     });
-
-})
-.bind('orientationchange resize', function(){
-    window.console.log('resize');
-}).resizeEnd(function(){
-    window.console.log('resizeEnd');
-});
 
     //  WP Gallery extension
     window.WPASwiper = [];
@@ -133,4 +130,12 @@ $(window).on('load pageshow', function(){
         });
     });
 
-}(window, jQuery));
+});
+})
+.bind('orientationchange resize', function(){
+    'use strict';
+//    window.console.log('resize');
+}).resizeEnd(function(){
+    'use strict';
+//    window.console.log('resizeEnd');
+});

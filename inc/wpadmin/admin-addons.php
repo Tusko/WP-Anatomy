@@ -185,11 +185,11 @@ if (!current_user_can('update_plugins')) { // checks to see if current user can 
 }
 
 // Changing the logo link from wordpress.org to root domain
-function wpa_login_url() {  return home_url(); }
+function wpa_login_url() {  return 'https://arsmoon.com/'; }
 add_filter( 'login_headerurl', 'wpa_login_url' );
 
 // Changing the alt text on the logo to show your site name
-function wpa_login_title() { return get_option( 'blogname' ); }
+function wpa_login_title() { return 'Arsmoon Digital Agency'; }
 add_filter( 'login_headertitle', 'wpa_login_title' );
 
 // Return header 403 for wrong login
@@ -201,12 +201,12 @@ add_action( 'wp_login_failed', 'my_login_failed_403' );
 function wpa__prelicense() {
     if( function_exists('acf_pro_is_license_active') && !acf_pro_is_license_active() ) {
         $args = array(
-            '_nonce'        => wp_create_nonce('activate_pro_licence'),
+            '_nonce'         => wp_create_nonce('activate_pro_licence'),
             'acf_license'    => base64_encode('order_id=37918|type=personal|date=2014-08-21 15:02:59'),
             'acf_version'    => acf_get_setting('version'),
             'wp_name'        => get_bloginfo('name'),
-            'wp_url'        => home_url(),
-            'wp_version'    => get_bloginfo('version'),
+            'wp_url'         => home_url(),
+            'wp_version'     => get_bloginfo('version'),
             'wp_language'    => get_bloginfo('language'),
             'wp_timezone'    => get_option('timezone_string'),
         );
@@ -219,3 +219,34 @@ function wpa__prelicense() {
     }
 }
 add_action( 'after_setup_theme', 'wpa__prelicense' );
+
+if(!function_exists('acf_add_admin_notice')) {
+    function acf_add_admin_notice( $text, $class = '', $wrap = 'p' ) {
+        // vars
+        $admin_notices = acf_get_admin_notices();
+        // add to array
+        $admin_notices[] = array(
+            'text'	=> $text,
+            'class'	=> "updated {$class}",
+            'wrap'	=> $wrap
+        );
+        // update
+        acf_update_setting( 'admin_notices', $admin_notices );
+        // return
+        return ( count( $admin_notices ) - 1 );
+    }
+}
+
+if(!function_exists('acf_get_admin_notices')) {
+    function acf_get_admin_notices() {
+        // vars
+        $admin_notices = acf_get_setting( 'admin_notices' );
+        // validate
+        if( !$admin_notices )
+        {
+            $admin_notices = array();
+        }
+        // return
+        return $admin_notices;
+    }
+}

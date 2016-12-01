@@ -1,7 +1,7 @@
 <?php
 /* BEGIN: Theme config params*/
 
-//define ('GOOGLEMAPS', YOUR-API-KEY-HERE);
+//define ('GOOGLEMAPS',' YOUR-API-KEY-HERE');
 define ('HOME_PAGE_ID', get_option('page_on_front'));
 define ('BLOG_ID', get_option('page_for_posts'));
 define ('POSTS_PER_PAGE', get_option('posts_per_page'));

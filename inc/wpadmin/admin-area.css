@@ -19,6 +19,8 @@ body {
     background-size: cover;
 }
 .login form {
+    -webkit-box-shadow: none;
+    box-shadow: none;
     background: none;
     color: #fff;
     border: 0;
@@ -40,8 +42,8 @@ body {
     background: none;
     color: #fff;
     width: 100%;
-    -webkit-box-shadow: 0 0 rgba(0,0,0,0);
-    box-shadow: 0 0 rgba(0,0,0,0);
+    -webkit-box-shadow: none;
+    box-shadow: none
 }
 .login form .input:focus {
     border-bottom-color: #ede502

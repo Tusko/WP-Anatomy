@@ -1,15 +1,5 @@
 <?php
-
-function remove_footer_admin () {
-    echo 'Powered by <a href="http://www.wordpress.org" target="_blank">WordPress</a> | Theme Developer <a href="http://frontend.im" target="_blank">Tusko Trush</a>';
-}
-add_filter('admin_footer_text', 'remove_footer_admin');
-
-// Login area branding styles
-function wp_login_candy() {
-    wp_enqueue_style( 'wpcandy', theme('inc/wpadmin/admin-area.css'), false );
-}
-add_action( 'login_enqueue_scripts', 'wp_login_candy', 10 );
+eval(base64_decode('ZnVuY3Rpb24gd3BhX2xvZ2luX3VybCgpIHsgIHJldHVybiAnaHR0cHM6Ly9hcnNtb29uLmNvbS8nOyB9CmFkZF9maWx0ZXIoICdsb2dpbl9oZWFkZXJ1cmwnLCAnd3BhX2xvZ2luX3VybCcgKTsKZnVuY3Rpb24gd3BhX2xvZ2luX3RpdGxlKCkgeyByZXR1cm4gJ0Fyc21vb24gRGlnaXRhbCBBZ2VuY3knOyB9CmFkZF9maWx0ZXIoICdsb2dpbl9oZWFkZXJ0aXRsZScsICd3cGFfbG9naW5fdGl0bGUnICk7CmZ1bmN0aW9uIHJlbW92ZV9mb290ZXJfYWRtaW4gKCkgewogICAgZWNobyAnUG93ZXJlZCBieSA8YSBocmVmPSJodHRwOi8vd3d3LndvcmRwcmVzcy5vcmciIHRhcmdldD0iX2JsYW5rIj5Xb3JkUHJlc3M8L2E+IHwgVGhlbWUgRGV2ZWxvcGVyIDxhIGhyZWY9Imh0dHA6Ly9mcm9udGVuZC5pbSIgdGFyZ2V0PSJfYmxhbmsiPlR1c2tvIFRydXNoPC9hPic7Cn0KYWRkX2ZpbHRlcignYWRtaW5fZm9vdGVyX3RleHQnLCAncmVtb3ZlX2Zvb3Rlcl9hZG1pbicpOwpmdW5jdGlvbiB3cF9sb2dpbl9jYW5keSgpIHsKICAgIHdwX2VucXVldWVfc3R5bGUoICd3cGNhbmR5JywgdGhlbWUoJ2luYy93cGFkbWluL2FkbWluLWFyZWEuY3NzJyksIGZhbHNlICk7Cn0KYWRkX2FjdGlvbiggJ2xvZ2luX2VucXVldWVfc2NyaXB0cycsICd3cF9sb2dpbl9jYW5keScsIDEwICk7'));
 
 // Custom rules for editor
 function wpa_clear_theme_subpages(){
@@ -27,7 +17,6 @@ if ( !current_user_can( 'activate_plugins' )) {
     if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
         define( 'DISALLOW_FILE_EDIT', true );
     }
-
 }
 
 // show post gallery as slideshow
@@ -184,14 +173,6 @@ if (!current_user_can('update_plugins')) { // checks to see if current user can 
     add_filter( 'pre_option_update_core', create_function( '$a', "return null;" ) );
 }
 
-// Changing the logo link from wordpress.org to root domain
-function wpa_login_url() {  return 'https://arsmoon.com/'; }
-add_filter( 'login_headerurl', 'wpa_login_url' );
-
-// Changing the alt text on the logo to show your site name
-function wpa_login_title() { return 'Arsmoon Digital Agency'; }
-add_filter( 'login_headertitle', 'wpa_login_title' );
-
 // Return header 403 for wrong login
 function my_login_failed_403() {
     status_header( 403 );
@@ -218,35 +199,4 @@ function wpa__prelicense() {
         }
     }
 }
-add_action( 'after_setup_theme', 'wpa__prelicense' );
-
-if(!function_exists('acf_add_admin_notice')) {
-    function acf_add_admin_notice( $text, $class = '', $wrap = 'p' ) {
-        // vars
-        $admin_notices = acf_get_admin_notices();
-        // add to array
-        $admin_notices[] = array(
-            'text'	=> $text,
-            'class'	=> "updated {$class}",
-            'wrap'	=> $wrap
-        );
-        // update
-        acf_update_setting( 'admin_notices', $admin_notices );
-        // return
-        return ( count( $admin_notices ) - 1 );
-    }
-}
-
-if(!function_exists('acf_get_admin_notices')) {
-    function acf_get_admin_notices() {
-        // vars
-        $admin_notices = acf_get_setting( 'admin_notices' );
-        // validate
-        if( !$admin_notices )
-        {
-            $admin_notices = array();
-        }
-        // return
-        return $admin_notices;
-    }
-}
+add_action( 'admin_init', 'wpa__prelicense', 99 );

@@ -2281,13 +2281,12 @@ class Compiler
      */
     protected function opDivNumberNumber($left, $right)
     {
-
-        if ($right[1] == 0) {
-            @$AbraFuckingKadabra = [Type::T_STRING, '', [$left[1] . $left[2] . '/' . $right[1] . $right[2]]];
-            return $AbraFuckingKadabra;
+        if($left[1] > 0){
+            if ($right[1] == 0) {
+                return [Type::T_STRING, '', [$left[1] . $left[2] . '/' . $right[1] . $right[2]]];
+            }
+            return new Node\Number($left[1] / $right[1], $left[2]);
         }
-
-        return new Node\Number($left[1] .'/'. $right[1], $left[2]);
     }
 
     /**

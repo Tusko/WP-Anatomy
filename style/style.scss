@@ -18,14 +18,10 @@ html {
         max-width: 1920px;
         background: #fff;
         min-height: 100vh;
-        color: #323232;
+        color: $default;
         margin: 0 auto;
-        opacity: 1;
+        opacity: 1
     }
-}
-
-.ani {
-    @include transition();
 }
 
 #wrap {
@@ -122,11 +118,11 @@ input[type="submit"] {
         color: #fff;
     }
     &.empty {
-        padding: 4px 30px 0;
+        padding: 0 30px;
         min-width: 1px;
         height: 32px;
         width: auto;
-        border: 0;
+        border: 0
     }
 }
 
@@ -171,12 +167,12 @@ input[type="submit"] {
         position: relative
     }
     .ajax-loader {
-        background: #fff;
         @include border-radius(50%);
-        display: inline-block;
         margin: 0 -20px 0 10px;
-        padding: 5px;
-        vertical-align: middle
+        vertical-align: middle;
+        display: inline-block;
+        background: #fff;
+        padding: 5px
     }
 }
 
@@ -186,10 +182,11 @@ input[type="submit"] {
     display: none;
     right: 20px;
     z-index: 10;
-    top: 50%;
+    top: 50%
 }
 
 header {
+
 }
 
 .content {
@@ -232,7 +229,7 @@ header {
     @include flexbox();
     position: relative;
     padding: 15px 0;
-    z-index: 999;
+    z-index: 99
 }
 
 #bloggrid {

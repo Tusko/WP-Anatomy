@@ -35,10 +35,10 @@
         right: 0;
         top: 6px;
         &:before {
-            @extend .ani;
             @include transform( rotate(-45deg) );
             border-right: 1px solid #000;
             border-top: 1px solid #000;
+            @include transition();
             position: absolute;
             content: '';
             height: 4px;

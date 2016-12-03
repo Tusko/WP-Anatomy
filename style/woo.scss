@@ -169,7 +169,7 @@
     img {
         display: inline-block;
         margin: 0 6px;
-        width: 35px;
+        width: 35px
     }
 }
 
@@ -380,8 +380,7 @@
         }
     }
     #review_form {
-        @extend .row;
-        margin-top: 40px;
+        margin: 40px auto 0;
         width: 640px;
         #commentform {
             .comment-form-rating .stars {

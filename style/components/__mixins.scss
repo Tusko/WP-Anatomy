@@ -3,6 +3,7 @@
 $font: 'Open Sans', 'Arial', sans-serif;
 $container: 960px;
 $font-base: 15px;
+$default: #333;
 
 /// Strips the unit from a number.
 @function strip-units($value) {
@@ -182,4 +183,8 @@ $font-base: 15px;
         border-right: $height solid $color;
     }
 
+}
+
+.ani {
+    @include transition();
 }

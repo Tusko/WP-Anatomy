@@ -95,8 +95,8 @@ input {
     @include transition()
 }
 
-[data-aload] {
-    background-image: none !important
+[data-defer] {
+    background-color: #f5f5f5
 }
 
 svg:not(:root) {

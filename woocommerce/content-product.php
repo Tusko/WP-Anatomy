@@ -42,7 +42,7 @@ endif;
           echo '<a class="product-image" href="' . get_permalink($product->id) . '">';
             woocommerce_show_product_loop_sale_flash();
             if(has_post_thumbnail($product->id)) {
-                echo '<img src="'.ALOAD.'" alt="'.get_alt($thumbnal_id).'" data-defer="'.$img[0].'" class="aligncenter" width="'.$img[1].'" height="'.$img[2].'" />';
+                echo '<img src="'.placeImg($img[1], $img[2]).'" alt="'.get_alt($thumbnal_id).'" data-defer="'.$img[0].'" class="aligncenter" width="'.$img[1].'" height="'.$img[2].'" />';
             } else {
                 echo wc_placeholder_img( 'shop_catalog' );
             }

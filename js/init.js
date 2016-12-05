@@ -94,14 +94,19 @@ $(document).ready(function(){
     });
 
     $(this).on("pageshow visibilitychange scrollstop",function(event){
-        $(window).triggerHandler('load');
+        $(window).triggerHandler('defer.load');
+    });
+
+    $('#css-defer-load > link').ready(function(){
+        setTimeout(function(){
+            $(window).triggerHandler('defer.load');
+        }, 500);
     });
 
 });
 
-$(window).on('load', function(){
+$(window).on('defer.load', function(){
 'use strict';
-$.ready.then(function(){
 
     //  fluid video (iframe)
     $('.content article iframe').each(function(i) {
@@ -120,17 +125,25 @@ $.ready.then(function(){
     window.WPASwiper = [];
     $('.wpa_slideshow').each(function(i){
         var t = this;
-        window.WPASwiper[i] = new Swiper( t, {
-            nextButton          : $('.swiper-button-next', t)[0],
-            prevButton          : $('.swiper-button-prev', t)[0],
-            pagination          : $('.swiper-pagination', t)[0],
-            paginationClickable : true,
-            autoHeight          : true,
-            speed               : 500
-        });
+        setTimeout(function(){
+            window.WPASwiper[i] = new Swiper( t, {
+                nextButton                  : $('.swiper-button-next', t)[0],
+                prevButton                  : $('.swiper-button-prev', t)[0],
+                pagination                  : $('.swiper-pagination', t)[0],
+                roundLengths                : true,
+                observer                    : true,
+                observeParents              : true,
+                paginationClickable         : true,
+                grabCursor                  : true,
+                autoHeight                  : true,
+                speed                       : 500,
+                preloadImages               : false,
+                lazyLoading                 : true,
+                lazyLoadingInPrevNext       : true
+            });
+        }, 500*i);
     });
 
-});
 })
 .bind('orientationchange resize', function(){
     'use strict';

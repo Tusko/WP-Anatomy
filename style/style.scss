@@ -167,12 +167,22 @@ input[type="submit"] {
         position: relative
     }
     .ajax-loader {
-        @include border-radius(50%);
-        margin: 0 -20px 0 10px;
+        @include prefixer(animation, swiper-preloader-spin 1s infinite linear);
+        @include border-radius(100%);
+        border: 2px solid #f3f3f3;
+        border-top:3px solid #ede502;
         vertical-align: middle;
+        @include transition();
         display: inline-block;
-        background: #fff;
-        padding: 5px
+        margin: 0 0 0 24px;
+        visibility: hidden;
+        height: 24px;
+        width: 24px;
+        opacity: 0;
+        &.is-active {
+            visibility: visible;
+            opacity: 1
+        }
     }
 }
 

@@ -64,9 +64,10 @@ function wpa_slideshow_from_gallery( $output, $attr) {
                 $pic_link = str_replace('href="', 'target="_blank" href="', $link);
             }
             $pic_link = str_replace(wp_get_attachment_image_src($id, 'full', false), wp_get_attachment_image_src($id, 'large', false), $link);
+            $pic_link = str_replace('src="', 'class="swiper-lazy" data-src="', $pic_link);
             $output .= '<div class="swiper-slide">';
             $output .= $pic_link;
-            $output .= '</div>';
+            $output .= '<div class="swiper-lazy-preloader"></div></div>';
         }
 
         $output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';

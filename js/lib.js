@@ -74,23 +74,6 @@ var mob = function(){
     });
 }(jQuery));
 
-function aload(nodes) {
-    'use strict';
-    nodes = nodes || window.document.querySelectorAll('[data-aload]');
-    if (nodes.length === undefined) {
-        nodes = [nodes];
-    }
-    var i = 0,
-        len = nodes.length,
-        node;
-    for (i; i < len; i += 1) {
-        node = nodes[i];
-        node[ node.tagName !== 'LINK' ? 'src' : 'href' ] = node.getAttribute('data-aload');
-        node.removeAttribute('data-aload');
-    }
-    return nodes;
-}
-
 function load_defer_img(source) {
     'use strict';
     return $.Deferred (function (task) {
@@ -142,5 +125,4 @@ window.onload = function () {
     'use strict';
     is_numeric_input();
     loadlater();
-    aload();
 };

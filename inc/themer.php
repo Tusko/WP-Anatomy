@@ -66,8 +66,8 @@ function wpa_activate_theme() {
         include_once('plugins/ajax-thumbnail-rebuild/ajax-thumbnail-rebuild.php');
     }
 
-    if ( ! function_exists( 'smush_activated' ) ) {
-        include_once('plugins/wp-smushit/wp-smush.php');
+    if ( ! function_exists( 'jr_uploadresize_options_page' ) ) {
+        include_once('plugins/min-max-img-dimentions.php');
     }
 
     if ( ! function_exists( 'wpa_media_field_input' ) ) {

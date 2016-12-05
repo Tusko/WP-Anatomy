@@ -2,6 +2,7 @@ var lds = function () {
     "use strict";
     var wf_asn = document.getElementById("wf_ds"),
         r = document.createElement("div");
+        r.id = 'css-defer-load';
     r.innerHTML = wf_asn.textContent;
     document.body.appendChild(r);
     wf_asn.parentElement.removeChild(wf_asn);

@@ -44,16 +44,6 @@ if( function_exists('acf_add_options_page') ) {
         'capability' => 'edit_posts',
         'redirect' => false
     ));
-//    acf_add_options_sub_page(array(
-//        'page_title' => 'Header',
-//        'menu_title' => 'Header',
-//        'parent_slug' => 'acf-theme-settings',
-//    ));
-//    acf_add_options_sub_page(array(
-//        'page_title' => 'Footer',
-//        'menu_title' => 'Footer',
-//        'parent_slug' => 'acf-theme-settings',
-//    ));
 }
 
 function get_alt($id){
@@ -101,16 +91,15 @@ function get_current_url() {
     return str_replace('www.', '', $pageURL);
 }
 
-function wpa_example_ajax(){
-    extract($_POST);
-
-    var_dump($action);
-
-    exit;
-}
-add_action('wp_ajax_wpa_example_ajax', 'wpa_example_ajax');
-add_action('wp_ajax_nopriv_wpa_example_ajax', 'wpa_example_ajax');
-
+//function wpa_example_ajax(){
+//    extract($_POST);
+//
+//    var_dump($action);
+//
+//    exit;
+//}
+//add_action('wp_ajax_wpa_example_ajax', 'wpa_example_ajax');
+//add_action('wp_ajax_nopriv_wpa_example_ajax', 'wpa_example_ajax');
 
 function wpa_dump($variable){
     $pretty = function($v='',$c="&nbsp;&nbsp;&nbsp;&nbsp;",$in=-1,$k=null)use(&$pretty){$r='';if(in_array(gettype($v),array('object','array'))){$r.=($in!=-1?str_repeat($c,$in):'').(is_null($k)?'':"$k: ").'<br>';foreach($v as $sk=>$vl){$r.=$pretty($vl,$c,$in+1,$sk).'<br>';}}else{$r.=($in!=-1?str_repeat($c,$in):'').(is_null($k)?'':"$k: ").(is_null($v)?'&lt;NULL&gt;':"<strong>$v</strong>");}return$r;};

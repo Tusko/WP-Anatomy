@@ -4,7 +4,7 @@
        <img src="<?php echo placeImg(818, 419); ?>" data-defer="//wpa.dev0.site/wp-content/uploads/HOTBalloonTrip_UltraHD.jpg" alt="">
         <?php if ( have_posts() ) : while ( have_posts() ) : the_post();
             the_content();
-        endwhile; endif; ?>
+        endwhile; endif; var2console( $post ) ?>
     </article>
 </section>
 

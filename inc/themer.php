@@ -288,12 +288,12 @@ function image_src($id, $size = 'full', $background_image = false, $height = fal
 if(defined('WPCF7_VERSION')) {
     function maybe_reset_autop( $form ) {
         $form_instance = WPCF7_ContactForm::get_current();
-        $manager = WPCF7_ShortcodeManager::get_instance();
+        $manager = WPCF7_FormTagsManager::get_instance();
         $form_meta = get_post_meta( $form_instance->id(), '_form', true );
-        $form = $manager->do_shortcode( $form_meta );
+        $form = $manager->replace_all( $form_meta );
         $form_instance->set_properties( array(
             'form' => $form
-        ) );
+        ));
         return $form;
     }
     add_filter( 'wpcf7_form_elements', 'maybe_reset_autop' );

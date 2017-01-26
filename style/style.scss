@@ -167,14 +167,14 @@ input[type="submit"] {
         position: relative
     }
     .ajax-loader {
+        @extend .ani;
         @include prefixer(animation, swiper-preloader-spin 1s infinite linear);
         @include border-radius(100%);
         border: 2px solid #f3f3f3;
         border-top:3px solid #ede502;
+        margin: 0 -48px 0 24px;
         vertical-align: middle;
-        @include transition();
         display: inline-block;
-        margin: 0 0 0 24px;
         visibility: hidden;
         height: 24px;
         width: 24px;
@@ -510,7 +510,7 @@ footer {
         @include flexbox();
         @include justify-content(space-between);
         p {
-            padding: 0
+            margin: 0
         }
     }
 }

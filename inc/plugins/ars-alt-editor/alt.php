@@ -25,16 +25,20 @@ Author URI: https://arsmoon.com
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+function wpa_check_qtx_i18n(){
+    if(defined('QTX_VERSION') && is_admin()){
+        global $q_config;
+        $i18n = './themes/' . wp_get_theme()->template . '/inc/plugins/ars-alt-editor/i18n-config.json';
+        if (!in_array($i18n, $q_config['config_files'])) {
+            $q_config['config_files'][] = $i18n;
+        }
+    }
+}
+add_action( 'admin_init', 'wpa_check_qtx_i18n',  10, 3 );
+
 /*
     Add column to Media Page
 */
-if(defined('QTX_VERSION') && is_admin()){
-    global $q_config;
-    $i18n = './themes/' . wp_get_theme()->template . '/inc/plugins/ars-alt-editor/i18n-config.json';
-    if (!in_array($i18n, $q_config['config_files'])) {
-        $q_config['config_files'][] = $i18n;
-    }
-}
 
 add_action( 'manage_media_custom_column', 'wpa_media_field_input' );
 add_filter( 'manage_media_columns', 'wpa_media_display_column' );

@@ -34,9 +34,20 @@
                 $(this).wrap("<span class='selbel_w' />")
                     .before(select.label )
                     .after('<span>' + $('*:selected', this).text() + '</span>');
+
+                if( $('*:selected', this).val() == '' ) {
+                    el.addClass('not_selected');
+                } else {
+                    el.removeClass('not_selected');
+                }
             });
             el.change(function() {
                 $(this).next().text($('*:selected', this).text());
+                if( $('*:selected', this).val() == '' ) {
+                    el.addClass('not_selected');
+                } else {
+                    el.removeClass('not_selected');
+                }
                 select.settings.onChange( el );
             });
         };

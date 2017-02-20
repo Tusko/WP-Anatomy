@@ -87,7 +87,7 @@ function workd_restrict_manage_posts() {
                 'taxonomy' => $tax_slug,
                 'name' => $tax_obj->name,
                 'orderby' => 'term_order',
-                'selected' => $_GET[$tax_obj->query_var],
+                'selected' => isset($_GET[$tax_obj->query_var])?$_GET[$tax_obj->query_var]:'',
                 'hierarchical' => $tax_obj->hierarchical,
                 'show_count' => false,
                 'hide_empty' => true

@@ -3,6 +3,46 @@
         'components/hamburger',
         'components/ie';
 
+%flex {
+    @include flexbox();
+}
+%inlineflex {
+    @include inline-flex();
+}
+%flex1 {
+    @include flex(1)
+}
+%flexwrapwrap {
+    @include flex-wrap(wrap);
+}
+%flexdirectioncolumn {
+    @include flex-direction(column);
+}
+%justifycontentspacea {
+    @include justify-content(space-around);
+}
+%justifycontentspaceb {
+    @include justify-content(space-between);
+}
+%justifycontentcenter {
+    @include justify-content(center);
+}
+%justifycontentstart {
+    @include justify-content(flex-start);
+}
+%justifycontentend {
+    @include justify-content(flex-end);
+}
+%alignitemscenter {
+    @include align-items(center);
+}
+%alignitemsstart {
+    @include align-items(flex-start);
+}
+%alignitemsend {
+    @include align-items(flex-end);
+}
+
 html {
     background: #f5f5f5;
     font: 400 #{$font-base}/1.4 $font;

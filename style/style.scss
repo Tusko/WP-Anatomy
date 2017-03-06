@@ -95,35 +95,23 @@ form {
 
 
 .button,
-button,
 input[type="submit"] {
-    @include justify-content(center);
-    @include align-items(center);
+    @include transition(all .2s ease-in-out);
+    @include border-radius(20px);
+    @include user-select(none);
     text-transform: uppercase;
-    border: 1px solid #000;
-    font: 400 19px/1 $font;
-    @include inline-flex();
     text-decoration: none;
-    padding: 0 20px;
-    background: none;
-    min-width: 200px;
-    color: #000;
-    height: 50px;
-    * {
-        @include flex(0, 0, auto);
-    }
-    &:hover {
-        border-color: darken(green, .2);
-        background: green;
-        color: #fff;
-    }
-    &.empty {
-        padding: 0 30px;
-        min-width: 1px;
-        height: 32px;
-        width: auto;
-        border: 0
-    }
+    margin: 5px 5px 5px 0;
+    display: inline-block;
+    background: #FF6666;
+    padding: 7px 20px;
+    line-height: 1.5;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 80%;
+    outline: none;
+    color: #fff;
+    border: 0;
 }
 
 .badge-icon {
@@ -511,53 +499,6 @@ footer {
         @include justify-content(space-between);
         p {
             margin: 0
-        }
-    }
-}
-
-.selbel_w {
-    font: 100 14px/32px $font;
-    margin-bottom: 20px;
-    position:relative;
-    text-align: left;
-    display:block;
-    height: 32px;
-    width:100%;
-    select {
-        -webkit-appearance: menulist-button;
-        position:relative;
-        cursor:pointer;
-        display:block;
-        height:100%;
-        width:100%;
-        z-index:1;
-        opacity:0;
-        + span {
-            @include position(absolute);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            padding: 0 10px;
-            color: $default;
-            border: 0;
-            border-bottom: 1px solid #b7b7b7;
-            &:after {
-                @include transform(rotate(-45deg) translate3d(0, -100%, 0));
-                border-bottom: 1px solid #000;
-                border-left: 1px solid #000;
-                position: absolute;
-                height: 6px;
-                content: '';
-                width: 6px;
-                right: 0;
-                top: 50%;
-            }
-            &.err {
-                border-color: #ef4036
-            }
-        }
-        option {
-            padding: 5px
         }
     }
 }

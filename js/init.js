@@ -79,16 +79,19 @@ $(document).ready(function(){
     });
 
     //Custom select
-    $('select').selbel();
-
-    $(document).on('change', 'select', function(){
-        setTimeout(function(){
-            $('select').selbel();
-        }, 500);
+    $('select').selectric({
+        maxHeight: (mob()?200:350),
+        disableOnMobile: false,
+        nativeOnMobile: false
     });
 
     $(document).ajaxComplete(function(){
-        $('select').selbel();
+        //Custom select
+        $('select').selectric({
+            maxHeight: (mob()?200:350),
+            disableOnMobile: false,
+            nativeOnMobile: false
+        });
         is_numeric_input();
         loadlater();
     });

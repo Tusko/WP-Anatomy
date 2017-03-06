@@ -21,6 +21,7 @@ function tt_add_jscss() {
     wp_enqueue_script('jquery', get_stylesheet_directory_uri(). '/js/libs/_jquery.js', false, null, false);
 
     if($js_lib = directoryToArray( get_stylesheet_directory(),'/js/libs/', array('js') )) {
+        asort($js_lib);
         foreach($js_lib as $name => $js){
             wp_enqueue_script($name, $js, array('jquery'), null, true);
         }
@@ -30,6 +31,7 @@ function tt_add_jscss() {
     wp_enqueue_script('init', get_stylesheet_directory_uri(). '/js/init.js', array('libs'), null, true);
 
     if($style_lib = directoryToArray( get_stylesheet_directory(),'/style/libs/', array('css', 'scss') )) {
+        asort($style_lib);
         foreach($style_lib as $name => $lib){
             wp_enqueue_style($name, $lib );
         }

@@ -4,7 +4,7 @@
        <img src="<?php echo placeImg(818, 419); ?>" data-defer="//wpa.dev0.site/wp-content/uploads/HOTBalloonTrip_UltraHD.jpg" alt="">
         <?php if ( have_posts() ) : while ( have_posts() ) : the_post();
             the_content();
-        endwhile; endif; var2console( $post ) ?>
+        endwhile; endif; ?>
     </article>
 </section>
 
@@ -34,16 +34,11 @@
         <div>text-17</div>
     </div>
 
-    <a href="#modal">Call the modal with data-remodal-id="modal"</a>
-    <div class="remodal" data-remodal-id="modal">
-          <button data-remodal-action="close" class="remodal-close"></button>
-          <h1>Remodal</h1>
-          <p>
-            Responsive, lightweight, fast, synchronized with CSS animations, fully customizable modal window plugin with declarative configuration and hash tracking.
-          </p>
-          <br>
-          <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
-          <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
+    <a class="button" data-fancybox data-src="#hidden-content" href="javascript:;">Hello fancybox</a>
+    <div class="fancybox-modal-content" id="hidden-content">
+        <h2>Hello</h2>
+        <p>You are awesome.</p>
+        <p><a class="button" href="javascript:parent.jQuery.fancybox.close();">Dismiss</a></p>
     </div>
 </div>
 

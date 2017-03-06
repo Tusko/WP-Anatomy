@@ -79,9 +79,8 @@ $default: #333;
 @mixin box-shadow($shadow) {
     @include prefixer('box-shadow', $shadow);
 }
-@mixin transition($property: all, $duration: .5s, $easing: ease) {
-    $transitions: ($property $duration $easing);
-    @include prefixer('transition', $transitions);
+@mixin transition($property: all .5s ease) {
+    @include prefixer('transition', $property);
 }
 @mixin position($position: relative, $top:0, $right:0, $bottom:0, $left:0, $zIndex: 0) {
     position: $position;

@@ -16,7 +16,7 @@ $h_bg_static: null !default;
 $h_bg_active: null !default;
 
 .nav-icon {
-    @include transition( all, .5s, ease-in-out );
+    @include transition( all .5s ease-in-out );
     @include transform( rotate(0deg) );
     position: relative;
     height: $h_height;
@@ -38,7 +38,7 @@ $h_bg_active: null !default;
     }
     i {
         top: ($h_height / 2) - ($h_bar_thickness / 2) - $h_spacing;
-        @include transition( all, .25s, ease-in-out );
+        @include transition( all .25s ease-in-out );
         @include transform( rotate(0deg) );
         height: $h_bar_thickness;
         background: $h_color;

@@ -36,11 +36,22 @@ function wpa_defer_scripts($url) {
     }
 }
 
-// Run this code on 'after_theme_setup', when plugins have already been loaded.
-add_action('after_setup_theme', 'wpa_activate_theme');
+add_action('after_switch_theme', 'wpa_activate_theme');
+function wpa_activate_theme() {
+    if (!class_exists('AssetsMinify')) {
+        update_option('am_async_flag', 0);
+    }
+
+    update_option('image_default_link_type','none');
+    update_option('uploads_use_yearmonth_folders', 0);
+    update_option('permalink_structure', '/%category%/%postname%/');
+}
+
+// Run this code on 'after_setup_theme', when plugins have already been loaded.
+add_action('after_setup_theme', 'wpa_pre_plugins');
 
 // This function loads the plugins && update some wordpress options
-function wpa_activate_theme() {
+function wpa_pre_plugins() {
 
     // Check to see if your plugin has already been loaded. This can be done in several ways - here are a few examples:
     //
@@ -55,7 +66,6 @@ function wpa_activate_theme() {
 
     if (!class_exists('AssetsMinify')) {
         include_once('plugins/assetsminify/plugin.php');
-        update_option('am_async_flag', 0);
     }
 
     if (!function_exists('ctl_schedule_conversion')) {
@@ -66,17 +76,13 @@ function wpa_activate_theme() {
         include_once('plugins/ajax-thumbnail-rebuild/ajax-thumbnail-rebuild.php');
     }
 
-    if ( ! function_exists( 'jr_uploadresize_options_page' ) ) {
+    if (!function_exists( 'jr_uploadresize_options_page' )) {
         include_once('plugins/min-max-img-dimentions.php');
     }
 
-    if ( ! function_exists( 'wpa_media_field_input' ) ) {
+    if (!function_exists( 'wpa_media_field_input')) {
         include_once('plugins/ars-alt-editor/alt.php');
     }
-
-    update_option('image_default_link_type','none');
-    update_option('uploads_use_yearmonth_folders', 0);
-    update_option('permalink_structure', '/%category%/%postname%/');
 
 }
 

@@ -29,7 +29,7 @@ function wpa_check_qtx_i18n(){
     if(defined('QTX_VERSION') && is_admin()){
         global $q_config;
         $i18n = './themes/' . wp_get_theme()->template . '/inc/plugins/ars-alt-editor/i18n-config.json';
-        if (!in_array($i18n, $q_config['config_files'])) {
+        if(isset($q_config['config_files']) && !in_array($i18n, $q_config['config_files'])) {
             $q_config['config_files'][] = $i18n;
         }
     }

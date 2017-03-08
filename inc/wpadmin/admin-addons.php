@@ -54,19 +54,24 @@ function wpa_slideshow_from_gallery( $output, $attr) {
         $output .= '<div id="wpa-slideshow-' . $instance . '" class="wpa_slideshow swiper-container"><div class="swiper-wrapper">';
 
         foreach ( $attachments as $id ) {
+            $img = wp_get_attachment_image_src($id, $size);
+            $img_tpl = '<img class="swiper-lazy aligncenter" src="'.$img[0].'" width="'.$img[1].'" height="'.$img[2].'" alt="' .get_alt($id). '" />';
+            $caption = wp_get_attachment_caption($id);
+            $caption = ( !empty($caption) ? ' data-caption="'.$caption.'"' : '' );
             if(isset($attr['link']) && 'none' === $attr['link']) {
-                $link = '<img src="'.image_src($id, $size).'" alt="' .get_alt($id). '" />';
+                $image   = $img_tpl;
             } elseif(isset($attr['link']) && 'file' === $attr['link']) {
-                $link = wp_get_attachment_link($id, $size, false, false);
-                $pic_link = str_replace('href="', 'target="_blank" href="', $link);
+                $image   = '<a href="'.image_src($id, 'full').'" data-type="image"'.$caption.' data-fancybox="wpa-gallery-'.$instance.'">';
+                $image  .= $img_tpl;
+                $image  .= '</a>';
             } else {
-                $link = wp_get_attachment_link($id, $size, true, false);
-                $pic_link = str_replace('href="', 'target="_blank" href="', $link);
+                $image   = '<a href="'.get_permalink($id).'" target="_blank" title="'.get_the_title($id).'">';
+                $image  .= $img_tpl;
+                $image  .= '</a>';
             }
-            $pic_link = str_replace(wp_get_attachment_image_src($id, 'full', false), wp_get_attachment_image_src($id, 'large', false), $link);
-            $pic_link = str_replace('src="', 'class="swiper-lazy" data-src="', $pic_link);
+
             $output .= '<div class="swiper-slide">';
-            $output .= $pic_link;
+            $output .= $image;
             $output .= '<div class="swiper-lazy-preloader"></div></div>';
         }
 

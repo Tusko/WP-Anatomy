@@ -1,14 +1,12 @@
-var lds = function () {
+var cssDeffered = function () {
     "use strict";
-    var wf_asn = document.getElementById("wf_ds"),
-        r = document.createElement("div");
-        r.id = 'css-defer-load';
-    r.innerHTML = wf_asn.textContent;
-    document.body.appendChild(r);
-    wf_asn.parentElement.removeChild(wf_asn);
+    var cssD = jQuery.Deferred(),
+        cssData = document.getElementById("wf_ds"),
+        link = document.createElement("div");
+        link.id = 'css-defer-load';
+        link.innerHTML = cssData.textContent;
+    document.body.appendChild(link);
+    cssData.parentElement.removeChild(cssData);
+    cssD.resolve( true );
+    return cssD.promise();
 };
-var f = requestAnimationFrame || mozRequestAnimationFrame || webkitRequestAnimationFrame || msRequestAnimationFrame;
-if (f) f(function () {
-    window.setTimeout(lds, 1);
-});
-else window.addEventListener("load", lds);

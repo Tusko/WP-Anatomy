@@ -109,19 +109,17 @@ $(document).ready(function(){
         $('.mejs-video .mejs-inner', this).addClass('fullframe');
     });
 
-    $(this).on("pageshow visibilitychange",function(event){
-        $(window).triggerHandler('defer.load');
+    $(this).on("pageshow visibilitychange",function(){
+        $(window).triggerHandler('resize');
     });
 
-    $.when( $('#css-defer-load > link').ready() ).then(function(){
-        setTimeout(function(){
-            $(window).triggerHandler('defer.load');
-        }, 500);
+    $.when( cssDeffered() ).done(function(){
+        $(window).triggerHandler('defer.cssLoad');
     });
 
 });
 
-$(window).on('defer.load', function(){
+$(window).on('defer.cssLoad', function(){
     'use strict';
 
     //  WP Gallery extension

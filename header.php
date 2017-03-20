@@ -2,13 +2,13 @@
     ob_start('ob_html_compress');
 } ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo function_exists('qtranxf_getLanguage')?qtranxf_getLanguage():'en'; ?>">
 <head>
 <meta charset="UTF-8">
 <title><?php wpa_title(); ?></title>
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="True" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui, minimum-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui" />
 <?php wp_head(); ?>
 <style>body{opacity:0}</style>
 </head>

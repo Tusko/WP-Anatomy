@@ -324,6 +324,27 @@ function denied_IE_2_10() {
     <?php exit(); endif;
 }
 
+//Hooks a single callback to multiple tags
+function add_filters($tags, $function, $priority = 10, $accepted_args = 1) {
+    foreach ((array) $tags as $tag) {
+        add_filter($tag, $function, $priority, $accepted_args);
+    }
+}
+/**
+ * Add multiple actions to a closure
+ *
+ * @param $tags
+ * @param $function_to_add
+ * @param int $priority
+ * @param int $accepted_args
+ *
+ * @return bool true
+ */
+function add_actions($tags, $function_to_add, $priority = 10, $accepted_args = 1) {
+    //add_action() is just a wrapper around add_filter(), so we do the same
+    return add_filters($tags, $function_to_add, $priority, $accepted_args);
+}
+
 function wpa_init() {
     /* @var WP $wp */
     global $wp;
@@ -338,19 +359,27 @@ function wpa_init() {
     // Filters for WP-API version 2.x
     add_filter('rest_enabled', '__return_false');
     add_filter('rest_jsonp_enabled', '__return_false');
-    remove_action( 'wp_head', 'rest_output_link_wp_head' );
+    remove_action('wp_head', 'rest_output_link_wp_head' );
+    remove_action('template_redirect', 'rest_output_link_header', 11, 0);
+
     //Disable Thumbnails Embeds
     add_filter( 'embed_thumbnail_image_shape', '__return_false' );
+
     // Remove the REST API endpoint.
     remove_action( 'rest_api_init', 'wp_oembed_register_route' );
+
     // Turn off oEmbed auto discovery.
     add_filter( 'embed_oembed_discover', '__return_false' );
+
     // Don't filter oEmbed results.
     remove_filter( 'oembed_dataparse', 'wp_filter_oembed_result', 10 );
+
     // Remove oEmbed discovery links.
     remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+
     // Remove oEmbed-specific JavaScript from the front-end and back-end.
     remove_action( 'wp_head', 'wp_oembed_add_host_js' );
+
     // Remove all embeds rewrite rules.
     add_filter( 'rewrite_rules_array', 'disable_embeds_rewrites' );
 
@@ -365,11 +394,39 @@ function wpa_init() {
     remove_action('wp_head', 'wp_generator');
     remove_action('wp_head', 'rel_canonical');
 
-    // Remove Emoji js/styles
-    remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-    remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-    remove_action( 'wp_print_styles', 'print_emoji_styles' );
-    remove_action( 'admin_print_styles', 'print_emoji_styles' );
+    // Remove all actions related to emojis
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+
+    // Remove TinyMCE emojis
+    add_filter('tiny_mce_plugins', function($plugins) {
+        if (is_array($plugins)) {
+            return array_diff($plugins, array('wpemoji'));
+        } else {
+            return array();
+        }
+    });
+
+    //Disbale RSS feeds
+    add_actions([
+        'do_feed',
+        'do_feed_rdf',
+        'do_feed_rss',
+        'do_feed_rss2',
+        'do_feed_atom',
+        'do_feed_rss2_comments',
+        'do_feed_atom_comments'
+    ], function() {
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        wp_die(__('No feed available. Please visit the <a href="' . esc_url(home_url('/')) . '">homepage</a>'));
+    }, 1);
 
     //Page/Post thumbnail support
     add_theme_support( 'post-thumbnails' );
@@ -398,6 +455,30 @@ function wpa_init() {
     add_filter('widget_categories_args','show_empty_widget_links');
     add_filter('widget_tag_cloud_args','show_empty_widget_links');
     add_filter('widget_title', 'wpa_widget_title');
+
+    //Disbale XML-RPC (Maybe)
+    add_filter('xmlrpc_enabled', '__return_false');
+
+    //Remove x-pingback HTTP header
+    add_filter('wp_headers', function($headers) {
+        unset($headers['X-Pingback']);
+        return $headers;
+    });
+
+    //Disable pingbacks
+    add_filter('xmlrpc_methods', function($methods) {
+       unset($methods['pingback.ping']);
+       return $methods;
+    });
+
+    //No author pages. Send to 404
+    add_action('template_redirect', function() {
+        global $wp_query;
+        if (is_author()) {
+            $wp_query->set_404();
+        }
+    });
+
 }
 add_action( 'init', 'wpa_init', 9999 );
 

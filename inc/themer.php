@@ -5,6 +5,8 @@ if(extension_loaded('zlib')) remove_action( 'shutdown', 'wp_ob_end_flush_all', 1
 require_once 'qtranslate.php';
 require_once 'search_query.php';
 
+require_once 'plugins/colors.inc.php';
+
 // Auto-install recommended plugins
 require_once 'plugins/installer.php';
 

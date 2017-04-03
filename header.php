@@ -8,7 +8,7 @@
 <title><?php wpa_title(); ?></title>
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="True" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui" />
 <?php wp_head(); ?>
 <style>body{opacity:0}</style>
 </head>

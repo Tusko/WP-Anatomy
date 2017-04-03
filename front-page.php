@@ -1,10 +1,12 @@
 <?php get_header(); ?>
 <section class="content row">
     <article>
-       <img src="<?php echo placeImg(818, 419); ?>" data-defer="//wpa.dev0.site/wp-content/uploads/HOTBalloonTrip_UltraHD.jpg" alt="">
+       <img src="<?php echo wpa_placeholder(get_post_thumbnail_id($post->ID), 'full'); ?>" data-defer="<?php echo image_src(get_post_thumbnail_id($post->ID), 'full'); ?>" alt="<?php echo get_alt(get_post_thumbnail_id($post->ID)); ?>" />
         <?php if ( have_posts() ) : while ( have_posts() ) : the_post();
             the_content();
-        endwhile; endif; ?>
+        endwhile; endif;
+        ?>
+
     </article>
 </section>
 

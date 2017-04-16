@@ -509,3 +509,11 @@ function wpa_fontbase64($fonthash) {
 }
 add_action('wp_ajax_wpa_fontbase64', 'wpa_fontbase64');
 add_action('wp_ajax_nopriv_wpa_fontbase64', 'wpa_fontbase64');
+
+
+if(defined('GOOGLEMAPS')) {
+    function my_acf_init() {
+     acf_update_setting('google_api_key', GOOGLEMAPS);
+    }
+    add_action('acf/init', 'my_acf_init');
+}

@@ -91,15 +91,18 @@ function loadlater() {
             pre = t.data('pre'),
             img = t.data('defer');
         $.when(load_defer_img(img)).done(function (image) {
-          t.removeAttr('data-defer');
+            t.removeAttr('data-defer');
             if(t.is('img')) {
-              t.prop('src', img);
+                t.prop('src', img);
             } else {
-              if(typeof pre !== 'undefined') {
-                t.prepend(image);
-              } else {
-                t.append(image);
-              }
+                if(t.has('img').length > 0) {
+                    return;
+                }
+                if(typeof pre !== 'undefined') {
+                    t.prepend(image);
+                } else {
+                    t.append(image);
+                }
             }
         });
     });

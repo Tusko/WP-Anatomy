@@ -95,7 +95,7 @@ function loadlater() {
             if(t.is('img')) {
                 t.prop('src', img);
             } else {
-                if(t.has('img').length > 0) {
+                if(t.has('> img:not([data-defer])').length > 0) {
                     return;
                 }
                 if(typeof pre !== 'undefined') {

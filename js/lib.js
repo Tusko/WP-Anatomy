@@ -1,25 +1,16 @@
 /*jslint browser: true, white: true, vars: true, plusplus: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, jQuery*/
 
+function pAjax(options) {
+    'use strict';
+    return new Promise(function (resolve, reject) {
+        $.ajax(options).done(resolve).fail(reject);
+    });
+}
+
 var hash = window.location.hash,
     supportsTouch = window.hasOwnProperty('ontouchstart') || window.navigator.msPointerEnabled ? true : false,
     TouchClickEvent = supportsTouch ? 'touchstart' : 'click';
-
-/*
-    equalHeight
-    usage: equalHeight('selector');
-*/
-function equalHeight(group) {
-    'use strict';
-    var tallest = 0;
-    $(group).height('').each(function() {
-        var thisHeight = $(this).outerHeight();
-        if(thisHeight > tallest) {
-            tallest = thisHeight;
-        }
-    });
-    $(group).height(tallest);
-}
 
 //return document
 function screen(method){

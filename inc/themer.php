@@ -40,7 +40,7 @@ function wpa_defer_scripts($url) {
 
 add_action('after_switch_theme', 'wpa_activate_theme');
 function wpa_activate_theme() {
-    if (!class_exists('AssetsMinify')) {
+    if (class_exists('AssetsMinify')) {
         update_option('am_async_flag', 0);
     }
 

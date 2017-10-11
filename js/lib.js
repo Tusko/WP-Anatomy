@@ -8,9 +8,14 @@ function pAjax(options) {
     });
 }
 
-var hash = window.location.hash,
-    supportsTouch = window.hasOwnProperty('ontouchstart') || window.navigator.msPointerEnabled ? true : false,
+var supportsTouch = window.hasOwnProperty('ontouchstart') || window.navigator.msPointerEnabled ? true : false,
     TouchClickEvent = supportsTouch ? 'touchstart' : 'click';
+
+$.getHash = function(trim){
+    'use strict';
+    var hashValue = window.location.hash;
+    return (typeof trim !== 'undefined'? hashValue.substr(1) : hashValue );
+};
 
 //return document
 function screen(method){

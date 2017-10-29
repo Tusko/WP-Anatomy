@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2015 Leaf Corcoran
+ * @copyright 2012-2017 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -165,9 +165,6 @@ class Compiler
      */
     public function compile($code, $path = null)
     {
-        $locale = setlocale(LC_NUMERIC, 0);
-        setlocale(LC_NUMERIC, 'C');
-
         $this->indentLevel    = -1;
         $this->commentsSeen   = [];
         $this->extends        = [];
@@ -195,8 +192,6 @@ class Compiler
         $this->popEnv();
 
         $out = $this->formatter->format($this->scope);
-
-        setlocale(LC_NUMERIC, $locale);
 
         return $out;
     }
@@ -1181,7 +1176,7 @@ class Compiler
     /**
      * Compile selector to string; self(&) should have been replaced by now
      *
-     * @param array $selector
+     * @param string|array $selector
      *
      * @return string
      */
@@ -1203,7 +1198,7 @@ class Compiler
     /**
      * Compile selector part
      *
-     * @param arary $piece
+     * @param array $piece
      *
      * @return string
      */
@@ -1963,7 +1958,7 @@ class Compiler
      * @param array   $value
      * @param boolean $inExp
      *
-     * @return array
+     * @return array|\Leafo\ScssPhp\Node\Number
      */
     protected function reduce($value, $inExp = false)
     {
@@ -2238,7 +2233,7 @@ class Compiler
      * @param array $left
      * @param array $right
      *
-     * @return array
+     * @return \Leafo\ScssPhp\Node\Number
      */
     protected function opAddNumberNumber($left, $right)
     {
@@ -2251,7 +2246,7 @@ class Compiler
      * @param array $left
      * @param array $right
      *
-     * @return array
+     * @return \Leafo\ScssPhp\Node\Number
      */
     protected function opMulNumberNumber($left, $right)
     {
@@ -2264,7 +2259,7 @@ class Compiler
      * @param array $left
      * @param array $right
      *
-     * @return array
+     * @return \Leafo\ScssPhp\Node\Number
      */
     protected function opSubNumberNumber($left, $right)
     {
@@ -2277,16 +2272,15 @@ class Compiler
      * @param array $left
      * @param array $right
      *
-     * @return array
+     * @return array|\Leafo\ScssPhp\Node\Number
      */
     protected function opDivNumberNumber($left, $right)
     {
-        if($left[1] > 0){
-            if ($right[1] == 0) {
-                return [Type::T_STRING, '', [$left[1] . $left[2] . '/' . $right[1] . $right[2]]];
-            }
-            return new Node\Number($left[1] / $right[1], $left[2]);
+        if ($right[1] == 0) {
+            return [Type::T_STRING, '', [$left[1] . $left[2] . '/' . $right[1] . $right[2]]];
         }
+
+        return new Node\Number($left[1] / $right[1], $left[2]);
     }
 
     /**
@@ -2295,7 +2289,7 @@ class Compiler
      * @param array $left
      * @param array $right
      *
-     * @return array
+     * @return \Leafo\ScssPhp\Node\Number
      */
     protected function opModNumberNumber($left, $right)
     {
@@ -2581,7 +2575,7 @@ class Compiler
      * @param array $left
      * @param array $right
      *
-     * @return array
+     * @return \Leafo\ScssPhp\Node\Number
      */
     protected function opCmpNumberNumber($left, $right)
     {
@@ -3391,6 +3385,8 @@ class Compiler
             $urls = [$url, preg_replace('/[^\/]+$/', '_\0', $url)];
         }
 
+        $hasExtension = preg_match('/[.]s?css$/', $url);
+
         foreach ($this->importPaths as $dir) {
             if (is_string($dir)) {
                 // check urls for normal import paths
@@ -3400,7 +3396,7 @@ class Compiler
                         . $full;
 
                     if ($this->fileExists($file = $full . '.scss') ||
-                        $this->fileExists($file = $full)
+                        ($hasExtension && $this->fileExists($file = $full))
                     ) {
                         return $file;
                     }
@@ -3497,14 +3493,14 @@ class Compiler
      */
     protected function fileExists($name)
     {
-        return is_file($name);
+        return file_exists($name) && is_file($name);
     }
 
     /**
      * Call SCSS @function
      *
      * @param string $name
-     * @param array  $args
+     * @param array  $argValues
      * @param array  $returnValue
      *
      * @return boolean Returns true if returnValue is set; otherwise, false
@@ -3776,7 +3772,7 @@ class Compiler
      *
      * @param mixed $value
      *
-     * @return array
+     * @return array|\Leafo\ScssPhp\Node\Number
      */
     private function coerceValue($value)
     {
@@ -3849,7 +3845,8 @@ class Compiler
     /**
      * Coerce something to list
      *
-     * @param array $item
+     * @param array  $item
+     * @param string $delim
      *
      * @return array
      */
@@ -5209,6 +5206,8 @@ class Compiler
      * Workaround IE7's content counter bug.
      *
      * @param array $args
+     *
+     * @return array
      */
     protected function libCounter($args)
     {

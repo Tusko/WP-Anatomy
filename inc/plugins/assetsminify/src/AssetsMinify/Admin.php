@@ -42,8 +42,47 @@ class Admin {
             $filesList = glob($uploadsDir['basedir'] . '/am_assets/' . "*.*");
             if ( $filesList !== false )
                 array_map('unlink', $filesList);
-            add_action('admin_notices', function() use ($filesList) {
-                echo '<div class="error"><h4>Cache cleared!</h4><p>', count($filesList), ' files was removed.</p><p>Reload your <a href="' . site_url('/') . '" target="">homepage</a> to compile new styles and scripts.</p></div>';
+
+            global $wp_fastest_cache;
+            $purgeCacheResponse = '';
+
+            // if W3 Total Cache is being used, clear the cache
+            if ( function_exists( 'w3tc_pgcache_flush' ) ) {
+                w3tc_pgcache_flush();
+                $purgeCacheResponse = 'W3 Total Cache removed';
+            }
+            // if WP Super Cache is being used, clear the cache
+            else if ( function_exists( 'wp_cache_clean_cache' ) ) {
+                global $file_prefix, $supercachedir;
+                if ( empty( $supercachedir ) && function_exists( 'get_supercache_dir' ) ) {
+                    $supercachedir = get_supercache_dir();
+                }
+                wp_cache_clean_cache( $file_prefix );
+                $purgeCacheResponse = 'WP Super Cache removed';
+            }
+            else if ( class_exists( 'WpeCommon' ) ) {
+                //be extra careful, just in case 3rd party changes things on us
+                if ( method_exists( 'WpeCommon', 'purge_memcached' ) ) {
+                    WpeCommon::purge_memcached();
+                }
+                if ( method_exists( 'WpeCommon', 'clear_maxcdn_cache' ) ) {
+                    WpeCommon::clear_maxcdn_cache();
+                }
+                if ( method_exists( 'WpeCommon', 'purge_varnish_cache' ) ) {
+                    WpeCommon::purge_varnish_cache();
+                }
+                $purgeCacheResponse = 'WP Engine Cache removed';
+            }
+            else if ( method_exists( 'WpFastestCache', 'deleteCache' ) && !empty( $wp_fastest_cache ) ) {
+                $wp_fastest_cache->deleteCache();
+                $purgeCacheResponse = 'WP Fastest Cache removed';
+            }
+
+            add_action('admin_notices', function() use ($filesList, $purgeCacheResponse) {
+                echo '<div class="error">
+                    <h4>✖ Cache removed!</h4>
+                    '.(!empty($purgeCacheResponse)?'<h4>✖ '.$purgeCacheResponse.'.</h4>':'').'
+                    <p>', count($filesList), ' files was removed.</p><p>Reload your <a href="' . site_url('/') . '" target="">homepage</a> to refrefh cache.</p></div>';
             });
         }
     }

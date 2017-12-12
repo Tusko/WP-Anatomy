@@ -134,7 +134,7 @@ class Js extends Factory {
      * @param string $filename The filename to dump
      * @param boolean $async Tells if the script is to include with async attribute (default=true)
      */
-    protected function dump( $filename, $async = true ) {
+    protected function dump( $filename, $async = false ) {
         preg_match("/head/i" , $filename, $matches);
         echo "<script ".(count($matches) == 0?'defer ':'')."src='" . $this->cache->getUrl() . $filename . "'" . ($async ? " async" : "") . "></script>\r\n";
     }

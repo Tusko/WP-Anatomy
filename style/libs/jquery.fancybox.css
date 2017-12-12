@@ -1,6 +1,7 @@
 .fancybox-modal-content {
+    max-width: 100%;
     display: none;
-    width: 760px;
+    width: 720px;
 }
 
 .fancybox-enabled {

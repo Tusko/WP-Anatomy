@@ -41,16 +41,13 @@ mark {
 }
 sub,
 sup {
-    position: relative;
-    font-size: 75%;
+    vertical-align: text-bottom;
+    display: inline-block;
     line-height: 0;
-    vertical-align: baseline
+    font-size: 60%;
 }
 sup {
-    top: -.5em
-}
-sub {
-    bottom: -.5em
+    vertical-align: text-top;
 }
 pre {
     overflow: auto

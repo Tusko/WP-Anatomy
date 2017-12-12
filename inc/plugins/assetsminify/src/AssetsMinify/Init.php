@@ -46,7 +46,9 @@ class Init {
 
         //Inclusion of scripts in <head> and before </body>
         add_action( 'wp_head', array( $this, 'header' ) );
-        add_action( 'wp_print_footer_scripts', array( $this, 'footer' ), 6 );
+        add_action( 'login_head', array( $this, 'header' ) );
+        add_action( 'wp_footer', array( $this, 'footer' ) );
+        add_action( 'login_footer', array( $this, 'footer' ), 21 );
     }
 
     /**

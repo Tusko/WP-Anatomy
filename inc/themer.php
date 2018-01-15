@@ -70,6 +70,10 @@ function wpa_pre_plugins() {
         include_once('plugins/assetsminify/plugin.php');
     }
 
+    if (!function_exists('include_field_types_smart_button')) {
+        include_once('plugins/acf-smart-button/acf-smart-button.php');
+    }
+
     if (!function_exists('ctl_schedule_conversion')) {
         include_once('plugins/cyr-to-lat.php');
     }
@@ -313,7 +317,7 @@ function denied_IE_2_10() {
     <body id="is-ie-denied">
         <div id="is-ie2-10">
             <span>(✖__✖)</span>
-            <h1>Sorry, this website is not compatible with <strong id="browserName">Internet Explorer 10 or less</strong>.</h1>
+            <h1>Sorry, this website is not compatible with <strong id="browserName">Internet Explorer 11 or less</strong>.</h1>
             <p>Please update your browser to newest version<br />
                 or use <a target="_blank" href="https://www.mozilla.org/firefox/new/?scene=2">Mozilla Firefox</a>,
                        <a target="_blank" href="https://google.com/chrome">Chrome</a>,
@@ -323,8 +327,47 @@ function denied_IE_2_10() {
         <?php wp_footer(); ?>
     </body>
     </html>
-    <?php exit(); endif;
+    <?php
+
+    global $wp_fastest_cache;
+    $purgeCacheResponse = '';
+
+    // if W3 Total Cache is being used, clear the cache
+    if ( function_exists( 'w3tc_pgcache_flush' ) ) {
+        w3tc_pgcache_flush();
+        $purgeCacheResponse = 'W3 Total Cache removed';
+    }
+    // if WP Super Cache is being used, clear the cache
+    else if ( function_exists( 'wp_cache_clean_cache' ) ) {
+        global $file_prefix, $supercachedir;
+        if ( empty( $supercachedir ) && function_exists( 'get_supercache_dir' ) ) {
+            $supercachedir = get_supercache_dir();
+        }
+        wp_cache_clean_cache( $file_prefix );
+        $purgeCacheResponse = 'WP Super Cache removed';
+    }
+    else if ( class_exists( 'WpeCommon' ) ) {
+        //be extra careful, just in case 3rd party changes things on us
+        if ( method_exists( 'WpeCommon', 'purge_memcached' ) ) {
+            WpeCommon::purge_memcached();
+        }
+        if ( method_exists( 'WpeCommon', 'clear_maxcdn_cache' ) ) {
+            WpeCommon::clear_maxcdn_cache();
+        }
+        if ( method_exists( 'WpeCommon', 'purge_varnish_cache' ) ) {
+            WpeCommon::purge_varnish_cache();
+        }
+        $purgeCacheResponse = 'WP Engine Cache removed';
+    }
+    else if ( method_exists( 'WpFastestCache', 'deleteCache' ) && !empty( $wp_fastest_cache ) ) {
+        $wp_fastest_cache->deleteCache();
+        $purgeCacheResponse = 'WP Fastest Cache removed';
+    }
+
+    exit();
+    endif;
 }
+
 
 //Hooks a single callback to multiple tags
 function add_filters($tags, $function, $priority = 10, $accepted_args = 1) {

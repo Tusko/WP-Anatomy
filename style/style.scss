@@ -585,6 +585,12 @@ footer {
     }
 }
 
+.fancybox-modal-content {
+    max-width: 100%;
+    display: none;
+    width: 720px;
+}
+
 .flexGrid {
     @include flexGrid(3, 3%);
     > div {

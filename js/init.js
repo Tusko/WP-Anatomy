@@ -128,21 +128,27 @@ $(window).on('defer.cssLoad', function(){
         var t = this;
         setTimeout(function(){
             window.WPASwiper[i] = new Swiper( t, {
-                nextButton                  : $('.swiper-button-next', t)[0],
-                prevButton                  : $('.swiper-button-prev', t)[0],
-                pagination                  : $('.swiper-pagination', t)[0],
+                navigation: {
+                    nextEl          : $('.swiper-button-next', t)[0],
+                    prevEl          : $('.swiper-button-prev', t)[0]
+                },
+                pagination: {
+                    el              : $('.swiper-pagination', t)[0],
+                    clickable       : true,
+                    type            : 'bullets',
+                },
                 roundLengths                : true,
                 observer                    : true,
                 observeParents              : true,
-                paginationClickable         : true,
                 grabCursor                  : true,
                 autoHeight                  : true,
                 speed                       : 500,
                 preloadImages               : false,
-                lazyLoading                 : true,
-                lazyLoadingInPrevNext       : true
+                lazy                        : {
+                    loadPrevNext    : true,
+                }
             });
-        }, 500*i);
+        }, 1e3*i);
     });
 
 })

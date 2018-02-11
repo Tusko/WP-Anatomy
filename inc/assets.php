@@ -27,7 +27,7 @@ function tt_add_jscss() {
         }
     }
 
-    wp_enqueue_script('libs', get_stylesheet_directory_uri(). '/js/lib.js', array('jquery'), null, true);
+    wp_enqueue_script('libs', get_stylesheet_directory_uri(). '/js/lib.js', array('jquery', 'jquery-migrate'), null, true);
     wp_enqueue_script('init', get_stylesheet_directory_uri(). '/js/init.js', array('libs'), null, true);
 
     if($style_lib = directoryToArray( get_stylesheet_directory(),'/style/libs/', array('css', 'scss') )) {

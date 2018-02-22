@@ -8,7 +8,7 @@ function pAjax(options) {
     });
 }
 
-var supportsTouch = window.hasOwnProperty('ontouchstart') || window.navigator.msPointerEnabled ? true : false,
+var supportsTouch = (window.hasOwnProperty('ontouchstart') || window.navigator.msPointerEnabled),
     TouchClickEvent = supportsTouch ? 'touchstart' : 'click';
 
 $.getHash = function(trim){
@@ -45,11 +45,7 @@ var mob = function(){
     var ua = navigator.userAgent,
         isIOS = /iPad/i.test(ua) || /iPhone OS 3_1_2/i.test(ua) || /iPhone OS 3_2_2/i.test(ua) || /iPhone/i.test(ua);
 
-    if (window.mobilecheck() || isIOS) {
-        return true;
-    } else {
-        return false;
-    }
+    return (window.mobilecheck() || isIOS);
 };
 
 (function($) {

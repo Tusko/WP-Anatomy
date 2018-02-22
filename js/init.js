@@ -97,7 +97,7 @@ $(document).ready(function(){
     });
 
     //  fluid video (iframe)
-    $('.content article iframe').each(function(i) {
+    $('.content article iframe').each(function() {
         var t = $(this),
             p = t.parent();
         if (p.is('p') && !p.hasClass('fullframe')) {
@@ -135,7 +135,7 @@ $(window).on('defer.cssLoad', function(){
                 pagination: {
                     el              : $('.swiper-pagination', t)[0],
                     clickable       : true,
-                    type            : 'bullets',
+                    type            : 'bullets'
                 },
                 roundLengths                : true,
                 observer                    : true,
@@ -145,7 +145,7 @@ $(window).on('defer.cssLoad', function(){
                 speed                       : 500,
                 preloadImages               : false,
                 lazy                        : {
-                    loadPrevNext    : true,
+                    loadPrevNext    : true
                 }
             });
         }, 1e3*i);

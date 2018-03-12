@@ -161,10 +161,10 @@ input[type="submit"] {
     .screen-reader-response {display: none !important}
     .wpcf7-not-valid-tip {
         @include position(absolute, 0, 0, 0, 0);
-        @include justify-content(center);
-        @include align-items(center);
-        @include inline-flex();
+        @extend %justifycontentcenter;
+        @extend %alignitemscenter;
         font: 400 12px $font;
+        @extend %inlineflex;
         background: #eee;
         color: #ff5f5f !important
     }
@@ -212,26 +212,87 @@ input[type="submit"] {
     }
 }
 
-.nav-icon {
-    @include transform(translateY(-50%));
-    position: absolute;
-    display: none;
-    right: 20px;
-    z-index: 10;
-    top: 50%
-}
 
 header {
-
+    .nav-icon {
+        @include transform(translateY(-50%));
+        position: absolute;
+        display: none;
+        right: 20px;
+        z-index: 10;
+        top: 50%
+    }
+    nav {
+        #menu-primary {
+            @extend %flex;
+            > li {
+                position: relative;
+                > a {
+                    text-decoration: none;
+                    font-size: 20px;
+                    color: $default
+                }
+                & + li {
+                    margin-left: 36px;
+                }
+                &.menu-item-has-children {
+                    &:after {
+                        @include triangle(4px, 6px, $default);
+                        vertical-align: middle;
+                        margin-left: 6px;
+                        @extend .ani;
+                        content: '';
+                    }
+                    > ul {
+                        @include transform(translateX(-50%) scale(.85));
+                        background: $default;
+                        white-space: nowrap;
+                        position: absolute;
+                        visibility: hidden;
+                        @extend .ani;
+                        opacity: 0;
+                        top: 110%;
+                        left: 50%;
+                        li {
+                            & + li {
+                                border-top: 1px solid rgba(#fff, .1);
+                            }
+                            a {
+                                text-decoration: none;
+                                padding: 5px 16px 6px;
+                                font-size: 16px;
+                                color: $default;
+                                display: block;
+                                &:hover {
+                                    background: $default;
+                                    color: #fff
+                                }
+                            }
+                        }
+                    }
+                    &:hover {
+                        > a {
+                            opacity: .5;
+                        }
+                        > ul {
+                            @include transform(translateX(-50%) scale(1));
+                            visibility: visible;
+                            opacity: 1;
+                            top: 105%;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 .content {
-    @include align-items(flex-start);
-    @include flex-flow(wrap);
-    @include flexbox();
+    @extend %alignitemscenter;
+    @extend %flex;
     article {
-        @include flex-basis(65%);
         padding: 0 40px 40px 0;
+        @extend %flex1;
         img {
             margin-bottom: .75em;
             &.alignright { margin-left: 1.5em }
@@ -255,127 +316,6 @@ header {
         @include flex-basis(35%);
         word-wrap: break-word;
         padding: 20px
-    }
-}
-
-.blog-meta {
-    @include box-shadow(0 1px rgba(0, 0, 0, 0.1));
-    @include justify-content(space-between);
-    @include align-items(center);
-    @include flexbox();
-    position: relative;
-    padding: 15px 0;
-    z-index: 99
-}
-
-#bloggrid {
-    article {
-        @include justify-content(space-between);
-        @include flex-flow(row wrap);
-        @include flexbox();
-        h1, .wp-pagenavi {
-            @include flex-basis(100%);
-        }
-        .blogpost {
-            @include flex-basis(48%);
-            &.sticky_post {
-                @include flex-basis(100%);
-            }
-            .post-data {
-                padding-bottom: 15px;
-                color: #000;
-            }
-            h2 a {
-                color: #333;
-                &:hover {
-                    color: #faad65
-                }
-            }
-            .post-meta {
-                border-bottom: 1px solid #d7d7d7;
-                border-top: 1px solid #d7d7d7;
-                @include align-items(center);
-                @include flex-flow(row wrap);
-                position: relative;
-                @include flexbox();
-                margin: 0 0 20px;
-                > div {
-                    @include flex(1, 0, auto);
-                    padding: 10px 0;
-                    color: #707070;
-                    & + & { margin-left: 20px }
-                    a {
-                        text-decoration: none;
-                        color: #707070;
-                        &:hover {
-                            color: #faad65
-                        }
-                    }
-                    > div {
-                        background: rgba(#333, .8);
-                        @include transition();
-                        margin-bottom: 10px;
-                        visibility: hidden;
-                        position: absolute;
-                        padding: 10px;
-                        bottom: 100%;
-                        color: #fff;
-                        opacity: 0;
-                        left: 0;
-                        right: 0;
-                        a {
-                            color: #fff;
-                            &:hover {
-                                text-decoration: underline
-                            }
-                        }
-                    }
-                    i {
-                        @extend .ani;
-                        vertical-align: middle;
-                        display: inline-block;
-                        position: relative;
-                        margin-right: 10px;
-                        color: #707070;
-                        font-size: 16px;
-                        &:hover {
-                            cursor: pointer;
-                            color: #1e4391;
-                        }
-                    }
-                    &:hover {
-                        > div {
-                            visibility: visible;
-                            margin-bottom: 0;
-                            opacity: 1;
-                        }
-                    }
-                }
-            }
-        }
-        .wp-pagenavi {
-            @include justify-content(space-between);
-            @include align-items(center);
-            @include flexbox();
-            margin-top: 40px;
-            > * {
-                font: 400 16px/24px $font;
-                @include flex(1, 0, auto);
-                text-decoration: none;
-                background: #d7d7d7;
-                text-align: center;
-                padding: 10px 0;
-                color: #333;
-            }
-            a:hover {
-                background: #f96834;
-                color: #fff;
-            }
-            .current {
-                background: #faaf6a;
-                color: #fff
-            }
-        }
     }
 }
 
@@ -533,8 +473,8 @@ footer {
     padding: 20px 0;
     color: #fff;
     .copyright {
-        @include flexbox();
-        @include justify-content(space-between);
+        @extend %justifycontentspaceb;
+        @extend %flex;
         p {
             margin: 0
         }
@@ -587,19 +527,4 @@ footer {
     max-width: 100%;
     display: none;
     width: 720px;
-}
-
-.flexGrid {
-    @include flexGrid(3, 3%);
-    > div {
-        background: #333;
-        padding: .8em;
-        color: #fff;
-    }
-    @media screen and (max-width: 1024px) {
-        @include flexGrid(2, 2%, true)
-    }
-    @media screen and (max-width: 479px) {
-        @include flexGrid(1, 0, true)
-    }
 }

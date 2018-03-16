@@ -1,7 +1,7 @@
 {"vendor":{"plugins/ars-alt-editor":"1.0"},
 "admin-config": {
 "post": {
-    "pages": { "upload.php":"" },
+    "pages": { "upload.php":"mode=list" },
     "anchors" : {
         "before": "posts-filter"
     },

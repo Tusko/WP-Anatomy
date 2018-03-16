@@ -1,47 +1,14 @@
-<?php get_header(); ?>
+<?php get_header(); global $post;?>
 <section class="content row">
     <article>
-       <img src="<?php echo wpa_placeholder(get_post_thumbnail_id($post->ID), 'full'); ?>" data-defer="<?php echo image_src(get_post_thumbnail_id($post->ID), 'full'); ?>" alt="<?php echo get_alt(get_post_thumbnail_id($post->ID)); ?>" />
+        <img src="<?php echo wpa_placeholder(get_post_thumbnail_id($post->ID), 'full'); ?>" data-defer="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'full') ?>" alt="<?php echo get_alt(get_post_thumbnail_id($post->ID)); ?>" />
         <?php if ( have_posts() ) : while ( have_posts() ) : the_post();
             the_content();
         endwhile; endif;
         ?>
-
     </article>
+    <aside>
+    </aside>
 </section>
-
-<div id="testarea" class="content row">
-    <select name="" id="">
-        <?php for($i=0; $i<10;$i++) {
-            echo '<option>Option '.$i.'</option>';
-        } ?>
-    </select>
-    <div class="flexGrid">
-        <div>text-1</div>
-        <div>text-2</div>
-        <div>text-3</div>
-        <div>text-4</div>
-        <div>text-5</div>
-        <div>text-6</div>
-        <div>text-7</div>
-        <div>text-8</div>
-        <div>text-9</div>
-        <div>text-10</div>
-        <div>text-11</div>
-        <div>text-12</div>
-        <div>text-13</div>
-        <div>text-14</div>
-        <div>text-15</div>
-        <div>text-16</div>
-        <div>text-17</div>
-    </div>
-
-    <a class="button" data-fancybox data-src="#hidden-content" href="javascript:;">Hello fancybox</a>
-    <div class="fancybox-modal-content" id="hidden-content">
-        <h2>Hello</h2>
-        <p>You are awesome.</p>
-        <p><a class="button" href="javascript:parent.jQuery.fancybox.close();">Dismiss</a></p>
-    </div>
-</div>
 
 <?php get_footer(); ?>

@@ -4,8 +4,6 @@ namespace AssetsMinify\Assets;
 use Assetic\Filter\MinifyCssCompressorFilter;
 use Assetic\Filter\CssRewriteFilter;
 
-use AssetsMinify\Log;
-
 /**
  * Css Factory.
  * Manages the styles (Css and sass, scss, stylus, less)
@@ -76,7 +74,7 @@ class Css extends Factory {
             unset($wp_styles->to_do[$key]);
         }
         $profiler []= time();
-        Log::getInstance()->set( 'Css extraction', $profiler );
+//        Log::getInstance()->set( 'Css extraction', $profiler );
     }
 
     /**
@@ -124,7 +122,7 @@ class Css extends Factory {
         }
 
         $profiler []= time();
-        Log::getInstance()->set( 'Css minification', $profiler );
+//        Log::getInstance()->set( 'Css minification', $profiler );
     }
 
     /**

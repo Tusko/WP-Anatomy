@@ -23,7 +23,6 @@ use Assetic\Filter\Sass\BaseSassFilter;
  */
 class CompassFilter extends BaseSassFilter
 {
-    private $compassPath;
     private $rubyPath;
     private $scss;
 

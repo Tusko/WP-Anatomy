@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Leafo\\ScssPhp\\' => array($vendorDir . '/leafo/scssphp/src'),
 );

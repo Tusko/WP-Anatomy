@@ -27,21 +27,10 @@ use Leafo\ScssPhp\Compiler;
  */
 class ScssphpFilter implements DependencyExtractorInterface
 {
-    private $compass = false;
     private $importPaths = array();
     private $customFunctions = array();
     private $formatter;
     private $variables = array();
-
-    public function enableCompass($enable = true)
-    {
-        $this->compass = (Boolean) $enable;
-    }
-
-    public function isCompassEnabled()
-    {
-        return $this->compass;
-    }
 
     public function setFormatter($formatter)
     {
@@ -76,10 +65,6 @@ class ScssphpFilter implements DependencyExtractorInterface
     public function filterLoad(AssetInterface $asset)
     {
         $sc = new Compiler();
-
-        if ($this->compass) {
-            new \scss_compass($sc);
-        }
 
         if ($dir = $asset->getSourceDirectory()) {
             $sc->addImportPath($dir);

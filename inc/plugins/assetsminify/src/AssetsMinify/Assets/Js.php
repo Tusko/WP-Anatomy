@@ -4,8 +4,6 @@ namespace AssetsMinify\Assets;
 use Assetic\Filter\JSqueezeFilter;
 use Assetic\Asset\StringAsset;
 
-use AssetsMinify\Log;
-
 /**
  * Js Factory.
  * Manages the scripts (JS and Coffeescript)
@@ -78,7 +76,7 @@ class Js extends Factory {
             unset($wp_scripts->to_do[$key]);
         }
         $profiler []= time();
-        Log::getInstance()->set( 'Js extraction', $profiler );
+//        Log::getInstance()->set( 'Js extraction', $profiler );
     }
 
     /**
@@ -125,7 +123,7 @@ class Js extends Factory {
         $this->dump( "$where-$mtime.js", $async );
 
         $profiler []= time();
-        Log::getInstance()->set( 'Js minification', $profiler );
+//        Log::getInstance()->set( 'Js minification', $profiler );
     }
 
     /**

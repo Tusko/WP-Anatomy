@@ -8,34 +8,10 @@
 			<tbody>
 				<tr valign="top">
 					<th scope="row">
-						<label for="am_use_compass">Use Compass</label>
-					</th>
-					<td>
-						<input name="am_use_compass" type="checkbox" id="am_use_compass" value="1" <?php checked(1, get_option('am_use_compass')); ?>>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="am_compass_path">Compass compiler's path</label>
-					</th>
-					<td>
-						<input name="am_compass_path" type="text" id="am_compass_path" value="<?php echo get_option('am_compass_path', '/usr/bin/compass') ?>" class="regular-text">
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
 						<label for="am_sass_path">Sass compiler's path (required only for .sass format - not .scss)</label>
 					</th>
 					<td>
 						<input name="am_sass_path" type="text" id="am_sass_path" value="<?php echo get_option('am_sass_path', '/usr/bin/sass') ?>" class="regular-text">
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="am_coffeescript_path">CoffeeScript compiler's path</label>
-					</th>
-					<td>
-						<input name="am_coffeescript_path" type="text" id="am_coffeescript_path" value="<?php echo get_option('am_coffeescript_path', '/usr/bin/coffee') ?>" class="regular-text">
 					</td>
 				</tr>
 				<tr valign="top">
@@ -72,20 +48,6 @@
 						<div>
 							<span class="description">Fill in the filename of the resources you don't want to be managed from AssetsMinify, separated by comma. (eg. custom-carousel.js, slideshow.js)</span>
 						</div>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row">
-						<label for="am_log">Activate Log</label>
-					</th>
-					<td>
-						<input name="am_log" type="checkbox" id="am_log" value="1" <?php checked(1, get_option('am_log')); ?>>
-						<?php
-						$logging = get_option('am_log');
-						if ( $logging === '1' ):
-						?>
-							<span class="description"><?php echo \AssetsMinify\Log::$filename ?> will flush automatically if its weight is 10Mb.</span>
-						<?php endif ?>
 					</td>
 				</tr>
 				<tr valign="top">

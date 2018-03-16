@@ -70,10 +70,6 @@ function wpa_pre_plugins() {
         include_once('plugins/assetsminify/plugin.php');
     }
 
-    if (!function_exists('include_field_types_smart_button')) {
-        include_once('plugins/acf-smart-button/acf-smart-button.php');
-    }
-
     if (!function_exists('ctl_schedule_conversion')) {
         include_once('plugins/cyr-to-lat.php');
     }

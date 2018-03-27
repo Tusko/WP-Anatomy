@@ -482,9 +482,10 @@ footer {
                 @extend %flex;
                 a {
                     text-decoration: none;
-                    img {
-                        margin-left: 7px;
-                        width: 22px;
+                    margin-left: 7px;
+                    width: 25px;
+                    &:hover {
+                        opacity: .5
                     }
                 }
             }

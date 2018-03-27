@@ -3,7 +3,7 @@
     <div class="copyright row">
         <p>Copyright &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. All rights reserved.</p>
         <p class="dev">
-            Handcrafted by <a href="https://arsmoon.com" data-defer="https://arsmoon.com/brand-wp-admin/logo_white.svg"><span class="hidden">Arsmoon Digital Agency</span></a>
+            Handcrafted by <a href="https://arsmoon.com" target="_blank" data-defer="https://arsmoon.com/brand-wp-admin/logo_white.svg"><span class="hidden">Arsmoon Digital Agency</span></a>
         </p>
     </div>
 </footer>

@@ -467,15 +467,27 @@ header {
 }
 
 footer {
-    background: #333;
+    background: $default;
     overflow: hidden;
-    padding: 20px 0;
-    color: #fff;
+    padding: 50px 0;
+    font-size: 15px;
+    color:#fff;
     .copyright {
-        @extend %justifycontentspaceb;
         @extend %flex;
         p {
-            margin: 0
+            @extend %flex1;
+            margin: 0;
+            &.dev {
+                @extend %alignitemscenter;
+                @extend %flex;
+                a {
+                    text-decoration: none;
+                    img {
+                        margin-left: 7px;
+                        width: 22px;
+                    }
+                }
+            }
         }
     }
 }

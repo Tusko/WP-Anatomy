@@ -5,6 +5,8 @@
         <p class="dev">Design &amp; Development <a href="https://arsmoon.com" target="_blank">Independent developers team</a></p>
     </div>
 </footer>
+
+<script defer src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 <?php wp_footer(); ?>
 </body>
 </html>

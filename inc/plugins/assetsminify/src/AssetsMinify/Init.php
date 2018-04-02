@@ -34,19 +34,18 @@ class Init {
         $this->exclusions = preg_split('/[ ]*,[ ]*/', trim(get_option('am_files_to_exclude')));
 
         //Detects all js and css added to WordPress and removes their inclusion
-        if( get_option('am_compress_styles', 1) )
-            add_action( 'wp_print_styles',  array( $this->css, 'extract' ) );
-        if( get_option('am_compress_scripts', 1) ) {
-            add_action( 'wp_print_scripts', array( $this->js, 'extract' ) );
-            add_action( 'wp_print_footer_scripts', array( $this->js, 'extract' ), 5 );
-        }
+	    if( get_option('am_compress_styles', 1) )
+		    add_action( 'wp_print_styles',  array( $this->css, 'extract' ) );
+	    if( get_option('am_compress_scripts', 1) ) {
+		    add_action( 'wp_print_scripts', array( $this->js, 'extract' ) );
+		    add_action( 'wp_print_footer_scripts', array( $this->js, 'extract' ), 98 );
+	    }
 
-        //Inclusion of scripts in <head> and before </body>
-        add_action( 'wp_head', array( $this, 'header' ) );
-        add_action( 'login_head', array( $this, 'header' ) );
-        add_action( 'wp_footer', array( $this, 'footer' ) );
-        add_action( 'login_footer', array( $this, 'footer' ), 21 );
-    }
+	    //Inclusion of scripts in <head> and before </body>
+	    add_action( 'wp_head', array( $this, 'header' ) );
+	    add_action( 'login_head', array( $this, 'header' ), 10 );
+	    add_action( 'wp_footer', array( $this, 'footer' ), 99 );
+	    add_action( 'login_footer', array( $this, 'footer' ), 99 );
 
     /**
      * Checks if a file is within the list of resources to exclude

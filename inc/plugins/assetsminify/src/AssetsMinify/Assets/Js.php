@@ -118,7 +118,8 @@ class Js extends Factory {
         //Prints <script> inclusion in the page
         $this->dumpScriptData( $where );
         $async = false;
-        if( $where != 'header' && get_option('am_async_flag', 1) )
+
+        if( ( $where == 'header' && get_option('am_async_flag_header', 1) ) || ( $where != 'header' && get_option('am_async_flag_footer', 1) ) )
             $async = true;
         $this->dump( "$where-$mtime.js", $async );
 

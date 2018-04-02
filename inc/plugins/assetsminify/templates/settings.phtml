@@ -2,6 +2,9 @@
 	<div class="icon32" id="icon-options-general"><br></div>
 	<h2>AssetsMinify's configuration</h2>
 	<p>&nbsp;</p>
+	<?php if($this->systemMessage){ ?>
+		<div style="display:block !important;" class="updated <?php echo $this->systemMessage[1]."-am"; ?>" id="message"><p><?php echo $this->systemMessage[0]; ?></p></div>
+	<?php } ?>
 	<form method="post" action="options.php">
 		<?php settings_fields('am_options_group'); ?>
 		<table class="form-table">
@@ -33,10 +36,35 @@
 				</tr>
 				<tr valign="top">
 					<th scope="row">
-						<label for="am_async_flag">Async attribute on footer's script tag</label>
+						<label for="am_async_flag_header">Async attribute on header's script tag</label>
 					</th>
 					<td>
-						<input name="am_async_flag" type="checkbox" id="am_async_flag" value="1" <?php checked(1, get_option('am_async_flag', 1)); ?>>
+						<input name="am_async_flag_header" type="checkbox" id="am_async_flag_header" value="1" <?php checked(1, get_option('am_async_flag_header', 1)); ?>>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="am_async_flag_footer">Async attribute on footer's script tag</label>
+					</th>
+					<td>
+						<input name="am_async_flag_footer" type="checkbox" id="am_async_flag_footer" value="1" <?php checked(1, get_option('am_async_flag_footer', 1)); ?>>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="am_leverage_browser_caching">Leverage browser caching</label>
+					</th>
+					<td>
+						<input name="am_leverage_browser_caching" type="checkbox" id="am_leverage_browser_caching" value="1" <?php checked(1, get_option('am_leverage_browser_caching', 1)); ?>>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<label for="am_enable_compression">Enable compression</label>
+					</th>
+					<td>
+						<input name="am_enable_compression" type="checkbox" id="am_enable_compression" value="1" <?php checked(1, get_option('am_enable_compression', 1)); ?>>
+						<span class="description">Compressing resources with gzip or deflate can reduce the number of bytes sent over the network.</span>
 					</td>
 				</tr>
 				<tr valign="top">

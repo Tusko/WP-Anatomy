@@ -2,6 +2,7 @@
 namespace AssetsMinify;
 
 use AssetsMinify\Cache;
+use AssetsMinify\Assets\Htaccess;
 
 /**
  * Admin's page manager.
@@ -19,7 +20,10 @@ class Admin {
         'am_compass_path',
         'am_sass_path',
         'am_coffeescript_path',
-        'am_async_flag',
+        'am_async_flag_header',
+        'am_async_flag_footer',
+        'am_leverage_browser_caching',
+        'am_enable_compression',
         'am_compress_styles',
         'am_compress_scripts',
         'am_files_to_exclude',
@@ -27,17 +31,23 @@ class Admin {
         'am_dev_mode',
     );
 
+    private $systemMessage = array();
+    public $htaccess;
+
     /**
      * Constructor
      */
     public function __construct() {
         // Cache manager
         $this->cache = new Cache;
+        $this->htaccess = new Htaccess;
 
         add_action('admin_init', array( $this, 'options') );
         add_action('admin_menu', array( $this, 'menu') );
+        add_action( 'update_option_am_leverage_browser_caching', array( $this, 'lbc') );
+        add_action( 'update_option_am_enable_compression', array( $this, 'lbc') );
 
-        if ( isset($_GET['empty_cache']) ) {
+        if ( isset($_GET['empty_cache']) && current_user_can( 'activate_plugins' ) ) {
             $uploadsDir = wp_upload_dir();
             $filesList = glob($uploadsDir['basedir'] . '/am_assets/' . "*.*");
             if ( $filesList !== false )
@@ -85,6 +95,23 @@ class Admin {
                     <p>', count($filesList), ' files was removed.</p><p>Reload your <a href="' . site_url('/') . '" target="">homepage</a> to refrefh cache.</p></div>';
             });
         }
+
+    }
+
+    // Leverage browser caching
+    public function lbc() {
+
+        $this->systemMessage = $this->htaccess->modifyHtaccess();
+
+        $message = __( $this->systemMessage[0], 'adsense-theme' );
+        $type = $this->systemMessage[1];
+        add_settings_error(
+            'lbc-notice',
+            esc_attr( 'settings_updated' ),
+            $message,
+            $type
+        );
+        // wp_die(print_r($this->systemMessage));
     }
 
     /**

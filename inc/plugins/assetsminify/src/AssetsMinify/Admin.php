@@ -111,7 +111,7 @@ class Admin {
             $message,
             $type
         );
-        // wp_die(print_r($this->systemMessage));
+
     }
 
     /**

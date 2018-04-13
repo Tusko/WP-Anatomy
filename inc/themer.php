@@ -125,13 +125,6 @@ function ob_html_compress($buf){
     return preg_replace(array('/<!--(?>(?!\[).)(.*)(?>(?!\]).)-->/Uis','/[[:blank:]]+/'),array('',' '),str_replace(array("\n","\r","\t"),'',$buf));
 }
 
-// HTML5 support for IE
-function wp_IEhtml5_js () {
-    global $is_IE;
-    if ($is_IE)
-        echo '<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><script src="//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]--><!--[if lte IE 9]><link href="'.theme().'/style/animations-ie-fix.css" rel="stylesheet" /><![endif]-->';
-}
-
 //custom wp_nav_menu classes
 function wpa_discard_menu_classes($classes, $item) {
     $classes = array_filter(
@@ -307,63 +300,75 @@ if(defined('WPCF7_VERSION')) {
     add_filter( 'wpcf7_form_elements', 'maybe_reset_autop' );
 }
 
+
 function denied_IE_2_10() {
-    global $is_IE;
-    if($is_IE && @preg_match('/msie ((?!(11))[0-9]{1,2})/i', $_SERVER['HTTP_USER_AGENT']) ) : ?>
-    <body id="is-ie-denied">
+	global $is_IE;
+
+	$browser = '';
+	$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+	if (preg_match('~(?:msie ?|trident.+?; ?rv: ?)(\d+)~', $ua, $matches)) $browser = $matches[1];
+    elseif (preg_match('~(safari|chrome|firefox)~', $ua, $matches)) $browser = $matches[1];
+
+	if($is_IE && $browser < 11 ) :
+
+		global $wp_fastest_cache;
+		$purgeCacheResponse = '';
+
+		// if W3 Total Cache is being used, clear the cache
+		if ( function_exists( 'w3tc_pgcache_flush' ) ) {
+			w3tc_pgcache_flush();
+			$purgeCacheResponse = 'W3 Total Cache removed';
+		}
+		// if WP Super Cache is being used, clear the cache
+		else if ( function_exists( 'wp_cache_clean_cache' ) ) {
+			global $file_prefix, $supercachedir;
+			if ( empty( $supercachedir ) && function_exists( 'get_supercache_dir' ) ) {
+				$supercachedir = get_supercache_dir();
+			}
+			wp_cache_clean_cache( $file_prefix );
+			$purgeCacheResponse = 'WP Super Cache removed';
+		}
+		else if ( class_exists( 'WpeCommon' ) ) {
+			//be extra careful, just in case 3rd party changes things on us
+			if ( method_exists( 'WpeCommon', 'purge_memcached' ) ) {
+				WpeCommon::purge_memcached();
+			}
+			if ( method_exists( 'WpeCommon', 'clear_maxcdn_cache' ) ) {
+				WpeCommon::clear_maxcdn_cache();
+			}
+			if ( method_exists( 'WpeCommon', 'purge_varnish_cache' ) ) {
+				WpeCommon::purge_varnish_cache();
+			}
+			$purgeCacheResponse = 'WP Engine Cache removed';
+		}
+		else if ( method_exists( 'WpFastestCache', 'deleteCache' ) && !empty( $wp_fastest_cache ) ) {
+			$wp_fastest_cache->deleteCache();
+			$purgeCacheResponse = 'WP Fastest Cache removed';
+		}
+		else if ( class_exists( 'Cache_Enabler' ) ) {
+			Cache_Enabler::clear_total_cache();
+			$purgeCacheResponse = 'Cache_Enabler removed';
+		}
+		?>
+        <body id="is-ie-denied" <?php body_class(); ?> data-hash="<?php wpa_fontbase64(true); ?>" data-a="<?php echo admin_url('admin-ajax.php'); ?>" >
+
+        <script>console.log('<?php echo $purgeCacheResponse; ?>');</script>
         <div id="is-ie2-10">
             <span>(✖__✖)</span>
             <h1>Sorry, this website is not compatible with <strong id="browserName">Internet Explorer 11 or less</strong>.</h1>
             <p>Please update your browser to newest version<br />
                 or use <a target="_blank" href="https://www.mozilla.org/firefox/new/?scene=2">Mozilla Firefox</a>,
-                       <a target="_blank" href="https://google.com/chrome">Chrome</a>,
-                       <a target="_blank" href="http://www.apple.com/safari">Safari</a> or
-                       <a target="_blank" href="http://www.opera.com">Opera 15+</a> instead.</p>
+                <a target="_blank" href="https://google.com/chrome">Chrome</a>,
+                <a target="_blank" href="http://www.apple.com/safari">Safari</a> or
+                <a target="_blank" href="http://www.opera.com">Opera 15+</a> instead.</p>
         </div>
-        <?php wp_footer(); ?>
-    </body>
-    </html>
-    <?php
-
-    global $wp_fastest_cache;
-    $purgeCacheResponse = '';
-
-    // if W3 Total Cache is being used, clear the cache
-    if ( function_exists( 'w3tc_pgcache_flush' ) ) {
-        w3tc_pgcache_flush();
-        $purgeCacheResponse = 'W3 Total Cache removed';
-    }
-    // if WP Super Cache is being used, clear the cache
-    else if ( function_exists( 'wp_cache_clean_cache' ) ) {
-        global $file_prefix, $supercachedir;
-        if ( empty( $supercachedir ) && function_exists( 'get_supercache_dir' ) ) {
-            $supercachedir = get_supercache_dir();
-        }
-        wp_cache_clean_cache( $file_prefix );
-        $purgeCacheResponse = 'WP Super Cache removed';
-    }
-    else if ( class_exists( 'WpeCommon' ) ) {
-        //be extra careful, just in case 3rd party changes things on us
-        if ( method_exists( 'WpeCommon', 'purge_memcached' ) ) {
-            WpeCommon::purge_memcached();
-        }
-        if ( method_exists( 'WpeCommon', 'clear_maxcdn_cache' ) ) {
-            WpeCommon::clear_maxcdn_cache();
-        }
-        if ( method_exists( 'WpeCommon', 'purge_varnish_cache' ) ) {
-            WpeCommon::purge_varnish_cache();
-        }
-        $purgeCacheResponse = 'WP Engine Cache removed';
-    }
-    else if ( method_exists( 'WpFastestCache', 'deleteCache' ) && !empty( $wp_fastest_cache ) ) {
-        $wp_fastest_cache->deleteCache();
-        $purgeCacheResponse = 'WP Fastest Cache removed';
-    }
-
-    exit();
-    endif;
+		<?php wp_footer(); ?>
+        </body>
+        </html>
+		<?php
+		exit();
+	endif;
 }
-
 
 //Hooks a single callback to multiple tags
 function add_filters($tags, $function, $priority = 10, $accepted_args = 1) {
@@ -487,8 +492,6 @@ function wpa_init() {
 
     //defer JS
     add_filter( 'clean_url', 'wpa_defer_scripts', 11, 1 );
-
-    add_action('wp_head', 'wp_IEhtml5_js');
 
     add_filter( 'body_class', 'wpa_body_classes' );
 

@@ -5,6 +5,7 @@ $font: 'Museo Sans Cyrl', $systemUI;
 $container: 1080px;
 $font-base: 50px;
 $default: #333;
+$white: #fff;
 
 /// Strips the unit from a number.
 @function strip-units($value) {

@@ -18,8 +18,13 @@ add_action( 'tgmpa_register', 'wpa_register_recommended_plugins', 10 );
 function wpa_register_recommended_plugins() {
     $plugins = array(
         array(
-            'name'      => 'Contact Form 7',
-            'slug'      => 'contact-form-7',
+            'name'      => 'Cache Enabler – WordPress Cache',
+            'slug'      => 'cache-enabler',
+            'required'  => false,
+        ),
+        array(
+            'name'      => 'Optimus – WordPress Image Optimizer',
+            'slug'      => 'optimus',
             'required'  => false,
         ),
         array(
@@ -57,6 +62,19 @@ function wpa_register_recommended_plugins() {
             'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
             'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
             'external_url'       => 'http://www.advancedcustomfields.com/pro/', // If set, overrides default API URL and points to an external URL.
+        ),
+        array(
+            'name'               => 'Gravity Forms',
+            'slug'               => 'gravity-forms',
+            'source'             => get_stylesheet_directory() . '/inc/plugins/gravityforms.zip',
+            'required'           => false,
+            'external_url'       => 'https://gravityforms.com', // If set, overrides default API URL and points to an external URL.
+        ),
+        array(
+            'name'               => 'GravityWP – CSS Selector',
+            'slug'               => 'gravitywp-css-selector',
+            'required'           => false,
+            'is_callable'        => 'gf_upgrade'
         )
     );
     $config = array(

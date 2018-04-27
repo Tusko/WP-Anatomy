@@ -67,34 +67,6 @@ function register_cpts() {
         'query_var'             => true,
         'menu_icon'             => 'dashicons-admin-page',
     ));
-    register_post_type( 'dev',
-        array(
-            'labels' => array(
-            'name' => 'dev',
-            'singular_name' => 'dev',
-            'add_new' => 'Add New',
-            'add_new_item' => 'Add New',
-            'edit_item' => 'Edit',
-            'new_item' => 'New',
-            'all_items' => 'All',
-            'view_item' => 'View',
-            'search_items' => 'Search',
-            'not_found' =>  'Not found',
-            'not_found_in_trash' => 'No found in Trash',
-            'parent_item_colon' => '',
-            'menu_name' => 'dev'
-        ),
-        'public'                => true,
-        'show_ui'               => true,
-        'show_in_menu'          => true,
-        'supports'              => array( 'title', 'editor', 'thumbnail' ),
-        'has_archive'           => true,
-        'hierarchical'          => true,
-        'show_in_nav_menus'     => true,
-        'capability_type'       => 'page',
-        'query_var'             => true,
-        'menu_icon'             => 'dashicons-admin-page',
-    ));
 
     if( defined('WP_DEBUG') && true !== WP_DEBUG) {
         flush_rewrite_rules();

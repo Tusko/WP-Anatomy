@@ -13,4 +13,15 @@ if(class_exists('Woocommerce')) :
     require_once('woocommerce.php');
 endif;
 
+if(class_exists('GFForms')) {
+	define('GF_LICENSE_KEY','94845faee900af43387fce4f9f1ce525');
+}
+
+if(class_exists('Optimus_HQ')) {
+	$optimus_HQ_key = get_site_option( 'optimus_key' );
+	if(!$optimus_HQ_key) {
+		update_site_option('optimus_key', '1CD4IJ468PD7KI0RBJPKI7P0');
+	}
+}
+
 /* END: Theme config params */

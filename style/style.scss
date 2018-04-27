@@ -105,59 +105,75 @@ hr {
 }
 
 form {
+    label {
+        text-transform: uppercase;
+        font-family: $font;
+        color: $default;
+    }
+    li.gfield {
+        padding-left: 0 !important;
+        &.gfield_error {
+            padding-bottom: 0 !important;
+            background: none !important;
+            padding-top: 0 !important;
+            border: 0 !important;
+        }
+    }
     input[type="text"],
     input[type="number"],
     input[type="email"],
     input[type="tel"],
     input[type="password"],
     textarea {
+        padding: 0 14px !important;
         @include border-radius(0);
-        font: 400 14px $font;
+        border: 1px solid #bfbfbf;
+        font: 400 20px $font;
         margin: 0 auto 20px;
         background:  none;
-        padding: 0 10px;
         display: block;
-        height: 32px;
+        height: 48px;
         width: 100%;
-        border: 0;
-        border-bottom: 1px solid #b7b7b7;
         &:focus {
-            border-bottom-color: green
+            @include box-shadow(0 3px 18px 0 rgba(10, 10, 10, 0.14));
         }
     }
     textarea {
+        padding-top: 0.75em !important;
         @include transition(none);
-        padding-top: 0.1em;
-        line-height: 32px;
+        line-height: 24px;
+        min-height: 240px;
         overflow: hidden;
-        min-height: 32px;
         resize: none;
     }
 }
 
-
 .button,
 input[type="submit"] {
-    @include transition(all .2s ease-in-out);
-    @include border-radius(20px);
     @include user-select(none);
+    font: 400 18px/36px $font;
     text-transform: uppercase;
+    @include border-radius(0);
     text-decoration: none;
-    margin: 5px 5px 5px 0;
     display: inline-block;
-    background: #FF6666;
-    padding: 7px 20px;
-    line-height: 1.5;
-    font-weight: 700;
+    position: relative;
+    background: none;
     cursor: pointer;
-    font-size: 80%;
+    color: $default;
     outline: none;
-    color: #fff;
+    padding: 0;
+    margin: 0;
     border: 0;
-}
-
-.badge-icon {
-    width: 40px;
+    &:hover {
+        @include box-shadow(0 2px 0 $default);
+        color: $default
+    }
+    &.white {
+        color: $white;
+        &:hover {
+            @include box-shadow(0 2px 0 $white)
+        }
+    }
 }
 
 .wpcf7 {
@@ -176,20 +192,20 @@ input[type="submit"] {
         @include position(absolute, 100%, 0, auto, 0);
         font: 400 12px $font;
         text-align: center;
-        background: #fff;
+        background: $white;
         display: none;
         padding: 2%;
         &.wpcf7-validation-errors {
             background:#FF5F5F;
-            color:#fff
+            color:$white
         }
         &.wpcf7-mail-sent-ng {
             background:#1091ae;
-            color:#fff
+            color:$white
         }
         &.wpcf7-mail-sent-ok {
             background:#16A085;
-            color:#fff
+            color:$white
         }
     }
     .wpcf7-form-control-wrap {
@@ -259,7 +275,7 @@ header {
                         left: 50%;
                         li {
                             & + li {
-                                border-top: 1px solid rgba(#fff, .1);
+                                border-top: 1px solid rgba($white, .1);
                             }
                             a {
                                 text-decoration: none;
@@ -269,7 +285,7 @@ header {
                                 display: block;
                                 &:hover {
                                     background: $default;
-                                    color: #fff
+                                    color: $white
                                 }
                             }
                         }
@@ -334,7 +350,7 @@ header {
             padding: 0 30px 0 10px;
             border: 1px solid #ccc;
             font: 300 14px $font;
-            background: #fff;
+            background: $white;
             display: block;
             width: 100%;
             height: 32px;
@@ -351,7 +367,7 @@ header {
             max-width: none;
             min-width: 1px;
             position: absolute;
-            background: #fff;
+            background: $white;
             cursor: pointer;
             height: 30px;
             width: 30px;
@@ -394,7 +410,7 @@ header {
         img {
             @include border-radius(5px);
             position: absolute;
-            background: #fff;
+            background: $white;
             display: none;
             padding: 7px;
             z-index: 99;
@@ -409,7 +425,7 @@ header {
             text-transform: uppercase;
             text-align: center;
             position: absolute;
-            background: #fff;
+            background: $white;
             cursor: pointer;
             display: none;
             height: 30px;
@@ -434,7 +450,7 @@ header {
         .showsearch {
             padding: 7px 0 0;
             margin: -7px 0 0;
-            background: #fff;
+            background: $white;
             &:empty {display: none}
         }
         mark {
@@ -475,7 +491,7 @@ footer {
     overflow: hidden;
     padding: 50px 0;
     font-size: 15px;
-    color:#fff;
+    color:$white;
     .copyright {
         @extend %flex;
         p {
@@ -508,13 +524,13 @@ footer {
         @extend .ani;
         text-align: center;
         background: none;
-        color: #fff;
+        color: $white;
         height: 40px;
         width: 40px;
         &::before {
             @include transform(rotate(45deg));
-            border-right: 0.05em solid #fff;
-            border-top: 0.05em solid #fff;
+            border-right: 0.05em solid $white;
+            border-top: 0.05em solid $white;
             display: inline-block;
             position: relative;
             height: 1.5em;

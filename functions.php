@@ -7,7 +7,7 @@ require_once('inc/defines.php');
 require_once('inc/themer.php');
 
 // uncomment if need CPT
-require_once('inc/custom-cpt.php');
+//require_once('inc/custom-cpt.php');
 
 // register menus
 register_nav_menus(array(

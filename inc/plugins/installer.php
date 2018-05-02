@@ -65,7 +65,7 @@ function wpa_register_recommended_plugins() {
         ),
         array(
             'name'               => 'Gravity Forms',
-            'slug'               => 'gravity-forms',
+            'slug'               => 'gravityforms',
             'source'             => get_stylesheet_directory() . '/inc/plugins/gravityforms.zip',
             'required'           => false,
             'external_url'       => 'https://gravityforms.com', // If set, overrides default API URL and points to an external URL.

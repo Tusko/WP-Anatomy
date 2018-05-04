@@ -122,25 +122,32 @@ $(document).ready(function(){
 $(window).on('defer.cssLoad', function(){
     'use strict';
 
+
     //  WP Gallery extension
     window.WPASwiper = [];
     $('.wpa_slideshow').each(function(i){
-        var t = this;
+        var t = this,
+            checklength = ($('.swiper-slide', t).length > 1),
+            isPagin = false;
+        if(checklength) {
+            isPagin = {
+                el              : $('.swiper-pagination', t)[0],
+                type            : 'bullets',
+                clickable       : true
+            };
+        }
         setTimeout(function(){
             window.WPASwiper[i] = new Swiper( t, {
                 navigation: {
                     nextEl          : $('.swiper-button-next', t)[0],
                     prevEl          : $('.swiper-button-prev', t)[0]
                 },
-                pagination: {
-                    el              : $('.swiper-pagination', t)[0],
-                    clickable       : true,
-                    type            : 'bullets'
-                },
+                simulateTouch               : isPagin,
+                pagination                  : isPagin,
                 roundLengths                : true,
                 observer                    : true,
                 observeParents              : true,
-                grabCursor                  : true,
+                grabCursor                  : checklength,
                 autoHeight                  : true,
                 speed                       : 500,
                 preloadImages               : false,

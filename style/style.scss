@@ -146,6 +146,43 @@ form {
         overflow: hidden;
         resize: none;
     }
+    .ginput_container_radio,
+    .ginput_container_checkbox {
+        ul {
+            li {
+                margin-bottom: 16px !important;
+                label {
+                    position: relative;
+                    padding-left: 30px;
+                    cursor: pointer;
+                    font-size: 18px;
+                    &:before {
+                        border: 1px solid $default;
+                        position: absolute;
+                        @extend .ani;
+                        height: 20px;
+                        width: 20px;
+                        content: '';
+                        top: 3px;
+                        left: 0;
+                    }
+                }
+                input {
+                    display: none;
+                    &:checked + label {
+                        &:before {
+                            background: $default;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .ginput_container_radio {
+        ul li label:before {
+            @include border-radius(50%);
+        }
+    }
 }
 
 .button,

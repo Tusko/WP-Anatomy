@@ -113,7 +113,7 @@ $(document).ready(function(){
         $(window).triggerHandler('resize');
     });
 
-    $.when( cssDeffered() ).done(function(){
+    cssDeffered().then(function(){
         $(window).triggerHandler('defer.cssLoad');
     });
 
@@ -121,7 +121,6 @@ $(document).ready(function(){
 
 $(window).on('defer.cssLoad', function(){
     'use strict';
-
 
     //  WP Gallery extension
     window.WPASwiper = [];

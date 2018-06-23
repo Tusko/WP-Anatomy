@@ -119,14 +119,14 @@ if(defined('GOOGLEMAPS')) {
     }
 } //end GOOGLEMAPS
 
-function content_btn($atts,$content){
-    extract(shortcode_atts(array(
-        'text' => 'Learn More',
-        'link' => site_url(),
-        'class' => false,
-        'target' => false
-    ), $atts ));
-    return '<a href="' . $link . '" class="button'.($class?' '.$class:'').'" '.($target?'target="'.$target.'"':'').'>' . $text . '</a>';
+function content_btn($atts, $content){
+	$attrbts = '';
+	foreach ( $atts as $k => $v ) {
+		if($k !== 'class') {
+			$attrbts .= ' ' . $k . '="' . $v .'"';
+		}
+	}
+	return '<a class="button ' . $atts['class'] . '"'.$attrbts.'>' . $content . '</a>';
 }
 add_shortcode("button", "content_btn");
 

@@ -126,7 +126,7 @@ function content_btn($atts, $content){
 			$attrbts .= ' ' . $k . '="' . $v .'"';
 		}
 	}
-	return '<a class="button ' . $atts['class'] . '"'.$attrbts.'>' . $content . '</a>';
+	return '<a class="button ' . (isset($atts['class'])?$atts['class']:'') . '"'.$attrbts.'>' . $content . '</a>';
 }
 add_shortcode("button", "content_btn");
 

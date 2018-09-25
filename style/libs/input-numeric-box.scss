@@ -27,7 +27,7 @@
             -webkit-appearance: none;
         }
         &[min="0"][max="1"] {
-            & + i.input-number-more {
+            & ~ i {
                 display: none;
             }
         }

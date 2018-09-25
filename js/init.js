@@ -7,13 +7,7 @@ $(document).ready(function(){
 
     $( 'textarea' ).keyup();
 
-//  contact form 7
-    $(this).on('click', '.wpcf7-not-valid-tip', function(){
-        $(this).prev().trigger('focus');
-        $(this).fadeOut(500,function(){
-            $(this).remove();
-        });
-    })
+    $(this)
 
 // auto adjust the height of
     .on( 'keyup', 'textarea', function (){
@@ -27,6 +21,10 @@ $(document).ready(function(){
             input = t.siblings('input'),
             val = Number(input.val());
         if(t.hasClass('input-number-more')) {
+            if(typeof input.attr('max') !== 'undefined' && input.attr('max').length > 0 && val >= input.attr('max')) {
+                input.val(input.attr('max'));
+                return;
+            }
             parseInt(input.val(val + 1), 1);
         } else if(t.hasClass('input-number-less') && val.length !== '' && val > 1) {
             parseInt(input.val(val - 1), 1);
@@ -39,6 +37,40 @@ $(document).ready(function(){
     .on('click', '.search_box i', function(){
         $(this).fadeOut(250).prev().fadeOut(250).parent().next().find('>div').html('');
         $(this).next().val('');
+    })
+
+    .ajaxComplete(function(){
+        //Custom select rebuild
+        $('.selectric-wrapper').each(function () {
+            var t = $(this),
+                s = $('select', t),
+                Selectric = s.data('selectric');
+            if($('input.input-text', t).length > 0) {
+                $('input.input-text', t).clone().appendTo('#billing_state_field');
+                t.remove();
+            }
+            if(typeof Selectric !== 'undefined') {
+                Selectric.refresh();
+            }
+        });
+        $('select').each(function(){
+            var e = $(this);
+            if(e.data('selectric') !== 'undefined') {
+                e.selectric({
+                    arrowButtonMarkup: '<i class="arrow_carrot-down"></i>',
+                    maxHeight: (mob()?200:350),
+                    disableOnMobile: false,
+                    nativeOnMobile: false
+                });
+            }
+        });
+
+        is_numeric_input();
+        loadlater();
+    })
+
+    .on("pageshow visibilitychange",function(){
+        $(window).triggerHandler('resize');
     });
 
 //  hamburger menu
@@ -48,7 +80,6 @@ $(document).ready(function(){
     });
 
 //  WP AJAX Search
-
     $('.searchform form[role="search"]').submit(function(){return false;});
 
     $('.search_box input[type="text"]').donetyping(function(){
@@ -80,20 +111,10 @@ $(document).ready(function(){
 
     //Custom select
     $('select').selectric({
+        arrowButtonMarkup: '<i class="arrow_carrot-down"></i>',
         maxHeight: (mob()?200:350),
         disableOnMobile: false,
         nativeOnMobile: false
-    });
-
-    $(document).ajaxComplete(function(){
-        //Custom select
-        $('select').selectric({
-            maxHeight: (mob()?200:350),
-            disableOnMobile: false,
-            nativeOnMobile: false
-        });
-        is_numeric_input();
-        loadlater();
     });
 
     //  fluid video (iframe)
@@ -109,12 +130,10 @@ $(document).ready(function(){
         $('.mejs-video .mejs-inner', this).addClass('fullframe');
     });
 
-    $(this).on("pageshow visibilitychange",function(){
-        $(window).triggerHandler('resize');
-    });
-
     cssDeffered().then(function(){
-        $(window).triggerHandler('defer.cssLoad');
+        setTimeout(function(){
+            $(window).triggerHandler('defer.cssLoad');
+        }, 500);
     });
 
 });

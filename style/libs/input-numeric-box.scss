@@ -26,6 +26,11 @@
         &::-webkit-inner-spin-button {
             -webkit-appearance: none;
         }
+        &[min="0"][max="1"] {
+            & + i.input-number-more {
+                display: none;
+            }
+        }
     }
     > i {
         position: absolute;

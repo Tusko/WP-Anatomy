@@ -133,7 +133,8 @@ $(document).ready(function(){
     cssDeffered().then(function(){
         setTimeout(function(){
             $(window).triggerHandler('defer.cssLoad');
-        }, 500);
+            $('body').fadeTo(350, 1);
+        }, 350);
     });
 
 });

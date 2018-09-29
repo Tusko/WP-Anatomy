@@ -6,10 +6,6 @@ function tt_add_jscss() {
         wp_deregister_script( 'jquery' );
     }
 
-    if(defined('WPCF7_VERSION')) {
-        wp_deregister_style( 'contact-form-7' );
-    }
-
     if(defined('QTX_VERSION')) {
         wp_deregister_style('qtranslate-style');
     }

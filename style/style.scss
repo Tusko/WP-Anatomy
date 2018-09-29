@@ -1,7 +1,6 @@
 @import 'components/_mixins',
         'components/reset',
-        'components/hamburger',
-        'components/ie';
+        'components/hamburger';
 
 %flex {
     @include flexbox();
@@ -82,16 +81,6 @@ hr {
     clear: both
 }
 
-.h100 {
-    min-height: 100vh;
-}
-
-.cover {
-    @include background-size(cover);
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-}
-
 .row {
     position: relative;
     width: $container;
@@ -106,9 +95,12 @@ hr {
 
 form {
     label {
-        text-transform: uppercase;
         font-family: $font;
         color: $default;
+        font-size: 18px;
+        span.gfield_required {
+            color: red
+        }
     }
     li.gfield {
         padding-left: 0 !important;
@@ -127,15 +119,20 @@ form {
     textarea {
         padding: 0 14px !important;
         @include border-radius(0);
-        border: 1px solid #bfbfbf;
-        font: 400 20px $font;
-        margin: 0 auto 20px;
-        background:  none;
+        border: 1px solid #bbb;
+        font: 400 22px $font;
+        margin: 0 auto 40px;
+        background: none;
+        color: $default;
         display: block;
-        height: 48px;
+        height: 50px;
         width: 100%;
+        @include placeholder {
+            color: #2c3e50
+        }
         &:focus {
-            @include box-shadow(0 3px 18px 0 rgba(10, 10, 10, 0.14));
+            @include box-shadow(0 2px 16px 0 rgba(#1abc9c, 0.15));
+            border-color: #3498db;
         }
     }
     textarea {
@@ -146,14 +143,17 @@ form {
         overflow: hidden;
         resize: none;
     }
+    input.datepicker {
+        width: 100% !important
+    }
     .ginput_container_radio,
     .ginput_container_checkbox {
         ul {
             li {
                 margin-bottom: 16px !important;
                 label {
+                    padding-left: 30px !important;
                     position: relative;
-                    padding-left: 30px;
                     cursor: pointer;
                     font-size: 18px;
                     &:before {
@@ -168,10 +168,11 @@ form {
                     }
                 }
                 input {
-                    display: none;
+                    display: none !important;
                     &:checked + label {
                         &:before {
-                            background: $default;
+                            border-color: green;
+                            background: green;
                         }
                     }
                 }
@@ -213,71 +214,9 @@ input[type="submit"] {
     }
 }
 
-.wpcf7 {
-    position: relative;
-    .screen-reader-response {display: none !important}
-    .wpcf7-not-valid-tip {
-        @include position(absolute, 0, 0, 0, 0);
-        @extend %justifycontentcenter;
-        @extend %alignitemscenter;
-        font: 400 12px $font;
-        @extend %inlineflex;
-        background: #eee;
-        color: #ff5f5f !important
-    }
-    .wpcf7-response-output {
-        @include position(absolute, 100%, 0, auto, 0);
-        font: 400 12px $font;
-        text-align: center;
-        background: $white;
-        display: none;
-        padding: 2%;
-        &.wpcf7-validation-errors {
-            background:#FF5F5F;
-            color:$white
-        }
-        &.wpcf7-mail-sent-ng {
-            background:#1091ae;
-            color:$white
-        }
-        &.wpcf7-mail-sent-ok {
-            background:#16A085;
-            color:$white
-        }
-    }
-    .wpcf7-form-control-wrap {
-        display: block !important;
-        position: relative
-    }
-    .ajax-loader {
-        @extend .ani;
-        @include prefixer(animation, swiper-preloader-spin 1s infinite linear);
-        @include border-radius(100%);
-        border: 2px solid #f3f3f3;
-        border-top:3px solid #ede502;
-        margin: 0 -48px 0 24px;
-        vertical-align: middle;
-        display: inline-block;
-        visibility: hidden;
-        height: 24px;
-        width: 24px;
-        opacity: 0;
-        &.is-active {
-            visibility: visible;
-            opacity: 1
-        }
-    }
-}
-
-
 header {
     .nav-icon {
-        @include transform(translateY(-50%));
-        position: absolute;
         display: none;
-        right: 20px;
-        z-index: 10;
-        top: 50%
     }
     nav {
         #menu-primary {
@@ -302,8 +241,8 @@ header {
                     }
                     > ul {
                         @include transform(translateX(-50%) scale(.85));
-                        background: $default;
                         white-space: nowrap;
+                        background: $white;
                         position: absolute;
                         visibility: hidden;
                         @extend .ani;
@@ -345,9 +284,7 @@ header {
 }
 
 .content {
-    @extend %flex;
     article {
-        padding: 0 40px 40px 0;
         @extend %flex1;
         img {
             margin-bottom: .75em;
@@ -367,11 +304,6 @@ header {
                 height: auto!important;
             }
         }
-    }
-    aside {
-        @include flex-basis(35%);
-        word-wrap: break-word;
-        padding: 20px
     }
 }
 
@@ -530,9 +462,9 @@ footer {
     font-size: 15px;
     color:$white;
     .copyright {
+        @extend %justifycontentspaceb;
         @extend %flex;
         p {
-            @extend %flex1;
             margin: 0;
             &.dev {
                 @extend %alignitemscenter;

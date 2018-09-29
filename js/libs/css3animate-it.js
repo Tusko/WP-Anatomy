@@ -113,6 +113,6 @@ function (a) {
     } else c.addClass("go")
 }), $(document.body).on("disappear", ".animatedParent", function (a, b) {
     $(this).hasClass("animateOnce") || $(this).find(".animated").removeClass("go")
-}), $(window).on("load", function () {
+}), $(window).on("defer.cssLoad", function () {
     $.force_appear()
 });

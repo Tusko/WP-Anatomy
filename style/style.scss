@@ -3,16 +3,16 @@
         'components/hamburger';
 
 %flex {
-    @include flexbox();
+    @include flexbox()
 }
 %inlineflex {
-    @include inline-flex();
+    @include inline-flex()
 }
 %flex1 {
     @include flex(1)
 }
 %flexwrapwrap {
-    @include flex-wrap(wrap);
+    @include flex-wrap(wrap)
 }
 %flexdirectioncolumn {
     @include flex-direction(column);
@@ -132,7 +132,7 @@ form {
         }
         &:focus {
             @include box-shadow(0 2px 16px 0 rgba(#1abc9c, 0.15));
-            border-color: #3498db;
+            border-color: #3498db
         }
     }
     textarea {

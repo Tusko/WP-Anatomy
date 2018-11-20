@@ -24,4 +24,11 @@ if(class_exists('Optimus_HQ')) {
 	}
 }
 
+if(class_exists('Tribe__Events__Pro__Main')) {
+	$eventsCalendarPro = get_site_option( 'pue_install_key_events_calendar_pro' );
+	if(!$eventsCalendarPro) {
+		update_site_option('pue_install_key_events_calendar_pro', '2b8e0de6f9b94c3e1a067759a36aeb45b9ffc95f');
+	}
+}
+
 /* END: Theme config params */

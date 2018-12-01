@@ -2,12 +2,12 @@
 /*
 Plugin Name: Resize Image After Upload
 Plugin URI: https://wordpress.org/plugins/resize-image-after-upload/
-Description: Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs. Configuration options found under <a href="options-general.php?page=resize-after-upload">Settings > Resize Image Upload</a>
-Author: iamphilrae
-Version: 1.7.2
-Author URI: http://www.philr.ae/
+Description: Automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs. Configuration options found under <a href="options-general.php?page=resize-after-upload">Settings > Resize Image Upload</a>
+Author: ShortPixel
+Version: 1.8.5
+Author URI: https://shortpixel.com
 
-Copyright (C) 2015 iamphilrae
+Copyright (C) 2017 ShortPixel
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -24,22 +24,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.7.2';
+$PLUGIN_VERSION = '1.8.5';
 $DEBUG_LOGGER = false;
 
 
 // Default plugin values
 if(get_option('jr_resizeupload_version') != $PLUGIN_VERSION) {
-    add_option('jr_resizeupload_version', 			$PLUGIN_VERSION, '','yes');
-    add_option('jr_resizeupload_width', 				'1920', '', 'yes');
-    add_option('jr_resizeupload_height',				'1920', '', 'yes');
-    add_option('jr_resizeupload_quality',				'85', '', 'yes');
-    add_option('jr_resizeupload_resize_yesno', 		'yes', '','yes');
-    add_option('jr_resizeupload_recompress_yesno', 	'yes', '','yes');
-    add_option('jr_resizeupload_convertbmp_yesno', 	'no', '', 'yes');
-    add_option('jr_resizeupload_convertpng_yesno', 	'no', '', 'yes');
-    add_option('jr_resizeupload_convertgif_yesno', 	'no', '', 'yes');
+
+	add_option('jr_resizeupload_version', 			$PLUGIN_VERSION, '','yes');
+	add_option('jr_resizeupload_width', 				'1920', '', 'yes');
+	add_option('jr_resizeupload_height',				'1920', '', 'yes');
+	add_option('jr_resizeupload_quality',				'90', '', 'yes');
+	add_option('jr_resizeupload_resize_yesno', 		'yes', '','yes');
+	add_option('jr_resizeupload_recompress_yesno', 	'no', '','yes');
+	add_option('jr_resizeupload_convertbmp_yesno', 	'no', '', 'yes');
+	add_option('jr_resizeupload_convertpng_yesno', 	'yes', '', 'yes');
+	add_option('jr_resizeupload_convertgif_yesno', 	'no', '', 'yes');
 }
+
+
 
 // Hook in the options page
 add_action('admin_menu', 'jr_uploadresize_options_page');
@@ -47,317 +50,536 @@ add_action('admin_menu', 'jr_uploadresize_options_page');
 // Hook the function to the upload handler
 add_action('wp_handle_upload', 'jr_uploadresize_resize');
 
+add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'jr_generate_plugin_links');//for plugin settings page
+
+//add_action('admin_notices', 'jr_display_notices');
+//add_action('wp_ajax_jr_dismiss_notices', 'jr_dismiss_notices');
+
 /**
-* Add the options page
-*/
-function jr_uploadresize_options_page(){
-    if(function_exists('add_media_page')){
-        add_media_page(
-            'Resize Image After Upload',
-            'Max Dimensions/Compress',
-            'manage_options',
-            'resize-after-upload',
-            'jr_uploadresize_options'
-        );
-    }
+ * Add ths link to Settings in Plugins Page
+ */
+function jr_generate_plugin_links($links) {
+	$settings_link = '<a href="options-general.php?page=resize-after-upload">Settings</a>';
+	array_unshift( $links, $settings_link );
+	return $links;
 }
 
-/**
-* Define the Options page for the plugin
-*/
-function jr_uploadresize_options(){
-    if(isset($_POST['jr_options_update'])) {
-        $resizing_enabled = trim(esc_sql($_POST['yesno']));
-        $force_jpeg_recompression   = trim(esc_sql($_POST['recompress_yesno']));
-        $max_width   = trim(esc_sql($_POST['maxwidth']));
-        $max_height  = trim(esc_sql($_POST['maxheight']));
-        $compression_level    = trim(esc_sql($_POST['quality']));
-        $convert_png_to_jpg = trim(esc_sql(isset($_POST['convertpng']) ? $_POST['convertpng'] : 'no'));
-        $convert_gif_to_jpg = trim(esc_sql(isset($_POST['convertgif']) ? $_POST['convertgif'] : 'no'));
-        $convert_bmp_to_jpg = trim(esc_sql(isset($_POST['convertbmp']) ? $_POST['convertbmp'] : 'no'));
-        $max_width = ($max_width == '') ? 0 : $max_width;
-        $max_width = (ctype_digit(strval($max_width)) == false) ? get_option('jr_resizeupload_width') : $max_width;
-        update_option('jr_resizeupload_width',$max_width);
-        $max_height = ($max_height == '') ? 0 : $max_height;
-        $max_height = (ctype_digit(strval($max_height)) == false) ? get_option('jr_resizeupload_height') : $max_height;
-        update_option('jr_resizeupload_height',$max_height);
-        $compression_level = ($compression_level == '') ? 1 : $compression_level;
-        $compression_level = (ctype_digit(strval($compression_level)) == false) ? get_option('jr_resizeupload_quality') : $compression_level;
-        if($compression_level < 1) {
-            $compression_level = 1;
-        } else if($compression_level > 100) {
-            $compression_level = 100;
-        }
-        update_option('jr_resizeupload_quality',$compression_level);
-        if ($resizing_enabled == 'yes') {
-            update_option('jr_resizeupload_resize_yesno','yes'); }
-        else {
-            update_option('jr_resizeupload_resize_yesno','no'); }
-        if ($force_jpeg_recompression == 'yes') {
-            update_option('jr_resizeupload_recompress_yesno','yes'); }
-        else {
-            update_option('jr_resizeupload_recompress_yesno','no'); }
-        if ($convert_png_to_jpg == 'yes') {
-            update_option('jr_resizeupload_convertpng_yesno','yes'); }
-        else {
-            update_option('jr_resizeupload_convertpng_yesno','no'); }
-        if ($convert_gif_to_jpg == 'yes') {
-            update_option('jr_resizeupload_convertgif_yesno','yes'); }
-        else {
-            update_option('jr_resizeupload_convertgif_yesno','no'); }
-        if ($convert_bmp_to_jpg == 'yes') {
-            update_option('jr_resizeupload_convertbmp_yesno','yes'); }
-        else {
-            update_option('jr_resizeupload_convertbmp_yesno','no'); }
-        echo('<div id="message" class="updated fade"><p><strong>Options have been updated.</strong></p></div>');
-    } // if
-
-    // get options and show settings form
-    $resizing_enabled = get_option('jr_resizeupload_resize_yesno');
-    $force_jpeg_recompression = get_option('jr_resizeupload_recompress_yesno');
-    $compression_level  = intval(get_option('jr_resizeupload_quality'));
-
-    $max_width     = get_option('jr_resizeupload_width');
-    $max_height    = get_option('jr_resizeupload_height');
-
-    $convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
-    $convert_gif_to_jpg = get_option('jr_resizeupload_convertgif_yesno');
-    $convert_bmp_to_jpg = get_option('jr_resizeupload_convertbmp_yesno');
-?>
-<style type="text/css">
-    .resizeimage-button {
-        color: #FFF;
-        background: none repeat scroll 0% 0% #FC9A24;
-        border-radius: 3px;
-        display: inline-block;
-        border-bottom: 4px solid #EC8A14;
-        margin-right:5px;
-        line-height:1.05em;
-        text-align: center;
-        text-decoration: none;
-        padding: 9px 20px 8px;
-        font-size: 15px;
-        font-weight: bold;
-        text-shadow: 0 -1px 1px rgba(0,0,0,0.2);
-    }
-    .resizeimage-button:active,
-    .resizeimage-button:hover,
-    .resizeimage-button:focus {
-        background-color: #EC8A14;
-        color: #FFF;
-    }
-    .media-upload-form div.error, .wrap div.error, .wrap div.updated {
-        margin: 25px 0px 25px;
-    }
-</style>
-<div class="wrap">
-    <form method="post" accept-charset="utf-8">
-        <h2>Resize Image After Upload</h2>
-        <div style="max-width:700px">
-            <p>This plugin automatically resizes uploaded images (JPEG, GIF, and PNG) to within a given maximum width and/or height to reduce server space usage. This may be necessary due to the fact that images from digital cameras and smartphones can now be over 10MB each due to higher megapixel counts.</p>
-            <p>In addition, the plugin can force re-compression of uploaded JPEG images, regardless of whether they are resized or not; and convert uploaded GIF and PNG images into JPEG format.</p>
-            <p><strong>Note:</strong> the resizing/recompression process will discard the original uploaded file including EXIF data.</p>
-            <p>This plugin is not intended to replace the WordPress <em>add_image_size()</em> function, but rather complement it. Use this plugin to ensure that no excessively large images are stored on your server, then use <em>add_image_size()</em> to create versions of the images suitable for positioning in your website theme.</p>
-            <p>This plugin uses standard PHP image resizing functions and will require a high amount of memory (RAM) to be allocated to PHP in your php.ini file (e.g 512MB).</p>
-        </div>
-        <hr style="margin-top:1px; margin-bottom:40px;">
-        <h3>Re-sizing options</h3>
-        <table class="form-table">
-            <tr>
-                <th scope="row">Enable re-sizing</th>
-                <td valign="top">
-                    <select name="yesno" id="yesno">
-                        <option value="no" label="no" <?php echo ($resizing_enabled == 'no') ? 'selected="selected"' : ''; ?>>NO - do not resize images</option>
-                        <option value="yes" label="yes" <?php echo ($resizing_enabled == 'yes') ? 'selected="selected"' : ''; ?>>YES - resize large images</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Max image dimensions</th>
-                <td>
-                    <fieldset><legend class="screen-reader-text"><span>Maximum width and height</span></legend>
-                        <label for="maxwidth">Max width</label>
-                        <input name="maxwidth" step="1" min="0" id="maxwidth" class="small-text" type="number" value="<?php echo $max_width; ?>">
-                        &nbsp;&nbsp;&nbsp;<label for="maxheight">Max height</label>
-                        <input name="maxheight" step="1" min="0" id="maxheight" class="small-text" type="number" value="<?php echo $max_height; ?>">
-                        <p class="description">Set to zero or very high value to prevent resizing in that dimension.
-                            <br />Recommended values: <code>1200</code></p>
-                    </fieldset>
-                </td>
-            </tr>
-        </table>
-        <hr style="margin-top:20px; margin-bottom:30px;">
-        <h3>Compression options</h3>
-        <p style="max-width:700px">The following settings will only apply to uploaded JPEG images and images converted to JPEG format.</p>
-        <table class="form-table">
-            <tr>
-                <th scope="row">JPEG compression level</th>
-                <td valign="top">
-                    <select id="quality" name="quality">
-                        <?php for($i=1; $i<=100; $i++) : ?>
-                        <option value="<?php echo $i; ?>" <?php if($compression_level == $i) : ?>selected<?php endif; ?>><?php echo $i; ?></option>
-                        <?php endfor; ?>
-                    </select>
-                    <p class="description"><code>1</code> = low quality (smallest files)
-                        <br><code>100</code> = best quality (largest files)
-                        <br>Recommended value: <code>90</code></p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Force JPEG re-compression</th>
-                <td>
-                    <select name="recompress_yesno" id="yesno">
-                        <option value="no" label="no" <?php echo ($force_jpeg_recompression == 'no') ? 'selected="selected"' : ''; ?>>NO - only re-compress resized jpeg images</option>
-                        <option value="yes" label="yes" <?php echo ($force_jpeg_recompression == 'yes') ? 'selected="selected"' : ''; ?>>YES - re-compress all uploaded jpeg images</option>
-                    </select>
-                </td>
-            </tr>
-
-        </table>
-
-        <?php /* DEFINED HERE FOR FUTURE RELEASE - does not do anything if uncommented
-        <hr style="margin-top:20px; margin-bottom:20px;">
-
-        <h3>Image conversion options</h3>
-        <p style="max-width:700px">Photos saved as PNG and GIF images can be extremely large in file size due to their compression methods not being suited for photos. Enable these options below to automatically convert GIF and/or PNG images to JPEG.</p>
-
-        <p>When enabled, conversion will happen to all uploaded GIF/PNG images, not just ones that require resizing.</p>
-
-        <table class="form-table">
-
-            <tr>
-                <th scope="row">Convert GIF to JPEG</th>
-                <td>
-                    <select id="convert-gif" name="convertgif">
-                        <option value="no" <?php if($convert_gif_to_jpg == 'no') : ?>selected<?php endif; ?>>NO - just resize uploaded gif images as normal</option>
-                        <option value="yes" <?php if($convert_gif_to_jpg == 'yes') : ?>selected<?php endif; ?>>YES - convert all uploaded gif images to jpeg</option>
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                <th scope="row">Convert PNG to JPEG</th>
-                <td>
-                    <select id="convert-png" name="convertpng">
-                        <option value="no" <?php if($convert_png_to_jpg == 'no') : ?>selected<?php endif; ?>>NO - just resize uploaded png images as normal</option>
-                        <option value="yes" <?php if($convert_png_to_jpg == 'yes') : ?>selected<?php endif; ?>>YES - convert all uploaded png images to jpeg</option>
-                    </select>
-                </td>
-            </tr>
-
-        </table>
-        */ ?>
-        <hr style="margin-top:30px;">
-        <p class="submit" style="margin-top:10px;border-top:1px solid #eee;padding-top:20px;">
-            <input type="hidden" id="convert-bmp" name="convertbmp" value="no" />
-            <input type="hidden" name="action" value="update" />
-            <input id="submit" name="jr_options_update" class="button button-primary" type="submit" value="Update Options">
-        </p>
-    </form>
-</div>
-<?php
-}
-
-/**
-* This function will apply changes to the uploaded file
-* @param $image_data - contains file, url, type
-*/
-function jr_uploadresize_resize($image_data){
-    jr_error_log("**-start--resize-image-upload");
-    $resizing_enabled = get_option('jr_resizeupload_resize_yesno');
-    $resizing_enabled = ($resizing_enabled=='yes') ? true : false;
-    $force_jpeg_recompression = get_option('jr_resizeupload_recompress_yesno');
-    $force_jpeg_recompression = ($force_jpeg_recompression=='yes') ? true : false;
-    $compression_level = get_option('jr_resizeupload_quality');
-    $max_width  = get_option('jr_resizeupload_width')==0 ? false : get_option('jr_resizeupload_width');
-    $max_height = get_option('jr_resizeupload_height')==0 ? false : get_option('jr_resizeupload_height');
-    $convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
-    $convert_png_to_jpg = ($convert_png_to_jpg=='yes') ? true : false;
-    $convert_gif_to_jpg = get_option('jr_resizeupload_convertgif_yesno');
-    $convert_gif_to_jpg = ($convert_gif_to_jpg=='yes') ? true : false;
-    $convert_bmp_to_jpg = get_option('jr_resizeupload_convertbmp_yesno');
-    $convert_bmp_to_jpg = ($convert_bmp_to_jpg=='yes') ? true : false;
-    //---------- In with the old v1.6.2, new v1.7 (WP_Image_Editor) ------------
-    if($resizing_enabled || $force_jpeg_recompression) {
-        $fatal_error_reported = false;
-        $valid_types = array('image/gif','image/png','image/jpeg','image/jpg');
-        if(empty($image_data['file']) || empty($image_data['type'])) {
-            jr_error_log("--non-data-in-file-( ".print_r($image_data, true)." )");
-            $fatal_error_reported = true;
-        } else if(!in_array($image_data['type'], $valid_types)) {
-            jr_error_log("--non-image-type-uploaded-( ".$image_data['type']." )");
-            $fatal_error_reported = true;
-        }
-        jr_error_log("--filename-( ".$image_data['file']." )");
-        $image_editor = wp_get_image_editor($image_data['file']);
-        $image_type = $image_data['type'];
-        if($fatal_error_reported || is_wp_error($image_editor)) {
-            jr_error_log("--wp-error-reported");
-        } else {
-            $to_save = false;
-            $resized = false;
-            // Perform resizing if required
-            if($resizing_enabled) {
-                jr_error_log("--resizing-enabled");
-                $sizes = $image_editor->get_size();
-                if((isset($sizes['width']) && $sizes['width'] > $max_width) || (isset($sizes['height']) && $sizes['height'] > $max_height)) {
-                    $image_editor->resize($max_width, $max_height, false);
-                    $resized = true;
-                    $to_save = true;
-                    $sizes = $image_editor->get_size();
-                    jr_error_log("--new-size--".$sizes['width']."x".$sizes['height']);
-                } else {
-                    jr_error_log("--no-resizing-needed");
+function jr_display_notices() {
+	if(get_option( 'jr_resizeupload_news') != 1 ) {
+		global $jr_settings_page;
+		$screen = get_current_screen();
+		if ( $screen->id != $jr_settings_page ) { ?>
+            <div class='notice notice-warning' id='jr-resizeupload-news' style="padding-top: 7px">
+                <div style="float:right;"><a href="javascript:jrResizeuploadDismissNews()" class="button" style="margin-top:10px;">Dismiss</a></div>
+                <strong>Resize Image After Upload</strong>
+                <p>Check out the <a href="options-general.php?page=resize-after-upload">Plugin settings</a> for new features that can make your site load faster.</p>
+            </div>
+            <script>
+                function jrResizeuploadDismissNews() {
+                    jQuery("#jr-resizeupload-news").hide();
+                    var data = { action  : 'jr_dismiss_notices'};
+                    jQuery.get('<?php echo admin_url('admin-ajax.php'); ?>', data, function(response) {
+                        data = JSON.parse(response);
+                        if(data["Status"] == 0) {
+                            console.log("dismissed");
+                        }
+                    });
                 }
-            } else {
-                jr_error_log("--no-resizing-requested");
-            }
+            </script>
+		<?php }
+	}
+}
 
-            // Regardless of resizing, image must be saved if recompressing
-            if($force_jpeg_recompression && ($image_type=='image/jpg' || $image_type=='image/jpeg')) {
-                $to_save = true;
-                jr_error_log("--compression-level--q-".$compression_level);
-            }
-            elseif(!$resized) {
-                jr_error_log("--no-forced-recompression");
-            }
+function jr_dismiss_notices() {
+	update_option( 'jr_resizeupload_news', 1);
+	die(json_encode(array("Status" => 0)));
+}
 
-            // Only save image if it has been resized or need recompressing
-            if($to_save) {
-                $image_editor->set_quality($compression_level);
-                $saved_image = $image_editor->save($image_data['file']);
-                jr_error_log("--image-saved");
-            }
-            else {
-                jr_error_log("--no-changes-to-save");
-            }
+/**
+ * Add the options page
+ */
+function jr_uploadresize_options_page(){
+	global $jr_settings_page;
+	if(function_exists('add_media_page')){
+		$jr_settings_page = add_media_page(
+			'Resize Image After Upload',
+			'Resize Image Upload',
+			'manage_options',
+			'resize-after-upload',
+			'jr_uploadresize_options'
+		);
+	}
+} // function jr_uploadresize_options_page(){
+
+
+
+/**
+ * Define the Options page for the plugin
+ */
+function jr_uploadresize_options(){
+
+	if(isset($_POST['jr_options_update'])) {
+
+		$resizing_enabled = ($_POST['yesno'] == 'yes' ? 'yes' : 'no');
+		$force_jpeg_recompression   = ($_POST['recompress_yesno'] == 'yes' ? 'yes' : 'no');
+
+		$max_width   = intval($_POST['maxwidth']);
+		$max_height  = intval($_POST['maxheight']);
+		$compression_level    = intval($_POST['quality']);
+
+		$convert_png_to_jpg = (isset($_POST['convertpng']) && $_POST['convertpng'] == 'yes' ? 'yes' : 'no');
+		$convert_gif_to_jpg = (isset($_POST['convertgif']) && $_POST['convertgif'] == 'yes' ? 'yes' : 'no');
+		$convert_bmp_to_jpg = (isset($_POST['convertbmp']) && $_POST['convertbmp'] == 'yes' ? 'yes' : 'no');
+
+
+		// If input is not an integer, use previous setting
+		$max_width = ($max_width == '') ? 0 : $max_width;
+		$max_width = (ctype_digit(strval($max_width)) == false) ? get_option('jr_resizeupload_width') : $max_width;
+		update_option('jr_resizeupload_width',$max_width);
+
+
+		$max_height = ($max_height == '') ? 0 : $max_height;
+		$max_height = (ctype_digit(strval($max_height)) == false) ? get_option('jr_resizeupload_height') : $max_height;
+		update_option('jr_resizeupload_height',$max_height);
+
+
+		$compression_level = ($compression_level == '') ? 1 : $compression_level;
+		$compression_level = (ctype_digit(strval($compression_level)) == false) ? get_option('jr_resizeupload_quality') : $compression_level;
+
+		if($compression_level < 1) {
+			$compression_level = 1;
+		}
+		else if($compression_level > 100) {
+			$compression_level = 100;
+		}
+
+		update_option('jr_resizeupload_quality',$compression_level);
+
+
+
+
+		if ($resizing_enabled == 'yes') {
+			update_option('jr_resizeupload_resize_yesno','yes'); }
+		else {
+			update_option('jr_resizeupload_resize_yesno','no'); }
+
+
+		if ($force_jpeg_recompression == 'yes') {
+			update_option('jr_resizeupload_recompress_yesno','yes'); }
+		else {
+			update_option('jr_resizeupload_recompress_yesno','no'); }
+
+
+		if ($convert_png_to_jpg == 'yes') {
+			update_option('jr_resizeupload_convertpng_yesno','yes'); }
+		else {
+			update_option('jr_resizeupload_convertpng_yesno','no'); }
+
+		if ($convert_gif_to_jpg == 'yes') {
+			update_option('jr_resizeupload_convertgif_yesno','yes'); }
+		else {
+			update_option('jr_resizeupload_convertgif_yesno','no'); }
+
+		if ($convert_bmp_to_jpg == 'yes') {
+			update_option('jr_resizeupload_convertbmp_yesno','yes'); }
+		else {
+			update_option('jr_resizeupload_convertbmp_yesno','no'); }
+
+
+
+		echo('<div id="message" class="updated fade"><p><strong>Options have been updated.</strong></p></div>');
+	} // if
+
+
+
+	// get options and show settings form
+	$resizing_enabled = get_option('jr_resizeupload_resize_yesno');
+	$force_jpeg_recompression = get_option('jr_resizeupload_recompress_yesno');
+	$compression_level  = intval(get_option('jr_resizeupload_quality'));
+
+	$max_width     = get_option('jr_resizeupload_width');
+	$max_height    = get_option('jr_resizeupload_height');
+
+	$convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
+	$convert_gif_to_jpg = get_option('jr_resizeupload_convertgif_yesno');
+	$convert_bmp_to_jpg = get_option('jr_resizeupload_convertbmp_yesno');
+	?>
+    <style type="text/css">
+        .resizeimage-button {
+            color: #FFF;
+            background: none repeat scroll 0% 0% #FC9A24;
+            border-radius: 3px;
+            display: inline-block;
+            border-bottom: 4px solid #EC8A14;
+            margin-right:5px;
+            line-height:1.05em;
+            text-align: center;
+            text-decoration: none;
+            padding: 9px 20px 8px;
+            font-size: 15px;
+            font-weight: bold;
+            text-shadow: 0 -1px 1px rgba(0,0,0,0.2);
         }
-    } // if($resizing_enabled || $force_jpeg_recompression)
-    else {
-        jr_error_log("--no-action-required");
-    }
-    jr_error_log("**-end--resize-image-upload\n");
-    return $image_data;
+
+        .resizeimage-button:active,
+        .resizeimage-button:hover,
+        .resizeimage-button:focus {
+            background-color: #EC8A14;
+            color: #FFF;
+        }
+
+        .media-upload-form div.error, .wrap div.error, .wrap div.updated {
+            margin: 25px 0px 25px;
+        }
+
+    </style>
+
+    <div class="wrap">
+        <form method="post" accept-charset="utf-8">
+
+            <h2>Resize Image After Upload</h2>
+
+            <hr style="margin-top:1px; margin-bottom:40px;">
+
+            <h3>Re-sizing options</h3>
+            <table class="form-table">
+                <tr>
+                    <th scope="row">Enable re-sizing</th>
+                    <td valign="top">
+                        <select name="yesno" id="yesno">
+                            <option value="no" label="no" <?php echo ($resizing_enabled == 'no') ? 'selected="selected"' : ''; ?>>NO - do not resize images</option>
+                            <option value="yes" label="yes" <?php echo ($resizing_enabled == 'yes') ? 'selected="selected"' : ''; ?>>YES - resize large images</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Max image dimensions</th>
+
+                    <td>
+                        <fieldset><legend class="screen-reader-text"><span>Maximum width and height</span></legend>
+                            <label for="maxwidth">Max width</label>
+                            <input name="maxwidth" step="1" min="0" id="maxwidth" class="small-text" type="number" value="<?php echo $max_width; ?>">
+                            &nbsp;&nbsp;&nbsp;<label for="maxheight">Max height</label>
+                            <input name="maxheight" step="1" min="0" id="maxheight" class="small-text" type="number" value="<?php echo $max_height; ?>">
+                            <p class="description">Set to zero or very high value to prevent resizing in that dimension.
+                                <br />Recommended values: <code>1200</code></p>
+                        </fieldset>
+                    </td>
+
+
+                </tr>
+
+            </table>
+
+            <hr style="margin-top:20px; margin-bottom:30px;">
+
+            <h3>Compression options</h3>
+            <p style="max-width:700px">The following settings will only apply to uploaded JPEG images and images converted to JPEG format.</p>
+
+            <table class="form-table">
+
+                <tr>
+                    <th scope="row">JPEG compression level</th>
+                    <td valign="top">
+                        <select id="quality" name="quality">
+							<?php for($i=1; $i<=100; $i++) : ?>
+                                <option value="<?php echo $i; ?>" <?php if($compression_level == $i) : ?>selected<?php endif; ?>><?php echo $i; ?></option>
+							<?php endfor; ?>
+                        </select>
+                        <p class="description"><code>1</code> = low quality (smallest files)
+                            <br><code>100</code> = best quality (largest files)
+                            <br>Recommended value: <code>90</code></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Force JPEG re-compression</th>
+                    <td>
+                        <select name="recompress_yesno" id="yesno">
+                            <option value="no" label="no" <?php echo ($force_jpeg_recompression == 'no') ? 'selected="selected"' : ''; ?>>NO - only re-compress resized jpeg images</option>
+                            <option value="yes" label="yes" <?php echo ($force_jpeg_recompression == 'yes') ? 'selected="selected"' : ''; ?>>YES - re-compress all uploaded jpeg images</option>
+                        </select>
+                    </td>
+                </tr>
+
+            </table>
+
+            <p class="description-link">
+                <a href="https://shortpixel.com/riau/af/WVCLIKV28044?autoreferrer=1" target="_blank">&gt;&gt; <?php _e( 'More info', 'sb-pack' ); ?></a>
+            </p>
+
+            <hr style="margin-top:20px; margin-bottom:20px;">
+
+            <h3>Image conversion options</h3>
+            <p style="max-width:700px">Photos saved as PNG <?php //and GIF ?> images can be extremely large in file size due to their compression methods not being suited for photos. Enable these options below to automatically convert <?php //GIF and/or ?>PNG images to JPEG <strong>only if they don't have transparency</strong></strong>.</p>
+
+            <p>When enabled, conversion will happen to all suitable uploaded PNG images, not just ones that require resizing.</p>
+
+            <table class="form-table">
+
+                <tr>
+                    <th scope="row">Convert PNG to JPEG</th>
+                    <td>
+                        <select id="convert-png" name="convertpng">
+                            <option value="no" <?php if($convert_png_to_jpg == 'no') : ?>selected<?php endif; ?>>NO - just resize uploaded png images as normal</option>
+                            <option value="yes" <?php if($convert_png_to_jpg == 'yes') : ?>selected<?php endif; ?>>YES - convert all uploaded png images not having a transparency layer to jpeg</option>
+                        </select>
+                    </td>
+                </tr>
+
+				<?php /* DEFINED HERE FOR FUTURE RELEASE - does not do anything if uncommented
+			<tr>
+				<th scope="row">Convert GIF to JPEG</th>
+				<td>
+					<select id="convert-gif" name="convertgif">
+						<option value="no" <?php if($convert_gif_to_jpg == 'no') : ?>selected<?php endif; ?>>NO - just resize uploaded gif images as normal</option>
+						<option value="yes" <?php if($convert_gif_to_jpg == 'yes') : ?>selected<?php endif; ?>>YES - convert all uploaded gif images to jpeg</option>
+					</select>
+				</td>
+			</tr>
+
+		*/ ?>
+
+            </table>
+
+            <hr style="margin-top:30px;">
+
+            <p class="submit" style="margin-top:10px;border-top:1px solid #eee;padding-top:20px;">
+                <input type="hidden" id="convert-bmp" name="convertbmp" value="no" />
+                <input type="hidden" name="action" value="update" />
+                <input id="submit" name="jr_options_update" class="button button-primary" type="submit" value="Update Options">
+            </p>
+        </form>
+
+    </div>
+	<?php
+} // function jr_uploadresize_options(){
+
+
+
+
+
+/**
+ * This function will apply changes to the uploaded file
+ * @param $image_data - contains file, url, type
+ */
+function jr_uploadresize_resize($image_data){
+
+
+	jr_error_log("**-start--resize-image-upload");
+
+
+	$resizing_enabled = get_option('jr_resizeupload_resize_yesno');
+	$resizing_enabled = ($resizing_enabled=='yes') ? true : false;
+
+	$force_jpeg_recompression = get_option('jr_resizeupload_recompress_yesno');
+	$force_jpeg_recompression = ($force_jpeg_recompression=='yes') ? true : false;
+
+	$compression_level = get_option('jr_resizeupload_quality');
+
+	$max_width  = get_option('jr_resizeupload_width')==0 ? false : get_option('jr_resizeupload_width');
+
+	$max_height = get_option('jr_resizeupload_height')==0 ? false : get_option('jr_resizeupload_height');
+
+
+	$convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
+	$convert_png_to_jpg = ($convert_png_to_jpg=='yes') ? true : false;
+
+	$convert_gif_to_jpg = get_option('jr_resizeupload_convertgif_yesno');
+	$convert_gif_to_jpg = ($convert_gif_to_jpg=='yes') ? true : false;
+
+	$convert_bmp_to_jpg = get_option('jr_resizeupload_convertbmp_yesno');
+	$convert_bmp_to_jpg = ($convert_bmp_to_jpg=='yes') ? true : false;
+
+
+	if($convert_png_to_jpg && $image_data['type'] == 'image/png' ) {
+		$image_data = jr_uploadresize_convert_image( $image_data, $compression_level );
+	}
+
+	if($image_data['type'] == 'image/gif' && is_ani($image_data['file'])) {
+		//animated gif, don't resize
+		jr_error_log("--animated-gif-not-resized");
+		return $image_data;
+	}
+
+	//---------- In with the old v1.6.2, new v1.7 (WP_Image_Editor) ------------
+
+	if($resizing_enabled || $force_jpeg_recompression) {
+
+		$fatal_error_reported = false;
+		$valid_types = array('image/gif','image/png','image/jpeg','image/jpg');
+
+		if(empty($image_data['file']) || empty($image_data['type'])) {
+			jr_error_log("--non-data-in-file-( ".print_r($image_data, true)." )");
+			$fatal_error_reported = true;
+		}
+		else if(!in_array($image_data['type'], $valid_types)) {
+			jr_error_log("--non-image-type-uploaded-( ".$image_data['type']." )");
+			$fatal_error_reported = true;
+		}
+
+		jr_error_log("--filename-( ".$image_data['file']." )");
+		$image_editor = wp_get_image_editor($image_data['file']);
+		$image_type = $image_data['type'];
+
+
+		if($fatal_error_reported || is_wp_error($image_editor)) {
+			jr_error_log("--wp-error-reported");
+		}
+		else {
+
+			$to_save = false;
+			$resized = false;
+
+
+			// Perform resizing if required
+			if($resizing_enabled) {
+
+				jr_error_log("--resizing-enabled");
+				$sizes = $image_editor->get_size();
+
+				if((isset($sizes['width']) && $sizes['width'] > $max_width)
+				   || (isset($sizes['height']) && $sizes['height'] > $max_height)) {
+
+					$image_editor->resize($max_width, $max_height, false);
+					$resized = true;
+					$to_save = true;
+
+					$sizes = $image_editor->get_size();
+					jr_error_log("--new-size--".$sizes['width']."x".$sizes['height']);
+				}
+				else {
+					jr_error_log("--no-resizing-needed");
+				}
+			}
+			else {
+				jr_error_log("--no-resizing-requested");
+			}
+
+
+			// Regardless of resizing, image must be saved if recompressing
+			if($force_jpeg_recompression && ($image_type=='image/jpg' || $image_type=='image/jpeg')) {
+
+				$to_save = true;
+				jr_error_log("--compression-level--q-".$compression_level);
+			}
+            elseif(!$resized) {
+				jr_error_log("--no-forced-recompression");
+			}
+
+
+			// Only save image if it has been resized or need recompressing
+			if($to_save) {
+
+				$image_editor->set_quality($compression_level);
+				$saved_image = $image_editor->save($image_data['file']);
+				jr_error_log("--image-saved");
+			}
+			else {
+				jr_error_log("--no-changes-to-save");
+			}
+		}
+	} // if($resizing_enabled || $force_jpeg_recompression)
+
+	else {
+		jr_error_log("--no-action-required");
+	}
+
+	jr_error_log("**-end--resize-image-upload\n");
+
+
+	return $image_data;
 } // function jr_uploadresize_resize($image_data){
 
-/**
-* Simple debug logging function. Will only output to the log file
-* if 'debugging' is turned on.
-*/
-function jr_error_log($message) {
-    global $DEBUG_LOGGER;
+function jr_uploadresize_convert_image( $params, $compression_level ){
+	$transparent = 0;
+	$image = $params['file'];
 
-    if($DEBUG_LOGGER) {
-        error_log(print_r($message, true));
-    }
+	$contents = file_get_contents( $image );
+	if ( ord ( file_get_contents( $image, false, null, 25, 1 ) ) & 4 ) $transparent = 1;
+	if ( stripos( $contents, 'PLTE' ) !== false && stripos( $contents, 'tRNS' ) !== false ) $transparent = 1;
+
+	$transparent_pixel = $img = $bg = false;
+	if($transparent) {
+		$img = imagecreatefrompng($params['file']);
+		$w = imagesx($img); // Get the width of the image
+		$h = imagesy($img); // Get the height of the image
+		//run through pixels until transparent pixel is found:
+		for($i = 0; $i<$w; $i++) {
+			for($j = 0; $j < $h; $j++) {
+				$rgba = imagecolorat($img, $i, $j);
+				if(($rgba & 0x7F000000) >> 24) {
+					$transparent_pixel = true;
+					break;
+				}
+			}
+		}
+	}
+
+	if( !$transparent || !$transparent_pixel) {
+		if(!$img) $img = imagecreatefrompng($params['file']);
+		$bg = imagecreatetruecolor(imagesx($img), imagesy($img));
+		imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
+		imagealphablending($bg, 1);
+		imagecopy($bg, $img, 0, 0, 0, 0, imagesx($img), imagesy($img));
+		$newPath = preg_replace("/\.png$/", ".jpg", $params['file']);
+		$newUrl = preg_replace("/\.png$/", ".jpg", $params['url']);
+		for($i = 1; file_exists($newPath); $i++) {
+			$newPath = preg_replace("/\.png$/", "-".$i.".jpg", $params['file']);
+		}
+		if ( imagejpeg( $bg, $newPath, $compression_level ) ){
+			unlink($params['file']);
+			$params['file'] = $newPath;
+			$params['url'] = $newUrl;
+			$params['type'] = 'image/jpeg';
+		}
+	}
+
+	return $params;
+}
+
+function is_ani($filename) {
+	if(!($fh = @fopen($filename, 'rb')))
+		return false;
+	$count = 0;
+	//an animated gif contains multiple "frames", with each frame having a
+	//header made up of:
+	// * a static 4-byte sequence (\x00\x21\xF9\x04)
+	// * 4 variable bytes
+	// * a static 2-byte sequence (\x00\x2C) (some variants may use \x00\x21 ?)
+
+	// We read through the file til we reach the end of the file, or we've found
+	// at least 2 frame headers
+	$chunk = false;
+	while(!feof($fh) && $count < 2) {
+		//add the last 20 characters from the previous string, to make sure the searched pattern is not split.
+		$chunk = ($chunk ? substr($chunk, -20) : "") . fread($fh, 1024 * 100); //read 100kb at a time
+		$count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)#s', $chunk, $matches);
+	}
+
+	fclose($fh);
+	return $count > 1;
+}
+
+/**
+ * Simple debug logging function. Will only output to the log file
+ * if 'debugging' is turned on.
+ */
+function jr_error_log($message) {
+	global $DEBUG_LOGGER;
+
+	if($DEBUG_LOGGER) {
+		error_log(print_r($message, true));
+	}
 }
 
 add_action( 'post-upload-ui', 'jr_uploader_message' );
 
 function jr_uploader_message() {
-    global $pagenow;
-    $jr_w = get_option('jr_resizeupload_width');
-    $jr_h = get_option('jr_resizeupload_height');
-    $link = current_user_can( 'manage_options' ) ? sprintf( '<a href="%1$s" target="_new">%2$s</a>', esc_url( admin_url( '?upload.php?page=resize-after-upload' ) ), __( 'media settings' ) ) : __( 'media settings' );
-    echo '<p>' . sprintf( __( 'Per your %1$s, all <strong>original</strong> images will be scaled with max-dimensions of %2$d x %3$d px' ), $link,  esc_attr( $jr_w ), esc_attr( $jr_h ) ) . '</p>';
+	global $pagenow;
+	$jr_w = get_option('jr_resizeupload_width');
+	$jr_h = get_option('jr_resizeupload_height');
+	$link = current_user_can( 'manage_options' ) ? sprintf( '<a href="%1$s" target="_new">%2$s</a>', esc_url( admin_url( '?upload.php?page=resize-after-upload' ) ), __( 'media settings' ) ) : __( 'media settings' );
+	echo '<p>' . sprintf( __( 'Per your %1$s, all <strong>original</strong> images will be scaled with max-dimensions of %2$d x %3$d px' ), $link,  esc_attr( $jr_w ), esc_attr( $jr_h ) ) . '</p>';
 }

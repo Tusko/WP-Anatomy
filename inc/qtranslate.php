@@ -1,5 +1,18 @@
 <?php
 
+function wpa_html_lang() {
+	$lang = get_locale();
+	$qconf = $GLOBALS['q_config'];
+	if(function_exists('qtranxf_getLanguage')) {
+		$curr = qtranxf_getLanguage();
+		$lang = $qconf['locale_html'][$curr];
+		if(empty($lang)) {
+			$lang = $qconf['locale'][$curr];
+		}
+	}
+	echo $lang;
+}
+
 if(defined('QTX_VERSION')) {
     remove_action('wp_head', 'qtranxf_wp_head_meta_generator');
     remove_action('wp_head', 'qtranxf_head', 10, 0);

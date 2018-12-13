@@ -2,7 +2,7 @@
     ob_start('ob_html_compress');
 } ?>
 <!DOCTYPE html>
-<html lang="<?php echo function_exists('qtranxf_getLanguage')?qtranxf_getLanguage():'en'; ?>">
+<html lang="<?php wpa_html_lang() ?>">
 <head>
 <meta charset="UTF-8">
 <title><?php wpa_title(); ?></title>

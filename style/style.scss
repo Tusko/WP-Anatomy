@@ -12,7 +12,7 @@
     @include flex(1)
 }
 %flexwrapwrap {
-    @include flex-wrap(wrap)
+    @include flex-wrap(wrap);
 }
 %flexdirectioncolumn {
     @include flex-direction(column);

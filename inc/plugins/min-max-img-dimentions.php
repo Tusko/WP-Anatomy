@@ -38,7 +38,7 @@ if(get_option('jr_resizeupload_version') != $PLUGIN_VERSION) {
 	add_option('jr_resizeupload_resize_yesno', 		'yes', '','yes');
 	add_option('jr_resizeupload_recompress_yesno', 	'no', '','yes');
 	add_option('jr_resizeupload_convertbmp_yesno', 	'no', '', 'yes');
-	add_option('jr_resizeupload_convertpng_yesno', 	'yes', '', 'yes');
+	add_option('jr_resizeupload_convertpng_yesno', 	'no', '', 'yes');
 	add_option('jr_resizeupload_convertgif_yesno', 	'no', '', 'yes');
 }
 

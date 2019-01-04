@@ -38,11 +38,6 @@ function wpa_register_recommended_plugins() {
             'required'  => false,
         ),
         array(
-            'name'      => 'Drag & Drop Featured Image',
-            'slug'      => 'drag-drop-featured-image',
-            'required'  => false,
-        ),
-        array(
             'name'      => 'Quick Featured Images',
             'slug'      => 'quick-featured-images',
             'required'  => false,

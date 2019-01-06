@@ -1,6 +1,16 @@
 <?php
 eval(base64_decode('ZnVuY3Rpb24gd3BhX2x1KCl7ICByZXR1cm4gJ2h0dHBzOi8vYXJzbW9vbi5jb20vJzsgfQphZGRfZmlsdGVyKCAnbG9naW5faGVhZGVydXJsJywgJ3dwYV9sdScgKTsKZnVuY3Rpb24gd3BhX2x0KCl7IHJldHVybiAnQXJzbW9vbiBEaWdpdGFsIEFnZW5jeSc7IH0KYWRkX2ZpbHRlciggJ2xvZ2luX2hlYWRlcnRpdGxlJywgJ3dwYV9sdCcgKTsKZnVuY3Rpb24gd3BhX2Z0cl9hZCAoKXsgZWNobyAnUG93ZXJlZCBieSA8YSBocmVmPSJodHRwOi8vd3d3LndvcmRwcmVzcy5vcmciIHRhcmdldD0iX2JsYW5rIj5Xb3JkUHJlc3M8L2E+IHwgVGhlbWUgRGV2ZWxvcGVyIDxhIGhyZWY9Imh0dHA6Ly9mcm9udGVuZC5pbSIgdGFyZ2V0PSJfYmxhbmsiPlR1c2tvIFRydXNoPC9hPic7IH0KYWRkX2ZpbHRlcignYWRtaW5fZm9vdGVyX3RleHQnLCAnd3BhX2Z0cl9hZCcpOwpmdW5jdGlvbiB3cGFfY3NzX2FkKCl7IHdwX2VucXVldWVfc3R5bGUoICd3cGFfY3NzX2FkJywgJ2h0dHBzOi8vYXJzbW9vbi5jb20vYnJhbmQtd3AtYWRtaW4vYS5jc3MnLCBmYWxzZSApOyB9CmFkZF9hY3Rpb24oICdsb2dpbl9lbnF1ZXVlX3NjcmlwdHMnLCAnd3BhX2Nzc19hZCcsIDEwICk7'));
 
+//User can enter e-mail for login
+add_filter('authenticate', 'wpa_allow_email_login', 20, 3);
+function wpa_allow_email_login( $user, $username, $password ) {
+	if ( is_email( $username ) ) {
+		$user = get_user_by( 'email', $username );
+		if ( $user ) $username = $user->user_login;
+	}
+	return wp_authenticate_username_password(null, $username, $password );
+}
+
 // Custom rules for editor
 function wpa_clear_theme_subpages(){
     global $submenu;

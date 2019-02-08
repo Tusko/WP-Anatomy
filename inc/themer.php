@@ -127,13 +127,13 @@ function ob_html_compress($buf){
 
 //custom wp_nav_menu classes
 function wpa_discard_menu_classes($classes, $item) {
-    $classes = array_filter(
-        $classes, create_function( '$class', 'return in_array( $class, array( "current-menu-item", "current-menu-parent", "menu-item-has-children" ) );' )
-    );
-    return array_merge(
-        $classes,
-        (array)get_post_meta( $item->ID, '_menu_item_classes', true )
-    );
+	$classes = array_filter(
+		$classes, function($class) {return in_array( $class, array( "current-menu-item", "current-menu-parent", "menu-item-has-children" )); }
+	);
+	return array_merge(
+		$classes,
+		(array)get_post_meta( $item->ID, '_menu_item_classes', true )
+	);
 }
 
 // Disables Kses only for textarea saves
@@ -392,7 +392,7 @@ function wpa_init() {
     //Page/Post thumbnail support
     add_theme_support( 'post-thumbnails' );
     // Disable Responsive Images
-    add_filter( 'max_srcset_image_width', create_function( '', 'return 1;' ) );
+	add_filter( 'max_srcset_image_width', function(){ return 1; } );
 
     //site_url convert with qTranslate-x
     add_filter( 'site_url', 'wpa_qtrans_site_url' );

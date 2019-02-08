@@ -2,8 +2,8 @@
 
 function wpa_html_lang() {
 	$lang = get_locale();
-	$qconf = $GLOBALS['q_config'];
 	if(function_exists('qtranxf_getLanguage')) {
+		$qconf = $GLOBALS['q_config'];
 		$curr = qtranxf_getLanguage();
 		$lang = $qconf['locale_html'][$curr];
 		if(empty($lang)) {

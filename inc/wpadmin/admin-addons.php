@@ -118,37 +118,6 @@ function wpa_fix_svg_thumb() {
 }
 add_action('admin_head', 'wpa_fix_svg_thumb');
 
-function wpa_svgs_display_thumbs() {
-    ob_start();
-    add_action( 'shutdown', 'wpa_svgs_thumbs_filter', 0 );
-    function wpa_svgs_thumbs_filter() {
-        $final = '';
-        $ob_levels = count( ob_get_level() );
-        for ( $i = 0; $i < $ob_levels; $i++ ) {
-            $final .= ob_get_clean();
-        }
-        echo apply_filters( 'final_output', $final );
-    }
-
-    add_filter( 'final_output', 'wpa_svgs_final_output' );
-    function wpa_svgs_final_output( $content ) {
-        $content = str_replace(
-            '<# } else if ( \'image\' === data.type && data.sizes && data.sizes.full ) { #>',
-            '<# } else if ( \'svg+xml\' === data.subtype ) { #>
-                <img class="details-image" src="{{ data.url }}" draggable="false" />
-                <# } else if ( \'image\' === data.type && data.sizes && data.sizes.full ) { #>', $content );
-        $content = str_replace(
-            '<# } else if ( \'image\' === data.type && data.sizes ) { #>',
-            '<# } else if ( \'svg+xml\' === data.subtype ) { #>
-                <div class="centered">
-                    <img src="{{ data.url }}" class="thumbnail" draggable="false" />
-                </div>
-            <# } else if ( \'image\' === data.type && data.sizes ) { #>', $content);
-        return $content;
-    }
-}
-add_action('admin_init', 'wpa_svgs_display_thumbs');
-
 //Remove ACF menu item from
 add_filter('acf/settings/show_admin', 'my_acf_show_admin');
 

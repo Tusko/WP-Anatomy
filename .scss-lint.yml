@@ -1,0 +1,24 @@
+#https://github.com/sasstools/sass-lint/blob/master/docs/rules/nesting-depth.md
+
+linters:
+  PropertySortOrder:
+    enabled: false
+    separate_groups: true
+
+  TrailingSemicolon:
+    enabled: false
+
+  ImportPath:
+    enabled: false
+
+  VendorPrefix:
+    enabled: false
+
+  IdSelector:
+    enabled: false
+
+  ImportantRule:
+    enabled: false
+
+  EmptyLineBetweenBlocks:
+    enabled: false

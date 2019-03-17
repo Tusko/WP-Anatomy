@@ -1,0 +1,179 @@
+@import 'variables',
+'flexbox',
+'gradient';
+
+/// Strips the unit from a number.
+@function strip-units($value) {
+  @return ($value / ($value * 0 + 1));
+}
+
+// Convert pixels to rems
+// eg. for a relational value of 12px write rem(12)
+// Assumes $em-base is the font-size of <html>
+
+@function rem($pxval) {
+  @if not unitless($pxval) {
+    $pxval: strip-units($pxval);
+  }
+  $base: $font-base;
+  @if not unitless($base) {
+    $base: strip-units($base);
+  }
+  @return ($pxval / $base) * 1rem;
+}
+
+@mixin add-font($font-family, $font-filename, $font-weight : normal, $font-style :normal) {
+  @font-face {
+    font-family: '#{$font-family}';
+    src: url('fonts/#{$font-filename}.eot');
+    src: url('fonts/#{$font-filename}.eot?#iefix') format('embedded-opentype'),
+    url('fonts/#{$font-filename}.woff') format('woff'),
+    url('fonts/#{$font-filename}.ttf') format('truetype'),
+    url('fonts/#{$font-filename}.svg##{$font-family}') format('svg');
+    font-weight: $font-weight;
+    font-style: $font-style
+  }
+}
+@mixin add-svg-font($font-family, $font-filename, $font-weight : normal, $font-style :normal) {
+  @font-face {
+    font-family: '#{$font-family}';
+    src: url('fonts/#{$font-filename}.svg##{$font-family}') format('svg');
+    font-weight: $font-weight;
+    font-style: $font-style
+  }
+}
+/*
+ Usage
+    @include add-font('FontName', 'fontfilename', 400);
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+        @include add-svg-font('FontName', 'fontfilename', 400);
+    }
+*/
+
+@mixin prefixer($property, $value, $prefixes: webkit) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-' + $property}: $value;
+  }
+  #{$property}: $value;
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder { @content }
+  &:-moz-placeholder           { @content }
+  &::-moz-placeholder          { @content }
+  &:-ms-input-placeholder      { @content }
+}
+
+@mixin border-radius($radius) {
+  @include prefixer('border-radius', $radius);
+}
+@mixin box-sizing($type: border-box) {
+  @include prefixer('box-sizing', $type);
+}
+@mixin background-size($size: cover) {
+  @include prefixer('background-size', $size);
+}
+@mixin box-shadow($shadow) {
+  @include prefixer('box-shadow', $shadow);
+}
+@mixin transition($property: all .5s ease) {
+  @include prefixer('transition', $property);
+}
+@mixin position($position: relative, $top: 0, $right: 0, $bottom: 0, $left: 0, $zindex: 0) {
+  position: $position;
+  z-index: $zindex;
+  bottom: $bottom;
+  right: $right;
+  left: $left;
+  top: $top;
+}
+@mixin transform($params, $backface: false) {
+  @include prefixer('transform', $params);
+  @if $backface {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+@mixin transform-origin($params) {
+  @include prefixer('transform-origin', $params);
+}
+
+@mixin user-select($select) {
+  -webkit-touch-callout: $select;
+  @include prefixer('user-select', $select);
+}
+
+@mixin columns($count: 2, $gap: 0) {
+  @include prefixer('column-count', $count);
+  @include prefixer('column-gap', $gap);
+}
+
+@mixin cfx() {
+  &:after {
+    visibility: hidden;
+    line-height: 0;
+    display: block;
+    content: '.';
+    clear: both;
+    height: 0;
+  }
+}
+
+// KEYFRAMES
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+// ANIMATION
+@mixin animation($str) {
+  @include prefixer('animation', $str);
+}
+
+//SCSS Triangle
+@mixin triangle ($width:10px, $height:10px, $color: $default, $direction: down) {
+  display: inline-block;
+  content: '';
+  height: 0;
+  width: 0;
+
+  @if $direction == up {
+    border-top: 0;
+    border-left: $width solid transparent;
+    border-right: $width solid transparent;
+    border-bottom: $height solid $color;
+  } @else if $direction == right {
+    border-right: 0;
+    border-top: $width solid transparent;
+    border-bottom: $width solid transparent;
+    border-left: $height solid $color;
+  } @else if $direction == down {
+    border-bottom: 0;
+    border-left: $width solid transparent;
+    border-right: $width solid transparent;
+    border-top: $height solid $color;
+  } @else {
+    border-left: 0;
+    border-top: $width solid transparent;
+    border-bottom: $width solid transparent;
+    border-right: $height solid $color;
+  }
+
+}
+
+.ani {
+  @include transition();
+}

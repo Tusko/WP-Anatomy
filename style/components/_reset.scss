@@ -1,10 +1,10 @@
 //custom reset
 * {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    @include box-sizing();
-    min-width: 1px; //flexbox fix for Firefox
-    padding: 0;
-    margin: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  @include box-sizing();
+  min-width: 1px; //flexbox fix for Firefox
+  padding: 0;
+  margin: 0;
 }
 
 article,
@@ -18,46 +18,46 @@ hgroup,
 nav,
 section,
 summary {
-    display: block
+  display: block
 }
 audio,
 canvas,
 video,
 progress {
-    vertical-align: baseline;
-    display: inline-block;
-    *display: inline;
-    *zoom: 1
+  vertical-align: baseline;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1
 }
 audio:not([controls]),
 [hidden],
 template {
-    display: none;
-    height: 0
+  display: none;
+  height: 0
 }
 mark {
-    background: none;
-    color: inherit
+  background: none;
+  color: inherit
 }
 sub,
 sup {
-    vertical-align: text-bottom;
-    display: inline-block;
-    line-height: 0;
-    font-size: 60%;
+  vertical-align: text-bottom;
+  display: inline-block;
+  line-height: 0;
+  font-size: 60%;
 }
 sup {
-    vertical-align: text-top;
+  vertical-align: text-top;
 }
 pre {
-    overflow: auto
+  overflow: auto
 }
 code,
 kbd,
 pre,
 samp {
-    font-family: monospace, monospace;
-    font-size: 1em
+  font-family: monospace, monospace;
+  font-size: 1em
 }
 input[type='text'],
 input[type='number'],
@@ -75,119 +75,130 @@ input[type='button'],
 input[type='search'],
 button,
 textarea {
-    -webkit-appearance: none;
-    outline: 0 none;
+  -webkit-appearance: none;
+  outline: 0 none;
 }
 strong {
-    font-weight: 700
+  font-weight: 700
 }
-input[type="submit"],
+
+[type="submit"],
 button {
-    cursor: pointer
+  cursor: pointer
 }
 textarea,
 button,
 a,
 input {
-    @include transition()
+  @include transition()
 }
 
 [data-defer] {
-    background-color: #f5f5f5
+  background-color: rgba($default, .2);
 }
 
 svg:not(:root) {
-    overflow: hidden
+  overflow: hidden
 }
 
 .hidden {
-    height: 0;
-    overflow: hidden;
-    pointer-events: none;
-    position: absolute;
-    width: 0;
-    border: 0;
-    -webkit-appearance: none;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  width: 0;
+  border: 0;
+  -webkit-appearance: none;
 }
 
 // fullframe video
 .fullframe {
-    height: 0;
-    margin: 0 0 20px;
-    overflow: hidden;
-    padding-bottom: 56.5%;
-    position: relative;
-    z-index: 0;
-    > {
-        iframe, object, embed {
-            height: 100%;
-            left: 0;
-            position: absolute;
-            top: 0;
-            width: 100%;
-            z-index: -1
-        }
+  padding-bottom: 56.5%;
+  position: relative;
+  margin: 0 0 20px;
+  overflow: hidden;
+  z-index: 0;
+  height: 0;
+  > {
+    iframe,
+    object,
+    embed {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: -1
     }
+  }
 }
 
 img {
-    vertical-align: middle;
-    max-width: 100%;
-    height: auto
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+  &.aligncenter,
+  &.ac {
+    display: block
+  }
 }
 
 p {
-    margin-bottom: 20px
+  margin-bottom: 20px
 }
 
 ul,
 ol {
-    list-style: none
+  list-style: none
 }
 
 //clearfix
 .clear {
-    clear: both
+  clear: both
 }
 
 .cfx {
-    @include cfx()
+  @include cfx()
 }
 
 html[xmlns] .cfx {
-    display: block
+  display: block
 }
 
 * html .cfx {
-    height: 1%
+  height: 1%
 }
 
 a {
-    color: #0000EE;
-    outline: 0 none;
-    &:hover {
-        text-decoration: none;
-    }
-    > img {border: 0}
+  outline: 0 none;
+  &:hover {
+    text-decoration: none;
+  }
+  > img {border: 0}
 }
 
 // Wordpress classes
-.alignleft, .al {float: left}
-.alignright, .ar {float: right}
-.aligncenter, .ac {margin-left: auto;margin-right: auto}
-img.aligncenter, img.ac {display: block}
+.alignleft,
+.al {float: left}
+.alignright,
+.ar {float: right}
+.aligncenter,
+.ac {
+  margin-left: auto;
+  margin-right: auto
+}
 
 //selection
 ::-moz-selection,
 ::selection {
-    color: #fff;
-    background: #3399ff
+  background: $active;
+  color: $white;
 }
 
 :focus {
-    outline: none
+  outline: none
 }
 
 ::-moz-focus-inner {
-    border: 0
+  border: 0
 }

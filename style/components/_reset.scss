@@ -1,628 +1,204 @@
-@import 'components/mixins',
-'components/reset',
-'components/hamburger';
-
-%flex {
-  @include flexbox();
+//custom reset
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  @include box-sizing();
+  min-width: 1px; //flexbox fix for Firefox
+  padding: 0;
+  margin: 0;
 }
 
-%inlineflex {
-  @include inline-flex();
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section,
+summary {
+  display: block
+}
+audio,
+canvas,
+video,
+progress {
+  vertical-align: baseline;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1
+}
+audio:not([controls]),
+[hidden],
+template {
+  display: none;
+  height: 0
+}
+mark {
+  background: none;
+  color: inherit
+}
+sub,
+sup {
+  vertical-align: text-bottom;
+  display: inline-block;
+  line-height: 0;
+  font-size: 60%;
+}
+sup {
+  vertical-align: text-top;
+}
+pre {
+  overflow: auto
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em
+}
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'],
+input[type='color'],
+input[type='url'],
+input[type='image'],
+input[type='tel'],
+input[type='submit'],
+input[type='file'],
+input[type='range'],
+input[type='reset'],
+input[type='button'],
+input[type='search'],
+button,
+textarea {
+  -webkit-appearance: none;
+  outline: 0 none;
+}
+strong {
+  font-weight: 700
 }
 
-%flex1 {
-  @include flex(1);
+[type="submit"],
+button {
+  cursor: pointer
+}
+textarea,
+button,
+a,
+input {
+  @include transition()
 }
 
-%flexwrapwrap {
-  @include flex-wrap(wrap);
+[data-defer] {
+  background-color: rgba($default, .2);
 }
 
-%flexdirectioncolumn {
-  @include flex-direction(column);
+svg:not(:root) {
+  overflow: hidden
 }
 
-%justifycontentspacea {
-  @include justify-content(space-around);
+.hidden {
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  width: 0;
+  border: 0;
+  -webkit-appearance: none;
 }
 
-%justifycontentspaceb {
-  @include justify-content(space-between);
-}
-
-%justifycontentcenter {
-  @include justify-content(center);
-}
-
-%justifycontentstart {
-  @include justify-content(flex-start);
-}
-
-%justifycontentend {
-  @include justify-content(flex-end);
-}
-
-%alignitemscenter {
-  @include align-items(center);
-}
-
-%alignitemsstart {
-  @include align-items(flex-start);
-}
-
-%alignitemsend {
-  @include align-items(flex-end);
-}
-
-html {
-  font                       : 400 #{$font-base}/1.4 $font;
-  -webkit-font-smoothing     : antialiased;
-  -webkit-overflow-scrolling : touch;
-  -webkit-text-size-adjust   : none;
-  -ms-text-size-adjust       : none;
-
-  > body {
-    @extend %flexdirectioncolumn;
-    @extend %flex;
-    position   : relative;
-    min-height : 100vh;
-    font-size  : 15px;
-    color      : $default;
-    opacity    : 1
+// fullframe video
+.fullframe {
+  padding-bottom: 56.5%;
+  position: relative;
+  margin: 0 0 20px;
+  overflow: hidden;
+  z-index: 0;
+  height: 0;
+  > {
+    iframe,
+    object,
+    embed {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: -1
+    }
   }
 }
 
-#wrap {
-  @include flex(1, 0, auto);
-  overflow : hidden;
-  width    : 100%
+img {
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+  &.aligncenter,
+  &.ac {
+    display: block
+  }
 }
 
-.googlemap {
-  margin-bottom : 20px;
+p {
+  margin-bottom: 20px
+}
 
-  img {
-    max-width : none
-  }
+ul,
+ol {
+  list-style: none
+}
+
+//clearfix
+.clear {
+  clear: both
+}
+
+.cfx {
+  @include cfx()
+}
+
+html[xmlns] .cfx {
+  display: block
+}
+
+* html .cfx {
+  height: 1%
 }
 
 a {
-  color : $active;
-}
-
-hr {
-  background : rgba($default, .2);
-  border     : 0 none;
-  display    : block;
-  margin     : 20px 0;
-  height     : 1px;
-  clear      : both
-}
-
-.row {
-  position  : relative;
-  width     : $container;
-  max-width : 100%;
-  margin    : 0 auto;
-  z-index   : 0;
-  @media screen and (max-width : $container) {
-    padding-right : 20px;
-    padding-left  : 20px;
-  }
-}
-
-form {
-  label {
-    font-family : $font;
-    color       : $default;
-    font-size   : 18px;
-
-    span.gfield_required {
-      color : #F00
-    }
-  }
-
-  li.gfield {
-    padding-left : 0 !important;
-
-    &.gfield_error {
-      padding-bottom : 0 !important;
-      background     : none !important;
-      padding-top    : 0 !important;
-      border         : 0 !important;
-    }
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="password"],
-  textarea {
-    @include border-radius(0);
-    padding    : 0 14px !important;
-    border     : 1px solid #BBB;
-    font       : 400 22px $font;
-    margin     : 0 auto 40px;
-    color      : $default;
-    background : none;
-    display    : block;
-    height     : 50px;
-    width      : 100%;
-    @include placeholder {
-      color : #2C3E50
-    }
-
-    &:focus {
-      @include box-shadow(0 2px 16px 0 rgba($active, .15));
-      border-color : $active
-    }
-  }
-
-  textarea {
-    @include transition(none);
-    padding-top : .75em !important;
-    line-height : 24px;
-    min-height  : 240px;
-    overflow    : hidden;
-    resize      : none;
-  }
-
-  input.datepicker {
-    width : 100% !important
-  }
-
-  .ginput_container_radio,
-  .ginput_container_checkbox {
-    ul {
-      li {
-        margin-bottom : 16px !important;
-
-        label {
-          padding-left : 30px !important;
-          position     : relative;
-          cursor       : pointer;
-          font-size    : 18px;
-
-          &:before {
-            @extend .ani;
-            border   : 1px solid $default;
-            position : absolute;
-            height   : 20px;
-            width    : 20px;
-            content  : '';
-            top      : 3px;
-            left     : 0;
-          }
-        }
-
-        input {
-          display : none !important;
-
-          &:checked + label {
-            &:before {
-              border-color : $active;
-              background   : $active;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .ginput_container_radio {
-    ul li label:before {
-      @include border-radius(50%);
-    }
-  }
-}
-
-.button,
-input[type="submit"] {
-  @include user-select(none);
-  @include border-radius(0);
-  font            : 400 18px/36px $font;
-  display         : inline-block;
-  text-transform  : uppercase;
-  position        : relative;
-  color           : $default;
-  cursor          : pointer;
-  text-decoration : none;
-  background      : none;
-  outline         : none;
-  padding         : 0;
-  margin          : 0;
-  border          : 0;
-
+  outline: 0 none;
   &:hover {
-    @include box-shadow(0 2px 0 $default);
-    color : $default
+    text-decoration: none;
   }
-
-  &.white {
-    color : $white;
-
-    &:hover {
-      @include box-shadow(0 2px 0 $white)
-    }
-  }
+  > img {border: 0}
 }
 
-header {
-  .nav-icon {
-    display : none
-  }
-
-  nav {
-    #menu-primary {
-      @extend %flex;
-
-      > li {
-        position : relative;
-
-        > a {
-          text-decoration : none;
-          font-size       : 20px;
-          color           : $default
-        }
-
-        & + li {
-          margin-left : 36px;
-        }
-      }
-
-
-      .menu-item-has-children {
-        &:after {
-          @extend .ani;
-          @include triangle(4px, 6px, $default);
-          vertical-align : middle;
-          margin-left    : 6px;
-          content        : '';
-        }
-
-        > ul {
-          @extend .ani;
-          @include transform(translateX(-50%) scale(.85));
-          white-space : nowrap;
-          background  : $white;
-          position    : absolute;
-          visibility  : hidden;
-          opacity     : 0;
-          top         : 110%;
-          left        : 50%;
-
-          li {
-            & + li {
-              border-top : 1px solid rgba($white, .1);
-            }
-
-            a {
-              text-decoration : none;
-              padding         : 5px 16px 6px;
-              font-size       : 16px;
-              color           : $default;
-              display         : block;
-
-              &:hover {
-                background : $default;
-                color      : $white
-              }
-            }
-          }
-        }
-
-        &:hover {
-          > a {
-            opacity : .5;
-          }
-
-          > ul {
-            @include transform(translateX(-50%) scale(1));
-            visibility : visible;
-            opacity    : 1;
-            top        : 105%;
-          }
-        }
-      }
-    }
-  }
+// Wordpress classes
+.alignleft,
+.al {float: left}
+.alignright,
+.ar {float: right}
+.aligncenter,
+.ac {
+  margin-left: auto;
+  margin-right: auto
 }
 
-.content {
-  article {
-    @extend %flex1;
-
-    img {
-      margin-bottom : .75em;
-
-      &.alignright {
-        margin-left : 1.5em
-      }
-
-      &.alignleft {
-        margin-right : 1.5em
-      }
-
-      &.alignnone {
-        display        : inline-block;
-        vertical-align : baseline;
-        margin         : 0;
-      }
-    }
-
-    .wp-video {
-      margin-bottom : .75em;
-      width         : auto !important;
-
-      .mejs-video {
-        width  : auto !important;
-        height : auto !important;
-      }
-    }
-  }
+//selection
+::-moz-selection,
+::selection {
+  background: $active;
+  color: $white;
 }
 
-.search_box {
-  @include border-radius(3px);
-  @include transition();
-  position : relative;
-  z-index  : 99;
-  margin   : 0;
-
-  form {
-    input[type="text"] {
-      @include border-radius(5px);
-      padding    : 0 30px 0 10px;
-      border     : 1px solid #CCC;
-      font       : 300 14px $font;
-      background : $white;
-      display    : block;
-      width      : 100%;
-      height     : 32px;
-      margin     : 0;
-      color      : #333;
-
-      &:focus {
-        border-color : #000
-      }
-    }
-
-    button {
-      @include border-radius(5px);
-      max-height : none;
-      min-height : 1px;
-      max-width  : none;
-      min-width  : 1px;
-      position   : absolute;
-      background : $white;
-      cursor     : pointer;
-      height     : 30px;
-      width      : 30px;
-      right      : 2px;
-      padding    : 0;
-      border     : 0;
-      top        : 1px;
-
-      &[disabled] {
-        cursor : pointer
-      }
-
-      &:before {
-        @extend .ani;
-        @include border-radius(50%);
-        border   : 2px solid #333;
-        position : absolute;
-        height   : 13px;
-        width    : 13px;
-        content  : "";
-        left     : 5px;
-        top      : 5px;
-      }
-
-      &:after {
-        @extend .ani;
-        @include transform(rotate(45deg));
-        @include border-radius(3px);
-        position   : absolute;
-        background : #333;
-        content    : "";
-        height     : 2px;
-        width      : 10px;
-        left       : 18px;
-        top        : 21px;
-      }
-
-      &:hover {
-        @include box-shadow(none);
-
-        &:before {
-          border-color : $active
-        }
-
-        &:after {
-          background : $active
-        }
-      }
-    }
-
-    img {
-      @include border-radius(5px);
-      position   : absolute;
-      background : $white;
-      display    : none;
-      padding    : 7px;
-      z-index    : 99;
-      width      : 30px;
-      right      : 1px;
-      top        : 1px;
-    }
-
-    .close {
-      @extend .ani;
-      font           : 400 14px/30px "Verdana", sans-serif;
-      @include border-radius(5px);
-      text-transform : uppercase;
-      text-align     : center;
-      position       : absolute;
-      background     : $white;
-      cursor         : pointer;
-      display        : none;
-      height         : 30px;
-      width          : 30px;
-      z-index        : 32;
-      right          : 1px;
-      top            : 1px;
-
-      &:hover {
-        color : #EF4036
-      }
-    }
-  }
-
-  .search_result {
-    position   : absolute !important;
-    font       : 400 14px/20px $font;
-    left       : 0;
-    max-height : 240px;
-    overflow   : auto;
-    right      : 0;
-    top        : 100%;
-    z-index    : -1;
-
-    .showsearch {
-      padding    : 7px 0 0;
-      margin     : -7px 0 0;
-      background : $white;
-
-      &:empty {
-        display : none
-      }
-    }
-
-    mark {
-      text-align : center;
-      color      : #707070;
-      display    : block;
-      padding    : 10px;
-    }
-
-    p {
-      border-top : 1px solid #E1E1E1;
-      text-align : left;
-      padding    : 0;
-
-      &:first-child {
-        border-top : 0
-      }
-
-      a {
-        @extend %justifycontentspacea;
-        @extend %alignitemscenter;
-        @extend %flex;
-        padding : 5px 10px;
-        color   : #333;
-
-        img {
-          width   : 40px;
-          display : block;
-          margin  : 0 10px 0 0;
-        }
-
-        span {
-          @extend %flex1;
-        }
-
-        &:hover {
-          color : #707070
-        }
-      }
-    }
-  }
+:focus {
+  outline: none
 }
 
-footer {
-  background : $default;
-  overflow   : hidden;
-  padding    : 50px 0;
-  font-size  : 15px;
-  color      : $white;
-
-  .copyright {
-    @extend %justifycontentspaceb;
-    @extend %flex;
-
-    p {
-      margin : 0;
-
-      &.dev {
-        @extend %alignitemscenter;
-        @extend %flex;
-
-        a {
-          text-decoration : none;
-          margin-left     : 7px;
-          width           : 25px;
-
-          &:hover {
-            opacity : .5
-          }
-        }
-      }
-    }
-  }
-}
-
-.wpa_slideshow {
-  position      : relative;
-  margin-bottom : 20px;
-
-  .swiper-pagination-bullet-active {
-    background : yellow
-  }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    @extend .ani;
-    text-align : center;
-    background : none;
-    color      : $white;
-    height     : 40px;
-    width      : 40px;
-
-    &::before {
-      @include transform(rotate(45deg));
-      border-right : 0.05em solid $white;
-      border-top   : 0.05em solid $white;
-      display      : inline-block;
-      position     : relative;
-      height       : 1.5em;
-      margin       : 0 5px;
-      width        : 1.5em;
-      content      : "";
-      top          : 6pt;
-    }
-  }
-
-  .swiper-button-prev {
-    &:before {
-      @include transform(rotate(-135deg))
-    }
-  }
-
-  .swiper-button-disabled {
-    visibility : hidden;
-    opacity    : 0;
-  }
-
-  img {
-    @extend .aligncenter;
-    margin-bottom : 0 !important
-  }
-}
-
-.fancybox-modal-content {
-  max-width : 100%;
-  display   : none;
-  width     : 720px;
+::-moz-focus-inner {
+  border: 0
 }

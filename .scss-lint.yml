@@ -22,3 +22,21 @@ linters:
 
   EmptyLineBetweenBlocks:
     enabled: false
+
+  SpaceAfterPropertyName:
+    enabled: false
+
+  ColorVariable:
+    enabled: false
+
+  PlaceholderInExtend:
+    enabled: false
+
+  HexNotation:
+    style: uppercase
+
+  SelectorDepth:
+    enabled: false
+
+  NestingDepth:
+    enabled: false

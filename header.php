@@ -30,7 +30,7 @@
 <div id="wrap">
     <header>
         <div class="row">
-            <a href="<?php echo site_url(); ?>" class="logo" data-defer="<?php echo theme('logo.svg'); ?>"></a>
+            <a href="<?php echo site_url(); ?>" class="logo" data-defer="<?php echo theme('images/logo.svg'); ?>"></a>
             <a class="nav-icon" href=""><i></i><i></i><i></i></a>
             <nav>
             <?php if ( has_nav_menu( 'primary_menu' ) ) {

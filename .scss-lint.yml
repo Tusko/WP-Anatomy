@@ -1,4 +1,4 @@
-#https://github.com/sasstools/sass-lint/blob/master/docs/rules/nesting-depth.md
+#https://github.com/brigade/scss-lint#configuration
 
 linters:
   PropertySortOrder:
@@ -40,3 +40,6 @@ linters:
 
   NestingDepth:
     enabled: false
+
+  StringQuotes:
+    style: double

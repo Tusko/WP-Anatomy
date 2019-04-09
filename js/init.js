@@ -2,6 +2,17 @@
 /*jshint multistr: true, latedef: nofunc */
 /*global jQuery, $, CustomEvent, Swiper, is_numeric_input, loadlater, mob*/
 
+window.lazySizesConfig = window.lazySizesConfig || {};
+window.lazySizesConfig.loadMode = 1;
+window.lazySizesConfig.expand = 300;
+
+document.addEventListener('lazybeforeunveil', function (e) {
+    var bg = e.target.getAttribute('data-bg');
+    if (bg) {
+        e.target.style.backgroundImage = 'url(' + bg + ')';
+    }
+});
+
 $(document).ready(function(){
     'use strict';
 

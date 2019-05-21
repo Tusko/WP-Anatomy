@@ -23,7 +23,7 @@ add_filter('request', 'wpa_request_filter');
 //  Custom AJAX search
 add_filter( 'posts_search', '__search_by_title_only', 500, 2 );
 
-function __search_by_title_only( $search, &$wp_query ){
+function __search_by_title_only( $search, $wp_query ){
     global $wpdb;
     if ( empty( $search ) ) return $search;
     $q = $wp_query->query_vars;

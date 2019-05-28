@@ -1,0 +1,224 @@
+@import '../components/mixins';
+
+form {
+	label {
+		color       : $default;
+		font-family : $font;
+		font-size   : 16px;
+		font-weight : 500;
+
+		span.gfield_required {
+			color : #F00
+		}
+	}
+
+	li.gfield {
+		padding-left : 0 !important;
+
+		&.gfield_error {
+			padding-bottom : 0 !important;
+			background     : none !important;
+			padding-top    : 0 !important;
+			border         : 0 !important;
+		}
+		&:before {
+			display : none !important
+		}
+		.description,
+		.gfield_description,
+		.gsection_description,
+		.instruction {
+			font-size : 100% !important
+		}
+
+		.ginput_container_fileupload {
+			& + .gfield_description {
+				@extend .ani;
+				box-sizing    : border-box !important;
+				border        : 2px dashed rgba($default, .2);
+				background    : rgba($default, .1);
+				position      : absolute;
+				text-align    : center;
+				top           : 30px;
+				width         : auto;
+				right         : 16px;
+				padding       : 10px;
+				border-radius : 5px;
+				z-index       : -1;
+				left          : 0;
+			}
+			&.dragover {
+				& + .gfield_description {
+					border     : 2px dashed rgba($active, .4);
+					background : rgba($active, .2);
+				}
+			}
+			input[type="file"] {
+				max-height : none !important;
+				display    : block !important;
+				width      : 100% !important;
+				cursor     : pointer;
+				height     : 45px;
+				opacity    : 0;
+			}
+			.ginput_preview {
+				margin : 20px 0 0;
+				> img {
+					margin : 0 4px 0 0;
+				}
+			}
+		}
+	}
+
+	input[type="text"],
+	input[type="number"],
+	input[type="email"],
+	input[type="tel"],
+	input[type="password"],
+	textarea {
+		@include border-radius(0);
+		border        : 0 !important;
+		border-bottom : 1px solid $default !important;
+		font          : 500 16px $font;
+		padding       : 0 !important;
+		margin        : 0 auto 20px;
+		color         : $default;
+		background    : none;
+		display       : block;
+		height        : 32px;
+		width         : 100%;
+		&:focus {
+			border-color : $active
+		}
+	}
+
+	textarea {
+		@include transition(none);
+		padding-top : .75em !important;
+		overflow    : hidden;
+		min-height  : 240px;
+		line-height : 24px;
+		resize      : none;
+		&.small {
+			min-height : 1px
+		}
+	}
+
+	input.datepicker {
+		width : 100% !important
+	}
+
+	.ginput_container_radio,
+	.ginput_container_checkbox {
+		ul {
+			li {
+				margin-bottom : 16px !important;
+
+				label {
+					padding-left : 30px !important;
+					position     : relative;
+					cursor       : pointer;
+					font-size    : 18px;
+
+					&:before {
+						@extend .ani;
+						border   : 1px solid $default;
+						position : absolute;
+						height   : 20px;
+						width    : 20px;
+						content  : '';
+						top      : 3px;
+						left     : 0;
+					}
+				}
+
+				input {
+					display : none !important;
+
+					&:checked + label {
+						&:before {
+							border-color : $active;
+							background   : $active;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.ginput_container_radio {
+		ul li label:before {
+			@include border-radius(50%);
+		}
+	}
+
+	div.validation_error {
+		border-bottom-color : $red !important;
+		border-top-color    : $red !important;
+		color               : $red !important;
+	}
+
+	.gform_ajax_spinner {
+		height : auto;
+		width  : 50px;
+	}
+}
+
+.button,
+.alm-load-more-btn,
+input[type="submit"] {
+	@include user-select(none);
+	@include border-radius(0);
+	font            : 500 18px/22px $font;
+	display         : inline-block;
+	text-transform  : uppercase;
+	padding         : 12px 20px;
+	position        : relative;
+	background      : $default;
+	cursor          : pointer;
+	color           : $white;
+	text-align      : center;
+	min-width       : 250px;
+	text-decoration : none;
+	outline         : none;
+	margin          : 0;
+	border          : 0;
+
+	&:hover {
+		background : $active;
+	}
+
+	&.white {
+		color      : $active;
+		background : $white;
+
+		&:hover {
+			opacity : .75
+		}
+	}
+
+	&.empty {
+		color      : $default;
+		background : none;
+		min-width  : 1px;
+		&:hover {
+			color : $active
+		}
+	}
+}
+
+.selectric-wrapper {
+	.selectric-items {
+		ul {
+			padding-bottom : 0 !important;
+			li {
+				padding-left  : 20px;
+				padding-right : 20px;
+				margin-bottom : 0;
+				&:before {
+					display : none;
+				}
+			}
+		}
+	}
+}

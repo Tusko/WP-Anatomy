@@ -300,10 +300,43 @@ function wpa_widget_title($title) {
 	return $title == '&nbsp;' ? '' : $title;
 }
 
+
+function wpa_convert_webp_src($src) {
+	$upload_dir  = wp_upload_dir();
+	$src_url     = parse_url($upload_dir['baseurl']);
+	$upload_path = $src_url['path'];
+	if(strpos($src, $upload_path) !== false) {
+		$src_webp      = str_replace('.jpg', '.webp', $src);
+		$src_webp      = str_replace('.jpeg', '.webp', $src_webp);
+		$src_webp      = str_replace('.png', '.webp', $src_webp);
+		$parts         = explode($upload_path, $src_webp);
+		$relative_path = $parts[1];
+		// check if relative path is not empty and file exists
+		if( ! empty($relative_path) && file_exists($upload_dir['basedir'] . $relative_path)) {
+			return $src_webp;
+		} else {
+			// try appended webp extension
+			$src_webp_appended      = $src . '.webp';
+			$parts_appended         = explode($upload_path, $src_webp_appended);
+			$relative_path_appended = $parts_appended[1];
+			// check if relative path is not empty and file exists
+			if( ! empty($relative_path_appended) && file_exists($upload_dir['basedir'] . $relative_path_appended)) {
+				return $src_webp_appended;
+			}
+		}
+	}
+
+	return $src;
+}
+
 //simple function for wp_get_attachment_image_src()
-function image_src($id, $size = 'full', $background_image = false, $height = false) {
-	if($image = wp_get_attachment_image_src((get_post_type($id) == 'attachment' ? $id : get_post_thumbnail_id($id)), $size, true)) {
-		return $background_image ? 'background-image: url(' . $image[0] . ');' . ($height ? 'height:' . $image[2] . 'px' : '') : $image[0];
+function image_src($id, $size, $background_image = false, $height = false) {
+	$attachmentID = get_post_type($id) === 'attachment' ? $id : get_post_thumbnail_id($id);
+	$image        = wp_get_attachment_image_src($attachmentID, $size, true);
+	if($image) {
+		$src = wpa_convert_webp_src($image[0]);
+
+		return $background_image ? 'background-image: url(' . $src . ');' . ($height ? 'height:' . $image[2] . 'px' : '') : $src;
 	}
 }
 

@@ -197,8 +197,8 @@ $(window).on('defer.cssLoad', function() {
 })
   .bind('orientationchange resize', function() {
     'use strict';
-//    window.console.log('resize');
-  }).resizeEnd(function() {
+    // window.console.log('resize');
+  }).on('resizeend', function() {
   'use strict';
-//    window.console.log('resizeEnd');
+  // window.console.log('resizeEnd');
 });

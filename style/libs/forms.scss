@@ -83,12 +83,12 @@ form {
 		padding       : 0 !important;
 		margin        : 0 auto 20px;
 		color         : $default;
-		background    : none;
 		display       : block;
+		background    : none;
 		height        : 32px;
 		width         : 100%;
 		&:focus {
-			border-color : $active
+			border-bottom : 1px solid $red !important;
 		}
 	}
 
@@ -207,7 +207,17 @@ input[type="submit"] {
 	}
 }
 
+
 .selectric-wrapper {
+	.selectric {
+		height : 60px;
+		.label {
+			margin      : 0 40px 0 20px;
+			color       : $default;
+			line-height : 60px;
+			height      : 60px;
+		}
+	}
 	.selectric-items {
 		ul {
 			padding-bottom : 0 !important;
@@ -219,6 +229,21 @@ input[type="submit"] {
 					display : none;
 				}
 			}
+		}
+	}
+	.selectric-icon-down {
+		@include transform(translateY(-50%));
+		position : absolute;
+		right    : 20px;
+		top      : 50%;
+		&:before {
+			@include transform(rotate(-45deg));
+			border-left   : 2px solid $default;
+			border-bottom : 2px solid $default;
+			display       : block;
+			height        : 10px;
+			width         : 10px;
+			content       : "";
 		}
 	}
 }

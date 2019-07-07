@@ -143,6 +143,18 @@ function fixGravityFileInput() {
   });
 }
 
+(function($) {
+  $(document).bind('gform_post_render', function() {
+    var $firstError = $('li.gfield.gfield_error:first');
+    var h = $('header');
+    if($firstError.length > 0) {
+      $firstError.find('input, select, textarea').eq(0).focus();
+      $('html, body').animate({scrollTop: $firstError.offset().top - (h.hasClass('fx') ? h.outerHeight(true) : 0)}, 350);
+    }
+    fixGravityFileInput();
+  });
+})(jQuery);
+
 window.onload = function() {
   'use strict';
   is_numeric_input();

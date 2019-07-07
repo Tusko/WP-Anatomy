@@ -68,9 +68,9 @@ $(document).ready(function() {
       });
       $('select').each(function() {
         var e = $(this);
-        if(e.data('selectric') !== 'undefined') {
+        if(e.data('selectric') === 'undefined') {
           e.selectric({
-            arrowButtonMarkup: '<i class="arrow_carrot-down"></i>',
+            arrowButtonMarkup: '<i class="selectric-icon-down"></i>',
             maxHeight: (mob() ? 200 : 350),
             disableOnMobile: false,
             nativeOnMobile: false
@@ -126,7 +126,7 @@ $(document).ready(function() {
 
   //Custom select
   $('select').selectric({
-    arrowButtonMarkup: '<i class="arrow_carrot-down"></i>',
+    arrowButtonMarkup: '<i class="selectric-icon-down"></i>',
     maxHeight: (mob() ? 200 : 350),
     disableOnMobile: false,
     nativeOnMobile: false

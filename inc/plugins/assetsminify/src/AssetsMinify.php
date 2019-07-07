@@ -48,7 +48,7 @@ class AssetsMinify extends AssetsMinify\Pattern\Singleton {
 				do_action('edit_post');
 				do_action('litespeed_cache_api_purge');
 
-				echo '<script>window.onload = function(){ if(location.search.indexOf(\'purge_all\') === -1) window.location = jQuery("#wp-admin-bar-litespeed-purge-all > a").attr("href") }</script>';
+				echo '<script>window.onload = function(){ if(location.search.indexOf(\'purge_all\') === -1 && jQuery("#wp-admin-bar-litespeed-purge-all").length > 0) window.location = jQuery("#wp-admin-bar-litespeed-purge-all > a").attr("href") }</script>';
 
 				$purgeCacheResponse = 'LiteSpeed Cache removed';
 			} // if WP Super Cache is being used, clear the cache
@@ -80,7 +80,7 @@ class AssetsMinify extends AssetsMinify\Pattern\Singleton {
 				echo '<div class="error">
                     <h4>✖ Cache removed!</h4>
                     ' . (! empty($purgeCacheResponse) ? '<h4>✖ ' . $purgeCacheResponse . '.</h4>' : '') . '
-                    <p>', count($filesList), ' files was removed.</p><p>Reload your <a href="' . site_url('/') . '" target="">homepage</a> to refrefh cache.</p></div>';
+                    <p>', count($filesList), ' files was removed.</p><p>Reload your <a target="_blank" href="' . site_url('/') . '" target="">homepage</a> to refresh cache.</p></div>';
 			});
 		}
 	}

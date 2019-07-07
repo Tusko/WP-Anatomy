@@ -543,28 +543,17 @@ function add_gf_cap() {
 
 add_action('admin_init', 'add_gf_cap');
 
-add_filter('gform_pre_render', 'gw_first_error_focus');
-function gw_first_error_focus($form) {
-	add_filter('gform_confirmation_anchor', '__return_false'); ?>
-	<script type="text/javascript">
-    if(window['jQuery']) {
-      (function($) {
-        $(document).bind('gform_post_render', function() {
-          var $firstError = $('li.gfield.gfield_error:first');
-          if($firstError.length > 0) {
-            $firstError.find('input, select, textarea').eq(0).focus();
-            document.body.scrollTop = $firstError.offset().top;
-          }
-          fixGravityFileInput();
-        });
-      })(jQuery);
-    }
-	</script>
-	<?php
-	return $form;
-}
-
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 function spinner_url($image_src, $form) {
 	return WPA_SPINNER;
 }
+
+function disable_media_comments($open, $post_id) {
+	if(get_post_type($post_id) == 'attachment') {
+		wp_die("Comment not allowed.");
+	}
+
+	return $open;
+}
+
+add_action('pre_comment_on_post', 'disable_media_comments');

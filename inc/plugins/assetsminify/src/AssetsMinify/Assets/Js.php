@@ -1,4 +1,5 @@
 <?php
+
 namespace AssetsMinify\Assets;
 
 use Assetic\Asset\StringAsset;

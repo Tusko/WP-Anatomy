@@ -6,6 +6,8 @@ window.lazySizesConfig = window.lazySizesConfig || {};
 window.lazySizesConfig.loadMode = 1;
 window.lazySizesConfig.expand = 300;
 
+var selectEl = $('select:not(.wpdiscuz_select)');
+
 document.addEventListener('lazybeforeunveil', function(e) {
   var bg = e.target.getAttribute('data-bg');
   if(bg) {
@@ -54,27 +56,11 @@ $(document).ready(function() {
 
     .ajaxComplete(function() {
       //Custom select rebuild
-      $('.selectric-wrapper').each(function() {
-        var t = $(this),
-          s = $('select', t),
-          Selectric = s.data('selectric');
-        if($('input.input-text', t).length > 0) {
-          $('input.input-text', t).clone().appendTo('#billing_state_field');
-          t.remove();
-        }
-        if(typeof Selectric !== 'undefined') {
-          Selectric.refresh();
-        }
-      });
-      $('select').each(function() {
+      selectEl.each(function() {
         var e = $(this);
-        if(e.data('selectric') === 'undefined') {
-          e.selectric({
-            arrowButtonMarkup: '<i class="selectric-icon-down"></i>',
-            maxHeight: (mob() ? 200 : 350),
-            disableOnMobile: false,
-            nativeOnMobile: false
-          });
+        if(typeof e.data('select2') === 'undefined') {
+          e.select2();
+          $(".select2-selection__arrow").html('<i class="arrow_carrot-down" />');
         }
       });
 
@@ -125,12 +111,10 @@ $(document).ready(function() {
   });
 
   //Custom select
-  $('select').selectric({
-    arrowButtonMarkup: '<i class="selectric-icon-down"></i>',
-    maxHeight: (mob() ? 200 : 350),
-    disableOnMobile: false,
-    nativeOnMobile: false
+  selectEl.select2({
+    dropdownPosition: 'below'
   });
+  $(".select2-selection__arrow").html('<i class="arrow_carrot-down" />');
 
   //  fluid video (iframe)
   $('.content article iframe').each(function() {

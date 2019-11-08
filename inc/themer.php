@@ -302,6 +302,9 @@ function wpa_widget_title($title) {
 
 
 function wpa_convert_webp_src($src) {
+	if(strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') === false) {
+		return $src;
+	}
 	$upload_dir  = wp_upload_dir();
 	$src_url     = parse_url($upload_dir['baseurl']);
 	$upload_path = $src_url['path'];
@@ -548,12 +551,18 @@ function spinner_url($image_src, $form) {
 	return WPA_SPINNER;
 }
 
-function disable_media_comments($open, $post_id) {
-	if(get_post_type($post_id) == 'attachment') {
-		wp_die("Comment not allowed.");
+add_filter("gform_init_scripts_footer", "gform_js_init_scripts");
+function gform_js_init_scripts() {
+	return true;
+}
+
+function wpa_add_filter_media_comment($open, $post_id) {
+	$post = get_post($post_id);
+	if($post->post_type === 'attachment') {
+		return false;
 	}
 
 	return $open;
 }
 
-add_action('pre_comment_on_post', 'disable_media_comments');
+add_filter('comments_open', 'wpa_add_filter_media_comment', 10, 2);

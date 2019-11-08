@@ -207,43 +207,61 @@ input[type="submit"] {
 	}
 }
 
+.select2.select2-container {
+	width   : auto !important;
+	display : block;
+	.select2-selection--single {
+		@include border-radius(0);
+		border        : 0;
+		border-bottom : 1px solid #CCC;
+		height        : auto;
+		.select2-selection__rendered {
+			font         : 500 15px/40px $font;
+			color        : $default;
+			height       : 40px;
+			padding-left : 0;
+		}
+		.select2-selection__arrow {
+			@include justify-content(center);
+			@include align-items(center);
+			@include flexbox();
+			height    : 100%;
+			font-size : 24px;
+		}
+	}
+}
 
-.selectric-wrapper {
-	.selectric {
-		height : 60px;
-		.label {
-			margin      : 0 40px 0 20px;
-			color       : $default;
-			line-height : 60px;
-			height      : 60px;
+.select2-dropdown {
+	@include border-radius(0);
+	z-index      : 999992;
+	border-color : #CCC;
+}
+
+.select2-container--default {
+	.select2-search--dropdown {
+		.select2-search__field {
+			border      : 1px solid #F5F5F5;
+			padding     : 0 10px;
+			font-size   : 15px;
+			height      : 32px;
+			font-weight : 300;
 		}
 	}
-	.selectric-items {
-		ul {
-			padding-bottom : 0 !important;
-			li {
-				padding-left  : 20px;
-				padding-right : 20px;
-				margin-bottom : 0;
-				&:before {
-					display : none;
-				}
+	.select2-results {
+		li.select2-results__option {
+			font    : 300 15px/40px $font;
+			color   : $default;
+			padding : 0 10px;
+			&:hover,
+			&.select2-results__option--highlighted {
+				background : $active;
+				color      : $white;
 			}
+
 		}
-	}
-	.selectric-icon-down {
-		@include transform(translateY(-50%));
-		position : absolute;
-		right    : 20px;
-		top      : 50%;
-		&:before {
-			@include transform(rotate(-45deg));
-			border-left   : 2px solid $default;
-			border-bottom : 2px solid $default;
-			display       : block;
-			height        : 10px;
-			width         : 10px;
-			content       : "";
+		li.select2-results__option[aria-selected="true"] {
+			background : $active;
+			color      : $white;
 		}
 	}
 }

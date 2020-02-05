@@ -1,4 +1,4 @@
-<?php if(defined('WP_DEBUG') && true !== WP_DEBUG) {
+<?php if(defined('WP_DEBUG') && true !== WP_DEBUG && ! isset($_REQUEST['debug'])) {
 	ob_start('ob_html_compress');
 } ?>
 <!DOCTYPE html>
@@ -28,9 +28,11 @@
 </head>
 <body <?php body_class(); ?> data-hash="<?php wpa_fontbase64(true); ?>" data-a="<?php echo admin_url('admin-ajax.php'); ?>">
 <div id="wrap">
-	<header>
+	<header class="lazyload" data-lazyload-children=".lazyload">
 		<div class="row">
-			<a href="<?php echo site_url(); ?>" class="logo" data-defer="<?php echo theme('images/logo.svg'); ?>"></a>
+			<a href="<?php echo site_url(); ?>" class="logo">
+				<img class="lazyload" data-src="<?php echo theme('images/logo.svg'); ?>" alt="<?php bloginfo('name'); ?>">
+			</a>
 			<a class="nav-icon" href=""><i></i><i></i><i></i></a>
 			<nav>
 				<?php if(has_nav_menu('primary_menu')) {

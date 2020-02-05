@@ -186,7 +186,7 @@
 	@include transition();
 }
 
-@mixin mq($prop: max-width, $size) {
+@mixin mq($size, $prop: max-width) {
 	@media screen and ($prop: $size) {
 		@content;
 	}

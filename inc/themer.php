@@ -566,3 +566,17 @@ function wpa_add_filter_media_comment($open, $post_id) {
 }
 
 add_filter('comments_open', 'wpa_add_filter_media_comment', 10, 2);
+
+function wrapStr($str, $before = '<p class="acf-str">', $after = '</p>', $echo = true) {
+	if(strlen($str) == 0) {
+		return;
+	}
+
+	$string = $before . __($str) . $after;
+
+	if($echo) {
+		echo $string;
+	} else {
+		return $string;
+	}
+}

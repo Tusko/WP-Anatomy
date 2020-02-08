@@ -158,6 +158,8 @@ $(document).ready(function() {
 $(window).on('defer.cssLoad', function() {
   'use strict';
 
+  AOS.init();
+
   //  WP Gallery extension
   window.WPASwiper = [];
   $('.wpa_slideshow').each(function(i) {
@@ -190,7 +192,7 @@ $(window).on('defer.cssLoad', function() {
           loadPrevNext: true
         }
       });
-    }, 1e3 * i);
+    }, 250 * i);
   });
 
   fixGravityFileInput();

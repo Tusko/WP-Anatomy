@@ -487,6 +487,9 @@ footer {
 				a {
 					display         : block;
 					text-decoration : none;
+					&:hover {
+						opacity : .5;
+					}
 					small {
 						display : block;
 					}

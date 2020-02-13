@@ -140,7 +140,7 @@ function ob_html_compress($buf) {
 function wpa_discard_menu_classes($classes, $item) {
 	$classes = array_filter(
 			$classes, function($class) {
-		return in_array($class, array("current-menu-item", "current-menu-parent", "menu-item-has-children"));
+		return in_array($class, array("current-menu-item", "current-menu-parent", "current_page_parent", "menu-item-has-children"));
 	}
 	);
 

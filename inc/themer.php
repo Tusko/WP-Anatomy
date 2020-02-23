@@ -333,7 +333,7 @@ function wpa_convert_webp_src($src) {
 }
 
 //simple function for wp_get_attachment_image_src()
-function image_src($id, $size, $background_image = false, $height = false) {
+function image_src($id, $size = 'full', $background_image = false, $height = false) {
 	$attachmentID = get_post_type($id) === 'attachment' ? $id : get_post_thumbnail_id($id);
 	$image        = wp_get_attachment_image_src($attachmentID, $size, true);
 	if($image) {

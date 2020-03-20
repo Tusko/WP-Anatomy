@@ -152,6 +152,8 @@ function wpa_remove_dashboard_widgets() {
 	remove_meta_box('dashboard_plugins', 'dashboard', 'normal'); //Plugins
 	remove_meta_box('rg_forms_dashboard', 'dashboard', 'normal'); //Gravity Forms
 	remove_meta_box('icl_dashboard_widget', 'dashboard', 'normal'); //Multi Language Plugin
+	remove_meta_box('wpseo-dashboard-overview', 'dashboard', 'normal'); //Yoast SEO
+
 	remove_action('welcome_panel', 'wp_welcome_panel');
 	//remove_meta_box('dashboard_activity','dashboard', 'normal'); //Activity
 	//remove_meta_box('dashboard_right_now','dashboard', 'normal'); //Right Now

@@ -6,7 +6,6 @@ window.lazySizesConfig = window.lazySizesConfig || {};
 window.lazySizesConfig.loadMode = 1;
 window.lazySizesConfig.expand = 300;
 
-
 var selectEl,
   selectInit = function(selector) {
     //Custom select

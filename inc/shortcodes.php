@@ -47,7 +47,7 @@ if(defined('GOOGLEMAPS')) {
             ' . ($icon ? 'icon:"' . $icon . '",' : '') . '
             animation: google.maps.Animation.DROP
         });
-        ' . ($infobox ? 'marker.info = new google.maps.InfoWindow({content: \'' . $infobox . '\'});
+        ' . ($infobox ? 'marker.info = new google.maps.InfoWindow({content: \'' . str_replace(array("\r", "\n"), "", $infobox) . '\'});
         google.maps.event.addListener(marker, "click", function() {marker.info.open(' . $mapid . ', marker);});' : '') . '
 
         google.maps.event.addListener(' . $mapid . ', "center_changed", function() {

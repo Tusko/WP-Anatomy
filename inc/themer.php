@@ -6,7 +6,6 @@ if(extension_loaded('zlib')) {
 
 require_once 'qtranslate.php';
 require_once 'search_query.php';
-require_once 'imgsrc.php';
 require_once 'plugins/colors.inc.php';
 
 // Auto-install recommended plugins
@@ -139,14 +138,14 @@ function ob_html_compress($buf) {
 //custom wp_nav_menu classes
 function wpa_discard_menu_classes($classes, $item) {
 	$classes = array_filter(
-			$classes, function($class) {
+		$classes, function($class) {
 		return in_array($class, array("current-menu-item", "current-menu-parent", "current_page_parent", "menu-item-has-children"));
 	}
 	);
 
 	return array_merge(
-			$classes,
-			(array) get_post_meta($item->ID, '_menu_item_classes', true)
+		$classes,
+		(array) get_post_meta($item->ID, '_menu_item_classes', true)
 	);
 }
 
@@ -176,11 +175,11 @@ function wpa_body_classes($classes) {
 //        }
 		foreach($classes as $k => $v) {
 			if(
-					$v == 'page-template' ||
-					$v == 'page-id-' . $post->ID ||
-					$v == 'page-template-default' ||
-					$v == 'woocommerce-page' ||
-					($temp != null ? ($v == 'page-template-' . $tn . '-php' || $v == 'page-template-' . $tn) : '')) {
+				$v == 'page-template' ||
+				$v == 'page-id-' . $post->ID ||
+				$v == 'page-template-default' ||
+				$v == 'woocommerce-page' ||
+				($temp != null ? ($v == 'page-template-' . $tn . '-php' || $v == 'page-template-' . $tn) : '')) {
 				unset($classes[ $k ]);
 			}
 		}
@@ -279,13 +278,15 @@ function wpa_title() {
 	}
 }
 
-function wpa_qtrans_site_url($url) {
-	// you probably don't want this in admin side
-	if(is_admin()) {
-		return $url;
-	}
+//simple function for wp_get_attachment_image_src()
+function image_src($id, $size = 'full', $background_image = false, $height = false) {
+	$attachmentID = get_post_type($id) === 'attachment' ? $id : get_post_thumbnail_id($id);
+	$image        = wp_get_attachment_image_src($attachmentID, $size, true);
+	if($image) {
+		$src = "/?imgsrc=$image[0]";
 
-	return function_exists('qtranxf_convertURL') ? qtranxf_convertURL($url) : $url;
+		return $background_image ? 'background-image: url(' . $src . ');' . ($height ? 'height:' . $image[2] . 'px' : '') : $src;
+	}
 }
 
 //Show empty categories in category widget
@@ -327,7 +328,7 @@ function wpa_init() {
 	global $wp;
 	// Remove the embed query var.
 	$wp->public_query_vars = array_diff($wp->public_query_vars, array(
-			'embed',
+		'embed',
 	));
 	// Filters for WP-API version 1.x
 	add_filter('json_enabled', '__return_false');
@@ -389,13 +390,13 @@ function wpa_init() {
 
 	//Disbale RSS feeds
 	add_actions([
-			'do_feed',
-			'do_feed_rdf',
-			'do_feed_rss',
-			'do_feed_rss2',
-			'do_feed_atom',
-			'do_feed_rss2_comments',
-			'do_feed_atom_comments'
+		'do_feed',
+		'do_feed_rdf',
+		'do_feed_rss',
+		'do_feed_rss2',
+		'do_feed_atom',
+		'do_feed_rss2_comments',
+		'do_feed_atom_comments'
 	], function() {
 		global $wp_query;
 		$wp_query->set_404();
@@ -476,8 +477,8 @@ function wpa_fontbase64($fonthash) {
 		$minfont  = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $minfont);
 		$minfont  = str_replace(';}', '}', $minfont);
 		$fontpack = array(
-				'md5'   => $md5_cached,
-				'value' => $minfont
+			'md5'   => $md5_cached,
+			'value' => $minfont
 		);
 		echo json_encode($fontpack);
 		exit;
@@ -487,6 +488,16 @@ function wpa_fontbase64($fonthash) {
 add_action('wp_ajax_wpa_fontbase64', 'wpa_fontbase64');
 add_action('wp_ajax_nopriv_wpa_fontbase64', 'wpa_fontbase64');
 
+//simple function for wp_get_attachment_image_src()
+function image_src($id, $size = 'full', $background_image = false, $height = false) {
+	$attachmentID = get_post_type($id) === 'attachment' ? $id : get_post_thumbnail_id($id);
+	$image        = wp_get_attachment_image_src($attachmentID, $size, true);
+	if($image) {
+		$src = $image[0];
+
+		return $background_image ? 'background-image: url(' . $src . ');' . ($height ? 'height:' . $image[2] . 'px' : '') : $src;
+	}
+}
 
 if(defined('GOOGLEMAPS')) {
 	function my_acf_init() {

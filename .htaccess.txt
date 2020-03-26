@@ -1,0 +1,262 @@
+
+RewriteOptions inherit
+# BEGIN LSCACHE
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+<IfModule LiteSpeed>
+RewriteEngine on
+CacheLookup on
+RewriteRule .* - [E=Cache-Control:no-autoflush]
+RewriteRule ^min/\w+\.(css|js) - [E=cache-control:no-vary]
+
+### marker CACHE RESOURCE start ###
+RewriteRule wp-content/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php - [E=cache-control:max-age=3600]
+### marker CACHE RESOURCE end ###
+
+### marker FAVICON start ###
+RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]
+### marker FAVICON end ###
+
+</IfModule>
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+# END LSCACHE
+# BEGIN NON_LSCACHE
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+### marker MINIFY start ###
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} ^(.*)/min/(\w+)\.(css|js)$
+RewriteCond %1/wp-content/cache/$2/$1.$2 -f
+RewriteRule min/(\w+)\.(css|js) wp-content/cache/$2/$1.$2 [L]
+</IfModule>
+### marker MINIFY end ###
+
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+# END NON_LSCACHE
+# BEGIN WordPress
+# The directives (lines) between `BEGIN WordPress` and `END WordPress` are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
+
+# BEGIN GZIP
+<IfModule mod_filter.c>
+AddOutputFilterByType DEFLATE "application/atom+xml" \
+                          "application/javascript" \
+                          "application/json" \
+                          "application/ld+json" \
+                          "application/manifest+json" \
+                          "application/rdf+xml" \
+                          "application/rss+xml" \
+                          "application/schema+json" \
+                          "application/vnd.geo+json" \
+                          "application/vnd.ms-fontobject" \
+                          "application/x-font-ttf" \
+                          "application/x-javascript" \
+                          "application/x-web-app-manifest+json" \
+                          "application/xhtml+xml" \
+                          "application/xml" \
+                          "font/eot" \
+                          "font/opentype" \
+                          "image/bmp" \
+                          "image/svg+xml" \
+                          "image/vnd.microsoft.icon" \
+                          "image/x-icon" \
+                          "text/cache-manifest" \
+                          "text/css" \
+                          "text/html" \
+                          "text/javascript" \
+                          "text/plain" \
+                          "text/vcard" \
+                          "text/vnd.rim.location.xloc" \
+                          "text/vtt" \
+                          "text/x-component" \
+                          "text/x-cross-domain-policy" \
+                          "text/xml"
+
+</IfModule>
+# END GZIP
+
+# JavaScript
+#   Normalize to standard type (it's sniffed in IE anyways)
+#   tools.ietf.org/html/rfc4329#section-7.2
+AddType	application/javascript			js jsonp
+AddType	application/json			json
+
+# Audio
+AddType	audio/ogg				oga ogg
+AddType	audio/mp4				m4a f4a f4b
+
+# Video
+AddType	video/ogg				ogv
+AddType	video/mp4				mp4 m4v f4v f4p
+AddType	video/webm				webm
+AddType	video/x-flv				flv
+
+# SVG
+#   Required for svg webfonts on iPad
+#   twitter.com/FontSquirrel/status/14855840545
+AddType		image/svg+xml			svg svgz
+AddEncoding	gzip				svgz
+
+# Webfonts
+AddType application/vnd.ms-fontobject		eot
+AddType application/x-font-ttf			ttf ttc
+AddType font/opentype				otf
+AddType application/x-font-woff			woff
+
+# Assorted types
+AddType	image/x-icon				ico
+AddType	image/webp				webp
+AddType	text/cache-manifest			appcache manifest
+AddType	text/x-component			htc
+AddType	application/xml				rss atom xml rdf
+AddType	application/x-chrome-extension		crx
+AddType	application/x-opera-extension		oex
+AddType	application/x-xpinstall			xpi
+AddType	application/octet-stream		safariextz
+AddType	application/x-web-app-manifest+json	webapp
+AddType	text/x-vcard				vcf
+AddType	application/x-shockwave-flash		swf
+AddType	text/vtt				vtt
+
+<IfModule mod_expires.c>
+	ExpiresActive On
+
+    ExpiresDefault "access plus 2 months"
+    ExpiresByType text/css  A2592000
+    ExpiresByType text/javascript A2592000
+    ExpiresByType application/javascript A2592000
+    ExpiresByType image/gif A2592000
+    ExpiresByType image/png A2592000
+    ExpiresByType image/jpg A2592000
+    ExpiresByType image/jpeg A2592000
+    ExpiresByType image/svg A2592000
+    ExpiresByType image/webp A2592000
+
+	ExpiresByType application/json			"access plus 1 year"
+	ExpiresByType application/pdf			"access plus 1 year"
+	ExpiresByType application/x-shockwave-flash	"access plus 1 year"
+	ExpiresByType image/bmp 			"access plus 1 year"
+	ExpiresByType image/gif 			"access plus 1 year"
+	ExpiresByType image/jpeg 			"access plus 1 year"
+	ExpiresByType image/png 			"access plus 1 year"
+	ExpiresByType image/svg+xml 			"access plus 1 year"
+	ExpiresByType image/tiff 			"access plus 1 year"
+	ExpiresByType image/vnd.microsoft.icon 		"access plus 1 year"
+    ExpiresByType image/x-icon			"access plus 1 year"
+	ExpiresByType text/css 				"access plus 1 year"
+	ExpiresByType video/x-flv 			"access plus 1 year"
+	ExpiresByType application/vnd.bw-fontobject	"access plus 1 year"
+	ExpiresByType application/x-font-ttf		"access plus 1 year"
+	ExpiresByType application/font-woff		"access plus 1 year"
+	ExpiresByType font/opentype			"access plus 1 year"
+	ExpiresByType image/webp			"access plus 1 year"
+
+#	# The following MIME types are in the process of registration
+	ExpiresByType application/xslt+xml		"access plus 1 year"
+	ExpiresByType image/svg+xml			"access plus 1 year"
+#
+#	# The following MIME types are NOT registered
+	ExpiresByType application/mathml+xml		"access plus 1 year"
+	ExpiresByType application/rss+xml		"access plus 1 year"
+#
+#	# JavaScript has various MIME types
+	ExpiresByType application/x-javascript 		"access plus 1 year"
+	ExpiresByType application/javascript 		"access plus 1 year"
+	ExpiresByType text/ecmascript 			"access plus 1 year"
+	ExpiresByType text/javascript 			"access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+	# Try removing etag headers (if it's coming from proxy for example)
+	Header unset ETag
+</IfModule>
+
+# Remove ETags
+FileETag None
+
+<filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|svg|js|css|swf|webp)$">
+Header set Cache-Control "max-age=604800, public"
+</filesMatch>
+
+<IfModule mod_setenvif.c>
+  # Vary: Accept for all the requests to jpeg and png
+  SetEnvIf Request_URI "\.(jpe?g|png)$" REQUEST_image
+</IfModule>
+
+
+<ifModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  RewriteCond %{REQUEST_URI}  (?i)(.*)(\.jpe?g|\.png)$
+  RewriteCond %{DOCUMENT_ROOT}%1.webp -f
+  RewriteRule (?i)(.*)(\.jpe?g|\.png)$ %1\.webp [L,T=image/webp,R]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header append Vary Accept env=REDIRECT_accept
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+</IfModule>
+
+# Rules to correctly serve gzip compressed CSS and JS files.
+# Requires both mod_rewrite and mod_headers to be enabled.
+<IfModule mod_headers.c>
+  # Serve brotli compressed CSS files if they exist and the client accepts gzip.
+  RewriteCond %{HTTP:Accept-encoding} br
+  RewriteCond %{REQUEST_FILENAME}\.br -s
+  RewriteRule ^(.*)\.css $1\.css\.br [QSA]
+
+  # Serve gzip compressed CSS files if they exist and the client accepts gzip.
+  RewriteCond %{HTTP:Accept-encoding} gzip
+  RewriteCond %{REQUEST_FILENAME}\.gz -s
+  RewriteRule ^(.*)\.css $1\.css\.gz [QSA]
+
+  # Serve brotli compressed JS files if they exist and the client accepts gzip.
+  RewriteCond %{HTTP:Accept-encoding} br
+  RewriteCond %{REQUEST_FILENAME}\.br -s
+  RewriteRule ^(.*)\.js $1\.js\.br [QSA]
+
+  # Serve gzip compressed JS files if they exist and the client accepts gzip.
+  RewriteCond %{HTTP:Accept-encoding} gzip
+  RewriteCond %{REQUEST_FILENAME}\.gz -s
+  RewriteRule ^(.*)\.js $1\.js\.gz [QSA]
+
+  # Serve correct content types, and prevent mod_deflate double gzip.
+  RewriteRule \.css\.gz$ - [T=text/css,E=no-gzip:1]
+  RewriteRule \.js\.gz$ - [T=text/javascript,E=no-gzip:1]
+  RewriteRule \.css\.br$ - [T=text/css,E=no-gzip:1]
+  RewriteRule \.js\.br$ - [T=text/javascript,E=no-gzip:1]
+
+  <FilesMatch "(\.js\.gz|\.css\.gz)$">
+    # Serve correct encoding type.
+    Header set Content-Encoding gzip
+    # Force proxies to cache gzipped & non-gzipped css/js files separately.
+    Header append Vary Accept-Encoding
+  </FilesMatch>
+  <FilesMatch "(\.js\.br|\.css\.br)$">
+    # Serve correct encoding type.
+    Header set Content-Encoding br
+    # Force proxies to cache gzipped & non-gzipped css/js files separately.
+    Header append Vary Accept-Encoding
+  </FilesMatch>
+</IfModule>
+
+# Expires is set to a point we won't reach,
+# Cache control will trigger first, 10 days after access
+# 10 Days = 60s x 60m x 24hrs x 10days =  864,000
+<FilesMatch "\.(webm|ogg|mp4)$">
+Header set Expires "Mon, 27 Mar 2038 13:33:37 GMT"
+Header set Cache-Control "max-age=864000"
+</FilesMatch>

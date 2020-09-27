@@ -18,38 +18,33 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class StringAsset extends BaseAsset
-{
-    private $string;
-    private $lastModified;
+class StringAsset extends BaseAsset {
+	private $string;
+	private $lastModified;
 
-    /**
-     * Constructor.
-     *
-     * @param string $content    The content of the asset
-     * @param array  $filters    Filters for the asset
-     * @param string $sourceRoot The source asset root directory
-     * @param string $sourcePath The source asset path
-     */
-    public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null)
-    {
-        $this->string = $content;
+	/**
+	 * Constructor.
+	 *
+	 * @param string $content    The content of the asset
+	 * @param array  $filters    Filters for the asset
+	 * @param string $sourceRoot The source asset root directory
+	 * @param string $sourcePath The source asset path
+	 */
+	public function __construct($content, $filters = array(), $sourceRoot = null, $sourcePath = null) {
+		$this->string = $content;
 
-        parent::__construct($filters, $sourceRoot, $sourcePath);
-    }
+		parent::__construct($filters, $sourceRoot, $sourcePath);
+	}
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
-        $this->doLoad($this->string, $additionalFilter);
-    }
+	public function load(FilterInterface $additionalFilter = null) {
+		$this->doLoad($this->string, $additionalFilter);
+	}
 
-    public function setLastModified($lastModified)
-    {
-        $this->lastModified = $lastModified;
-    }
+	public function getLastModified() {
+		return $this->lastModified;
+	}
 
-    public function getLastModified()
-    {
-        return $this->lastModified;
-    }
+	public function setLastModified($lastModified) {
+		$this->lastModified = $lastModified;
+	}
 }

@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 157 157"><defs><style>.a{fill:#e9dc72;stroke:#e9dc72;stroke-width:3px;}.b{isolation:isolate;font-size:96.34px;fill:#fff;font-family:Museo Sans Cyrl;}</style></defs><title>discount</title><circle class="a" cx="78.5" cy="78.5" r="77"/><text class="b" transform="translate(43.91 110.65)">%</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 157 157">
+    <defs>
+        <style>
+            .a{fill:#e9dc72;stroke:#e9dc72;stroke-width:3px;}.b{isolation:isolate;font-size:96.34px;fill:#fff;font-family:Museo
+            Sans
+            Cyrl;}
+        </style>
+    </defs>
+    <title>
+        discount
+    </title>
+    <circle class="a"
+            cx="78.5"
+            cy="78.5"
+            r="77"/>
+    <text class="b"
+          transform="translate(43.91 110.65)">
+        %
+    </text>
+</svg>

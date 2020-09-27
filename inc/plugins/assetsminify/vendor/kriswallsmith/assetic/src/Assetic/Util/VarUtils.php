@@ -16,69 +16,65 @@ namespace Assetic\Util;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-abstract class VarUtils
-{
-    /**
-     * Resolves variable placeholders.
-     *
-     * @param string $template A template string
-     * @param array  $vars     Variable names
-     * @param array  $values   Variable values
-     *
-     * @return string The resolved string
-     *
-     * @throws \InvalidArgumentException If there is a variable with no value
-     */
-    public static function resolve($template, array $vars, array $values)
-    {
-        $map = array();
-        foreach ($vars as $var) {
-            if (false === strpos($template, '{'.$var.'}')) {
-                continue;
-            }
+abstract class VarUtils {
+	final private function __construct() {
+	}
 
-            if (!isset($values[$var])) {
-                throw new \InvalidArgumentException(sprintf('The template "%s" contains the variable "%s", but was not given any value for it.', $template, $var));
-            }
+	/**
+	 * Resolves variable placeholders.
+	 *
+	 * @param string $template A template string
+	 * @param array  $vars     Variable names
+	 * @param array  $values   Variable values
+	 *
+	 * @return string The resolved string
+	 *
+	 * @throws \InvalidArgumentException If there is a variable with no value
+	 */
+	public static function resolve($template, array $vars, array $values) {
+		$map = array();
+		foreach($vars as $var) {
+			if(false === strpos($template, '{' . $var . '}')) {
+				continue;
+			}
 
-            $map['{'.$var.'}'] = $values[$var];
-        }
+			if( ! isset($values[ $var ])) {
+				throw new \InvalidArgumentException(sprintf('The template "%s" contains the variable "%s", but was not given any value for it.', $template, $var));
+			}
 
-        return strtr($template, $map);
-    }
+			$map[ '{' . $var . '}' ] = $values[ $var ];
+		}
 
-    public static function getCombinations(array $vars, array $values)
-    {
-        if (!$vars) {
-            return array(array());
-        }
+		return strtr($template, $map);
+	}
 
-        $combinations = array();
-        $nbValues = array();
-        foreach ($values as $var => $vals) {
-            if (!in_array($var, $vars, true)) {
-                continue;
-            }
+	public static function getCombinations(array $vars, array $values) {
+		if( ! $vars) {
+			return array(array());
+		}
 
-            $nbValues[$var] = count($vals);
-        }
+		$combinations = array();
+		$nbValues     = array();
+		foreach($values as $var => $vals) {
+			if( ! in_array($var, $vars, true)) {
+				continue;
+			}
 
-        for ($i = array_product($nbValues), $c = $i * 2; $i < $c; $i++) {
-            $k = $i;
-            $combination = array();
+			$nbValues[ $var ] = count($vals);
+		}
 
-            foreach ($vars as $var) {
-                $combination[$var] = $values[$var][$k % $nbValues[$var]];
-                $k = intval($k / $nbValues[$var]);
-            }
+		for($i = array_product($nbValues), $c = $i * 2; $i < $c; $i++) {
+			$k           = $i;
+			$combination = array();
 
-            $combinations[] = $combination;
-        }
+			foreach($vars as $var) {
+				$combination[ $var ] = $values[ $var ][ $k % $nbValues[ $var ] ];
+				$k                   = intval($k / $nbValues[ $var ]);
+			}
 
-        return $combinations;
-    }
+			$combinations[] = $combination;
+		}
 
-    final private function __construct()
-    {
-    }
+		return $combinations;
+	}
 }

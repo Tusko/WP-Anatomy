@@ -21,108 +21,98 @@ use Assetic\Asset\AssetCollectionInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class AssetCollectionIterator implements \RecursiveIterator
-{
-    private $assets;
-    private $filters;
-    private $vars;
-    private $output;
-    private $clones;
+class AssetCollectionIterator implements \RecursiveIterator {
+	private $assets;
+	private $filters;
+	private $vars;
+	private $output;
+	private $clones;
 
-    public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones)
-    {
-        $this->assets  = $coll->all();
-        $this->filters = $coll->getFilters();
-        $this->vars    = $coll->getVars();
-        $this->output  = $coll->getTargetPath();
-        $this->clones  = $clones;
+	public function __construct(AssetCollectionInterface $coll, \SplObjectStorage $clones) {
+		$this->assets  = $coll->all();
+		$this->filters = $coll->getFilters();
+		$this->vars    = $coll->getVars();
+		$this->output  = $coll->getTargetPath();
+		$this->clones  = $clones;
 
-        if (false === $pos = strrpos($this->output, '.')) {
-            $this->output .= '_*';
-        } else {
-            $this->output = substr($this->output, 0, $pos).'_*'.substr($this->output, $pos);
-        }
-    }
+		if(false === $pos = strrpos($this->output, '.')) {
+			$this->output .= '_*';
+		} else {
+			$this->output = substr($this->output, 0, $pos) . '_*' . substr($this->output, $pos);
+		}
+	}
 
-    /**
-     * Returns a copy of the current asset with filters and a target URL applied.
-     *
-     * @param Boolean $raw Returns the unmodified asset if true
-     *
-     * @return \Assetic\Asset\AssetInterface
-     */
-    public function current($raw = false)
-    {
-        $asset = current($this->assets);
+	public function next() {
+		return next($this->assets);
+	}
 
-        if ($raw) {
-            return $asset;
-        }
+	public function rewind() {
+		return reset($this->assets);
+	}
 
-        // clone once
-        if (!isset($this->clones[$asset])) {
-            $clone = $this->clones[$asset] = clone $asset;
+	public function valid() {
+		return false !== current($this->assets);
+	}
 
-            // generate a target path based on asset name
-            $name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ?: 'part', $this->key() + 1);
+	public function hasChildren() {
+		return current($this->assets) instanceof AssetCollectionInterface;
+	}
 
-            $name = $this->removeDuplicateVar($name);
+	/**
+	 * @uses current()
+	 */
+	public function getChildren() {
+		return new self($this->current(), $this->clones);
+	}
 
-            $clone->setTargetPath(str_replace('*', $name, $this->output));
-        } else {
-            $clone = $this->clones[$asset];
-        }
+	/**
+	 * Returns a copy of the current asset with filters and a target URL applied.
+	 *
+	 * @param Boolean $raw Returns the unmodified asset if true
+	 *
+	 * @return \Assetic\Asset\AssetInterface
+	 */
+	public function current($raw = false) {
+		$asset = current($this->assets);
 
-        // cascade filters
-        foreach ($this->filters as $filter) {
-            $clone->ensureFilter($filter);
-        }
+		if($raw) {
+			return $asset;
+		}
 
-        return $clone;
-    }
+		// clone once
+		if( ! isset($this->clones[ $asset ])) {
+			$clone = $this->clones[ $asset ] = clone $asset;
 
-    public function key()
-    {
-        return key($this->assets);
-    }
+			// generate a target path based on asset name
+			$name = sprintf('%s_%d', pathinfo($asset->getSourcePath(), PATHINFO_FILENAME) ? : 'part', $this->key() + 1);
 
-    public function next()
-    {
-        return next($this->assets);
-    }
+			$name = $this->removeDuplicateVar($name);
 
-    public function rewind()
-    {
-        return reset($this->assets);
-    }
+			$clone->setTargetPath(str_replace('*', $name, $this->output));
+		} else {
+			$clone = $this->clones[ $asset ];
+		}
 
-    public function valid()
-    {
-        return false !== current($this->assets);
-    }
+		// cascade filters
+		foreach($this->filters as $filter) {
+			$clone->ensureFilter($filter);
+		}
 
-    public function hasChildren()
-    {
-        return current($this->assets) instanceof AssetCollectionInterface;
-    }
+		return $clone;
+	}
 
-    /**
-     * @uses current()
-     */
-    public function getChildren()
-    {
-        return new self($this->current(), $this->clones);
-    }
+	public function key() {
+		return key($this->assets);
+	}
 
-    private function removeDuplicateVar($name)
-    {
-        foreach ($this->vars as $var) {
-            $var = '{'.$var.'}';
-            if (false !== strpos($name, $var) && false !== strpos($this->output, $var)) {
-                $name = str_replace($var, '', $name);
-            }
-        }
+	private function removeDuplicateVar($name) {
+		foreach($this->vars as $var) {
+			$var = '{' . $var . '}';
+			if(false !== strpos($name, $var) && false !== strpos($this->output, $var)) {
+				$name = str_replace($var, '', $name);
+			}
+		}
 
-        return $name;
-    }
+		return $name;
+	}
 }

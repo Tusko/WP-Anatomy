@@ -39,17 +39,17 @@ template {
 }
 mark {
 	color      : inherit;
-	background : none;
+	background : none
 }
 sub,
 sup {
 	display        : inline-block;
 	vertical-align : text-bottom;
 	font-size      : 60%;
-	line-height    : 0;
+	line-height    : 0
 }
 sup {
-	vertical-align : text-top;
+	vertical-align : text-top
 }
 pre {
 	overflow : auto
@@ -93,10 +93,6 @@ button,
 a,
 input {
 	@include transition()
-}
-
-[data-defer] {
-	background-color : rgba($default, .2);
 }
 
 svg:not(:root) {

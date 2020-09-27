@@ -20,51 +20,47 @@ use Assetic\Factory\AssetFactory;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CacheBustingWorker implements WorkerInterface
-{
-    private $separator;
+class CacheBustingWorker implements WorkerInterface {
+	private $separator;
 
-    public function __construct($separator = '-')
-    {
-        $this->separator = $separator;
-    }
+	public function __construct($separator = '-') {
+		$this->separator = $separator;
+	}
 
-    public function process(AssetInterface $asset, AssetFactory $factory)
-    {
-        if (!$path = $asset->getTargetPath()) {
-            // no path to work with
-            return;
-        }
+	public function process(AssetInterface $asset, AssetFactory $factory) {
+		if( ! $path = $asset->getTargetPath()) {
+			// no path to work with
+			return;
+		}
 
-        if (!$search = pathinfo($path, PATHINFO_EXTENSION)) {
-            // nothing to replace
-            return;
-        }
+		if( ! $search = pathinfo($path, PATHINFO_EXTENSION)) {
+			// nothing to replace
+			return;
+		}
 
-        $replace = $this->separator.$this->getHash($asset, $factory).'.'.$search;
-        if (preg_match('/'.preg_quote($replace, '/').'$/', $path)) {
-            // already replaced
-            return;
-        }
+		$replace = $this->separator . $this->getHash($asset, $factory) . '.' . $search;
+		if(preg_match('/' . preg_quote($replace, '/') . '$/', $path)) {
+			// already replaced
+			return;
+		}
 
-        $asset->setTargetPath(
-            preg_replace('/\.'.preg_quote($search, '/').'$/', $replace, $path)
-        );
-    }
+		$asset->setTargetPath(
+			preg_replace('/\.' . preg_quote($search, '/') . '$/', $replace, $path)
+		);
+	}
 
-    protected function getHash(AssetInterface $asset, AssetFactory $factory)
-    {
-        $hash = hash_init('sha1');
+	protected function getHash(AssetInterface $asset, AssetFactory $factory) {
+		$hash = hash_init('sha1');
 
-        hash_update($hash, $factory->getLastModified($asset));
+		hash_update($hash, $factory->getLastModified($asset));
 
-        if ($asset instanceof AssetCollectionInterface) {
-            foreach ($asset as $i => $leaf) {
-                $sourcePath = $leaf->getSourcePath();
-                hash_update($hash, $sourcePath ?: $i);
-            }
-        }
+		if($asset instanceof AssetCollectionInterface) {
+			foreach($asset as $i => $leaf) {
+				$sourcePath = $leaf->getSourcePath();
+				hash_update($hash, $sourcePath ? : $i);
+			}
+		}
 
-        return substr(hash_final($hash), 0, 7);
-    }
+		return substr(hash_final($hash), 0, 7);
+	}
 }

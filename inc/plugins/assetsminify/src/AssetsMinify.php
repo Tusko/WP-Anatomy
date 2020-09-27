@@ -10,7 +10,7 @@
 class AssetsMinify extends AssetsMinify\Pattern\Singleton {
 
 	public $js,
-			$css;
+		$css;
 
 	/**
 	 * Constructor
@@ -94,9 +94,9 @@ class AssetsMinify extends AssetsMinify\Pattern\Singleton {
 
 	public function wpa_remove_cache_btn($wp_admin_bar) {
 		$args = array(
-				'id'    => 'am-clear-cache',
-				'title' => '&#10006; Clear Assets Cache',
-				'href'  => get_admin_url() . '?empty_cache=true'
+			'id'    => 'am-clear-cache',
+			'title' => '&#10006; Clear Assets Cache',
+			'href'  => get_admin_url() . '?empty_cache=true'
 		);
 		$wp_admin_bar->add_node($args);
 	}

@@ -132,7 +132,14 @@ function wpa_remove_wp_ver_css_js($src) {
 
 // Compress HTML
 function ob_html_compress($buf) {
-	return preg_replace(array('/<!--(?>(?!\[).)(.*)(?>(?!\]).)-->/Uis', '/[[:blank:]]+/'), array('', ' '), str_replace(array("\n", "\r", "\t"), '', $buf));
+	$preResult = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/', ' ', $buf);
+	$out       = preg_replace(
+		array('/<!--(?>(?!\[).)(.*)(?>(?!\]).)-->/Uis', '/[[:blank:]]+/'),
+		array('', ' '),
+		str_replace(array("\n", "\r", "\t"), '', $preResult)
+	);
+
+	return nl2br($out);
 }
 
 //custom wp_nav_menu classes
@@ -278,17 +285,6 @@ function wpa_title() {
 	}
 }
 
-//simple function for wp_get_attachment_image_src()
-function image_src($id, $size = 'full', $background_image = false, $height = false) {
-	$attachmentID = get_post_type($id) === 'attachment' ? $id : get_post_thumbnail_id($id);
-	$image        = wp_get_attachment_image_src($attachmentID, $size, true);
-	if($image) {
-		$src = "/?imgsrc=$image[0]";
-
-		return $background_image ? 'background-image: url(' . $src . ');' . ($height ? 'height:' . $image[2] . 'px' : '') : $src;
-	}
-}
-
 //Show empty categories in category widget
 function show_empty_widget_links($args) {
 	$args['hide_empty'] = 0;
@@ -412,7 +408,7 @@ function wpa_init() {
 	});
 
 	//site_url convert with qTranslate-x
-	add_filter('site_url', 'wpa_qtrans_site_url');
+//	add_filter('site_url', 'wpa_qtrans_site_url');
 
 	// Remove Default Menu Classes
 	add_filter('nav_menu_css_class', 'wpa_discard_menu_classes', 10, 2);

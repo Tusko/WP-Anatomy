@@ -14,15 +14,15 @@ class Admin {
 	 * Admin options provided
 	 */
 	protected $options = array(
-			'am_use_compass',
-			'am_compass_path',
-			'am_sass_path',
-			'am_coffeescript_path',
-			'am_async_flag',
-			'am_compress_styles',
-			'am_compress_scripts',
-			'am_files_to_exclude',
-			'am_dev_mode',
+		'am_use_compass',
+		'am_compass_path',
+		'am_sass_path',
+		'am_coffeescript_path',
+		'am_async_flag',
+		'am_compress_styles',
+		'am_compress_scripts',
+		'am_files_to_exclude',
+		'am_dev_mode',
 	);
 
 	/**

@@ -35,14 +35,14 @@ if(class_exists('Tribe__Events__Pro__Main')) {
 function wpa__prelicense() {
 	if( ! acf_pro_is_license_active()) {
 		$args = array(
-				'_nonce'      => wp_create_nonce('activate_pro_licence'),
-				'acf_license' => base64_encode('order_id=37918|type=personal|date=2014-08-21 15:02:59'),
-				'acf_version' => acf_get_setting('version'),
-				'wp_name'     => get_bloginfo('name'),
-				'wp_url'      => home_url(),
-				'wp_version'  => get_bloginfo('version'),
-				'wp_language' => get_bloginfo('language'),
-				'wp_timezone' => get_option('timezone_string'),
+			'_nonce'      => wp_create_nonce('activate_pro_licence'),
+			'acf_license' => base64_encode('order_id=37918|type=personal|date=2014-08-21 15:02:59'),
+			'acf_version' => acf_get_setting('version'),
+			'wp_name'     => get_bloginfo('name'),
+			'wp_url'      => home_url(),
+			'wp_version'  => get_bloginfo('version'),
+			'wp_language' => get_bloginfo('language'),
+			'wp_timezone' => get_option('timezone_string'),
 		);
 
 		$response = acf_pro_get_remote_response('activate-license', $args);

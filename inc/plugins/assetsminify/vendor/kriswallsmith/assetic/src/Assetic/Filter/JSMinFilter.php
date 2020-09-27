@@ -18,17 +18,14 @@ use Assetic\Asset\AssetInterface;
  *
  * All credit for the filter itself is mentioned in the file itself.
  *
- * @link https://raw.github.com/mrclay/minify/master/min/lib/JSMin.php
+ * @link   https://raw.github.com/mrclay/minify/master/min/lib/JSMin.php
  * @author Brunoais <brunoaiss@gmail.com>
  */
-class JSMinFilter implements FilterInterface
-{
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
+class JSMinFilter implements FilterInterface {
+	public function filterLoad(AssetInterface $asset) {
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-        $asset->setContent(\JSMin::minify($asset->getContent()));
-    }
+	public function filterDump(AssetInterface $asset) {
+		$asset->setContent(\JSMin::minify($asset->getContent()));
+	}
 }

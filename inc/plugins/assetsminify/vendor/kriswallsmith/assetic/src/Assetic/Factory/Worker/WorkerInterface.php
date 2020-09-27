@@ -19,15 +19,14 @@ use Assetic\Factory\AssetFactory;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-interface WorkerInterface
-{
-    /**
-     * Processes an asset.
-     *
-     * @param AssetInterface $asset   An asset
-     * @param AssetFactory   $factory The factory
-     *
-     * @return AssetInterface|null May optionally return a replacement asset
-     */
-    public function process(AssetInterface $asset, AssetFactory $factory);
+interface WorkerInterface {
+	/**
+	 * Processes an asset.
+	 *
+	 * @param AssetInterface $asset   An asset
+	 * @param AssetFactory   $factory The factory
+	 *
+	 * @return AssetInterface|null May optionally return a replacement asset
+	 */
+	public function process(AssetInterface $asset, AssetFactory $factory);
 }

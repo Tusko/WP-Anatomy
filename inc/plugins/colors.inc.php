@@ -338,9 +338,9 @@ class PictureThis {
 			$color = $r . $r . $g . $g . $b . $b;
 		}
 		$rgb = array(
-				'r' => hexdec(substr($color, 0, 2)),
-				'g' => hexdec(substr($color, 2, 2)),
-				'b' => hexdec(substr($color, 4, 2))
+			'r' => hexdec(substr($color, 0, 2)),
+			'g' => hexdec(substr($color, 2, 2)),
+			'b' => hexdec(substr($color, 4, 2))
 		);
 
 		return $rgb;
@@ -351,13 +351,13 @@ function placeImg($w = 1000, $h = 500, $bg = '#f5f5f5', $fg = false, $t = false)
 	$args = array();
 
 	return PictureThis::display(
-			array(
-					'w'  => $w,
-					'h'  => $h,
-					't'  => $t,
-					'bg' => $bg,
-					'fg' => $fg
-			)
+		array(
+			'w'  => $w,
+			'h'  => $h,
+			't'  => $t,
+			'bg' => $bg,
+			'fg' => $fg
+		)
 	);
 }
 
@@ -370,10 +370,10 @@ function wpa_placeholder($id, $s) {
 	$args = array();
 
 	return PictureThis::display(
-			array(
-					'w'  => $size[1] / 4,
-					'h'  => $size[2] / 4,
-					'bg' => $dominant
-			)
+		array(
+			'w'  => $size[1] / 4,
+			'h'  => $size[2] / 4,
+			'bg' => $dominant
+		)
 	);
 }

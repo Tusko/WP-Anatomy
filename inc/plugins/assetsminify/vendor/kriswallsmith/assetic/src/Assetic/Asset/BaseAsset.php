@@ -22,160 +22,142 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseAsset implements AssetInterface
-{
-    private $filters;
-    private $sourceRoot;
-    private $sourcePath;
-    private $sourceDir;
-    private $targetPath;
-    private $content;
-    private $loaded;
-    private $vars;
-    private $values;
+abstract class BaseAsset implements AssetInterface {
+	private $filters;
+	private $sourceRoot;
+	private $sourcePath;
+	private $sourceDir;
+	private $targetPath;
+	private $content;
+	private $loaded;
+	private $vars;
+	private $values;
 
-    /**
-     * Constructor.
-     *
-     * @param array  $filters    Filters for the asset
-     * @param string $sourceRoot The root directory
-     * @param string $sourcePath The asset path
-     * @param array  $vars
-     */
-    public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
-    {
-        $this->filters = new FilterCollection($filters);
-        $this->sourceRoot = $sourceRoot;
-        $this->sourcePath = $sourcePath;
-        if ($sourcePath && $sourceRoot) {
-            $this->sourceDir = dirname("$sourceRoot/$sourcePath");
-        }
-        $this->vars = $vars;
-        $this->values = array();
-        $this->loaded = false;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param array  $filters    Filters for the asset
+	 * @param string $sourceRoot The root directory
+	 * @param string $sourcePath The asset path
+	 * @param array  $vars
+	 */
+	public function __construct($filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array()) {
+		$this->filters    = new FilterCollection($filters);
+		$this->sourceRoot = $sourceRoot;
+		$this->sourcePath = $sourcePath;
+		if($sourcePath && $sourceRoot) {
+			$this->sourceDir = dirname("$sourceRoot/$sourcePath");
+		}
+		$this->vars   = $vars;
+		$this->values = array();
+		$this->loaded = false;
+	}
 
-    public function __clone()
-    {
-        $this->filters = clone $this->filters;
-    }
+	public function __clone() {
+		$this->filters = clone $this->filters;
+	}
 
-    public function ensureFilter(FilterInterface $filter)
-    {
-        $this->filters->ensure($filter);
-    }
+	public function ensureFilter(FilterInterface $filter) {
+		$this->filters->ensure($filter);
+	}
 
-    public function getFilters()
-    {
-        return $this->filters->all();
-    }
+	public function getFilters() {
+		return $this->filters->all();
+	}
 
-    public function clearFilters()
-    {
-        $this->filters->clear();
-    }
+	public function clearFilters() {
+		$this->filters->clear();
+	}
 
-    /**
-     * Encapsulates asset loading logic.
-     *
-     * @param string          $content          The asset content
-     * @param FilterInterface $additionalFilter An additional filter
-     */
-    protected function doLoad($content, FilterInterface $additionalFilter = null)
-    {
-        $filter = clone $this->filters;
-        if ($additionalFilter) {
-            $filter->ensure($additionalFilter);
-        }
+	public function dump(FilterInterface $additionalFilter = null) {
+		if( ! $this->loaded) {
+			$this->load();
+		}
 
-        $asset = clone $this;
-        $asset->setContent($content);
+		$filter = clone $this->filters;
+		if($additionalFilter) {
+			$filter->ensure($additionalFilter);
+		}
 
-        $filter->filterLoad($asset);
-        $this->content = $asset->getContent();
+		$asset = clone $this;
+		$filter->filterDump($asset);
 
-        $this->loaded = true;
-    }
+		return $asset->getContent();
+	}
 
-    public function dump(FilterInterface $additionalFilter = null)
-    {
-        if (!$this->loaded) {
-            $this->load();
-        }
+	public function getSourceRoot() {
+		return $this->sourceRoot;
+	}
 
-        $filter = clone $this->filters;
-        if ($additionalFilter) {
-            $filter->ensure($additionalFilter);
-        }
+	public function getSourcePath() {
+		return $this->sourcePath;
+	}
 
-        $asset = clone $this;
-        $filter->filterDump($asset);
+	public function getSourceDirectory() {
+		return $this->sourceDir;
+	}
 
-        return $asset->getContent();
-    }
+	public function getTargetPath() {
+		return $this->targetPath;
+	}
 
-    public function getContent()
-    {
-        return $this->content;
-    }
+	public function setTargetPath($targetPath) {
+		if($this->vars) {
+			foreach($this->vars as $var) {
+				if(false === strpos($targetPath, $var)) {
+					throw new \RuntimeException(sprintf('The asset target path "%s" must contain the variable "{%s}".', $targetPath, $var));
+				}
+			}
+		}
 
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
+		$this->targetPath = $targetPath;
+	}
 
-    public function getSourceRoot()
-    {
-        return $this->sourceRoot;
-    }
+	public function getVars() {
+		return $this->vars;
+	}
 
-    public function getSourcePath()
-    {
-        return $this->sourcePath;
-    }
+	public function getValues() {
+		return $this->values;
+	}
 
-    public function getSourceDirectory()
-    {
-        return $this->sourceDir;
-    }
+	public function setValues(array $values) {
+		foreach($values as $var => $v) {
+			if( ! in_array($var, $this->vars, true)) {
+				throw new \InvalidArgumentException(sprintf('The asset with source path "%s" has no variable named "%s".', $this->sourcePath, $var));
+			}
+		}
 
-    public function getTargetPath()
-    {
-        return $this->targetPath;
-    }
+		$this->values = $values;
+		$this->loaded = false;
+	}
 
-    public function setTargetPath($targetPath)
-    {
-        if ($this->vars) {
-            foreach ($this->vars as $var) {
-                if (false === strpos($targetPath, $var)) {
-                    throw new \RuntimeException(sprintf('The asset target path "%s" must contain the variable "{%s}".', $targetPath, $var));
-                }
-            }
-        }
+	/**
+	 * Encapsulates asset loading logic.
+	 *
+	 * @param string          $content          The asset content
+	 * @param FilterInterface $additionalFilter An additional filter
+	 */
+	protected function doLoad($content, FilterInterface $additionalFilter = null) {
+		$filter = clone $this->filters;
+		if($additionalFilter) {
+			$filter->ensure($additionalFilter);
+		}
 
-        $this->targetPath = $targetPath;
-    }
+		$asset = clone $this;
+		$asset->setContent($content);
 
-    public function getVars()
-    {
-        return $this->vars;
-    }
+		$filter->filterLoad($asset);
+		$this->content = $asset->getContent();
 
-    public function setValues(array $values)
-    {
-        foreach ($values as $var => $v) {
-            if (!in_array($var, $this->vars, true)) {
-                throw new \InvalidArgumentException(sprintf('The asset with source path "%s" has no variable named "%s".', $this->sourcePath, $var));
-            }
-        }
+		$this->loaded = true;
+	}
 
-        $this->values = $values;
-        $this->loaded = false;
-    }
+	public function getContent() {
+		return $this->content;
+	}
 
-    public function getValues()
-    {
-        return $this->values;
-    }
+	public function setContent($content) {
+		$this->content = $content;
+	}
 }

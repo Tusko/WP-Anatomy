@@ -14,9 +14,9 @@ use Assetic\Filter\JSqueezeFilter;
 class Js extends Factory {
 
 	protected $assets = array(),
-			$files = array(),
-			$mtimes = array(),
-			$localized = array();
+		$files = array(),
+		$mtimes = array(),
+		$localized = array();
 
 	public function setFilters() {
 		$this->setFilter('JSqueeze', new JSqueezeFilter);

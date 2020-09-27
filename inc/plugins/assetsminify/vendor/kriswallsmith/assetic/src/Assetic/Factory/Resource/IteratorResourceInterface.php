@@ -16,6 +16,5 @@ namespace Assetic\Factory\Resource;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-interface IteratorResourceInterface extends ResourceInterface, \IteratorAggregate
-{
+interface IteratorResourceInterface extends ResourceInterface, \IteratorAggregate {
 }

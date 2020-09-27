@@ -1,4 +1,5 @@
 <?php
+
 namespace AssetsMinify\Cache;
 
 /**
@@ -9,10 +10,9 @@ namespace AssetsMinify\Cache;
  */
 class GarbageCollector {
 
-	protected $offset = 86400;
-
 	public static $code = 'am_last_gc';
 	public static $period = 10;
+	protected $offset = 86400;
 
 	/**
 	 * Constructor. Checks if the last check provided is < $period days ago
@@ -20,13 +20,13 @@ class GarbageCollector {
 	 * @param object $cache The cache manager used to get the cache path
 	 */
 	public function __construct($cache) {
-		$this->cache = $cache;
+		$this->cache  = $cache;
 		$this->offset *= self::$period;
 
 		//Every {$period} days the cache is refreshed
-		if ( get_option( self::$code, 0 ) <= time() - $this->offset ) {
+		if(get_option(self::$code, 0) <= time() - $this->offset) {
 			$this->refresh();
-			update_option( self::$code, time() );
+			update_option(self::$code, time());
 		}
 
 	}
@@ -35,13 +35,14 @@ class GarbageCollector {
 	 * Refreshes the outdated cached files
 	 */
 	public function refresh() {
-		$files = glob( $this->cache->getPath() . "*.*" );
-		if ( $files === false )
+		$files = glob($this->cache->getPath() . "*.*");
+		if($files === false) {
 			return false;
+		}
 
-		foreach ( $files  as $filepath ) {
+		foreach($files as $filepath) {
 			//If the file is older than $period days then is removed
-			if ( filemtime($filepath) <= time() - $this->offset ) {
+			if(filemtime($filepath) <= time() - $this->offset) {
 				unlink($filepath);
 			}
 		}

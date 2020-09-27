@@ -14,7 +14,7 @@ use AssetsMinify\Assets\Js;
 class Init {
 
 	public $js,
-			$css;
+		$css;
 
 	protected $exclusions;
 

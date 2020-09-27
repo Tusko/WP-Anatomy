@@ -1,48 +1,50 @@
-@include '../components/_mixins';
+@include
+'../components/_mixins'
+;
 
 .selbel_w {
-    font: 100 14px/32px $font;
-    margin-bottom: 20px;
-    position:relative;
-    text-align: left;
-    display:block;
-    height: 32px;
-    width:100%;
-    select {
-        -webkit-appearance: menulist-button;
-        position:relative;
-        cursor:pointer;
-        display:block;
-        height:100%;
-        width:100%;
-        z-index:1;
-        opacity:0;
-        + span {
-            @include position(absolute);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            padding: 0 10px;
-            color: $default;
-            border: 0;
-            border-bottom: 1px solid #b7b7b7;
-            &:after {
-                @include transform(rotate(-45deg) translate3d(0, -100%, 0));
-                border-bottom: 1px solid #000;
-                border-left: 1px solid #000;
-                position: absolute;
-                height: 6px;
-                content: '';
-                width: 6px;
-                right: 0;
-                top: 50%;
-            }
-            &.err {
-                border-color: #ef4036
-            }
-        }
-        option {
-            padding: 5px
-        }
-    }
+	font          : 100 14px/32px $font;
+	margin-bottom : 20px;
+	position      : relative;
+	text-align    : left;
+	display       : block;
+	height        : 32px;
+	width         : 100%;
+	select {
+		-webkit-appearance : menulist-button;
+		position           : relative;
+		cursor             : pointer;
+		display            : block;
+		height             : 100%;
+		width              : 100%;
+		z-index            : 1;
+		opacity            : 0;
+		+ span {
+			@include position(absolute);
+			text-overflow : ellipsis;
+			white-space   : nowrap;
+			overflow      : hidden;
+			padding       : 0 10px;
+			color         : $default;
+			border        : 0;
+			border-bottom : 1px solid #B7B7B7;
+			&:after {
+				@include transform(rotate(-45deg) translate3d(0, -100%, 0));
+				border-bottom : 1px solid #000;
+				border-left   : 1px solid #000;
+				position      : absolute;
+				height        : 6px;
+				content       : '';
+				width         : 6px;
+				right         : 0;
+				top           : 50%;
+			}
+			&.err {
+				border-color : #EF4036
+			}
+		}
+		option {
+			padding : 5px
+		}
+	}
 }

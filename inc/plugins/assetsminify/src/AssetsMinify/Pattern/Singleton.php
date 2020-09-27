@@ -1,15 +1,17 @@
 <?php
+
 namespace AssetsMinify\Pattern;
 
 /**
  * Singleton Design Pattern.
- * Provides an abstract structure for a single instance class. 
+ * Provides an abstract structure for a single instance class.
  *
  * @abstract
  * @author Alessandro Carbone <ale.carbo@gmail.com>
  */
 abstract class Singleton {
-	protected function __construct() {}
+	protected function __construct() {
+	}
 
 	/**
 	 * Method to get the single object instantiated for the class
@@ -22,12 +24,13 @@ abstract class Singleton {
 
 		$calledClass = get_called_class();
 
-		if ( !isset($instances[$calledClass]) ) {
-			$instances[$calledClass] = new $calledClass(func_get_args());
+		if( ! isset($instances[ $calledClass ])) {
+			$instances[ $calledClass ] = new $calledClass(func_get_args());
 		}
 
-		return $instances[$calledClass];
+		return $instances[ $calledClass ];
 	}
 
-	final private function __clone() {}
+	final private function __clone() {
+	}
 }

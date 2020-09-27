@@ -18,19 +18,18 @@ use Assetic\Asset\AssetInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-interface FilterInterface
-{
-    /**
-     * Filters an asset after it has been loaded.
-     *
-     * @param AssetInterface $asset An asset
-     */
-    public function filterLoad(AssetInterface $asset);
+interface FilterInterface {
+	/**
+	 * Filters an asset after it has been loaded.
+	 *
+	 * @param AssetInterface $asset An asset
+	 */
+	public function filterLoad(AssetInterface $asset);
 
-    /**
-     * Filters an asset just before it's dumped.
-     *
-     * @param AssetInterface $asset An asset
-     */
-    public function filterDump(AssetInterface $asset);
+	/**
+	 * Filters an asset just before it's dumped.
+	 *
+	 * @param AssetInterface $asset An asset
+	 */
+	public function filterDump(AssetInterface $asset);
 }

@@ -15,45 +15,46 @@
  * @version 2.5.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
+if( ! defined('ABSPATH')) {
+	exit; // Exit if accessed directly
 }
 
 global $product, $woocommerce_loop;
 
 // Ensure visibility
-if ( empty( $product ) || ! $product->is_visible() ) {
-    return;
+if(empty($product) || ! $product->is_visible()) {
+	return;
 }
 
-$terms = get_the_terms( $product->id, 'product_cat' );
+$terms = get_the_terms($product->id, 'product_cat');
 
 $classes = '';
-$co = count($terms); $i = $c = 1;
+$co      = count($terms);
+$i       = $c = 1;
 if($terms) :
-    foreach($terms as $cat){
-        $classes .= ' ' . $cat->slug;
-    }
+	foreach($terms as $cat) {
+		$classes .= ' ' . $cat->slug;
+	}
 endif;
 ?>
-<div class="grid-item<?php echo $product->is_on_sale()?' sale':''; ?><?php echo $classes; ?>">
-    <?php $thumbnal_id = get_post_thumbnail_id($product->id);
-          $img = wp_get_attachment_image_src($thumbnal_id, 'shop_catalog', true);
-          echo '<a class="product-image" href="' . get_permalink($product->id) . '">';
-            woocommerce_show_product_loop_sale_flash();
-            if(has_post_thumbnail($product->id)) {
-                echo '<img src="'.placeImg($img[1], $img[2]).'" alt="'.get_alt($thumbnal_id).'" data-defer="'.$img[0].'" class="aligncenter" width="'.$img[1].'" height="'.$img[2].'" />';
-            } else {
-                echo wc_placeholder_img( 'shop_catalog' );
-            }
-            echo '</a>';
-    ?>
-    <div class="product-data">
-        <a class="product-title" href="<?php the_permalink(); ?>">
-            <h3><?php echo get_the_title($product->id); ?></h3>
-            <div class="product-price"><?php echo $product->get_price_html(); ?></div>
-        </a>
-    </div>
+<div class="grid-item<?php echo $product->is_on_sale() ? ' sale' : ''; ?><?php echo $classes; ?>">
+	<?php $thumbnal_id = get_post_thumbnail_id($product->id);
+	$img               = wp_get_attachment_image_src($thumbnal_id, 'shop_catalog', true);
+	echo '<a class="product-image" href="' . get_permalink($product->id) . '">';
+	woocommerce_show_product_loop_sale_flash();
+	if(has_post_thumbnail($product->id)) {
+		echo '<img src="' . placeImg($img[1], $img[2]) . '" alt="' . get_alt($thumbnal_id) . '" data-defer="' . $img[0] . '" class="aligncenter" width="' . $img[1] . '" height="' . $img[2] . '" />';
+	} else {
+		echo wc_placeholder_img('shop_catalog');
+	}
+	echo '</a>';
+	?>
+	<div class="product-data">
+		<a class="product-title" href="<?php the_permalink(); ?>">
+			<h3><?php echo get_the_title($product->id); ?></h3>
+			<div class="product-price"><?php echo $product->get_price_html(); ?></div>
+		</a>
+	</div>
 </div>
 
 

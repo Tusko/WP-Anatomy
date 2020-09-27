@@ -18,12 +18,11 @@ namespace Assetic;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface ValueSupplierInterface
-{
-    /**
-     * Returns a map of values.
-     *
-     * @return array
-     */
-    public function getValues();
+interface ValueSupplierInterface {
+	/**
+	 * Returns a map of values.
+	 *
+	 * @return array
+	 */
+	public function getValues();
 }

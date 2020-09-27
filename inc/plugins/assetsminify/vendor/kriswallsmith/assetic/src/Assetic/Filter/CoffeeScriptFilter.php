@@ -13,70 +13,65 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Compiles CoffeeScript into Javascript.
  *
- * @link http://coffeescript.org/
+ * @link   http://coffeescript.org/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CoffeeScriptFilter extends BaseNodeFilter
-{
-    private $coffeeBin;
-    private $nodeBin;
+class CoffeeScriptFilter extends BaseNodeFilter {
+	private $coffeeBin;
+	private $nodeBin;
 
-    // coffee options
-    private $bare;
-    private $noHeader;
+	// coffee options
+	private $bare;
+	private $noHeader;
 
-    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
-    {
-        $this->coffeeBin = $coffeeBin;
-        $this->nodeBin = $nodeBin;
-    }
+	public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null) {
+		$this->coffeeBin = $coffeeBin;
+		$this->nodeBin   = $nodeBin;
+	}
 
-    public function setBare($bare)
-    {
-        $this->bare = $bare;
-    }
+	public function setBare($bare) {
+		$this->bare = $bare;
+	}
 
-    public function setNoHeader($noHeader)
-    {
-        $this->noHeader = $noHeader;
-    }
+	public function setNoHeader($noHeader) {
+		$this->noHeader = $noHeader;
+	}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $input = tempnam(sys_get_temp_dir(), 'assetic_coffeescript');
-        file_put_contents($input, $asset->getContent());
+	public function filterLoad(AssetInterface $asset) {
+		$input = FilesystemUtils::createTemporaryFile('coffee');
+		file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->coffeeBin)
-            : array($this->coffeeBin));
+		$pb = $this->createProcessBuilder($this->nodeBin
+			? array($this->nodeBin, $this->coffeeBin)
+			: array($this->coffeeBin));
 
-        $pb->add('-cp');
+		$pb->add('-cp');
 
-        if ($this->bare) {
-            $pb->add('--bare');
-        }
+		if($this->bare) {
+			$pb->add('--bare');
+		}
 
-        if ($this->noHeader) {
-            $pb->add('--no-header');
-        }
+		if($this->noHeader) {
+			$pb->add('--no-header');
+		}
 
-        $pb->add($input);
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+		$pb->add($input);
+		$proc = $pb->getProcess();
+		$code = $proc->run();
+		unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+		if(0 !== $code) {
+			throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+		}
 
-        $asset->setContent($proc->getOutput());
-    }
+		$asset->setContent($proc->getOutput());
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+	public function filterDump(AssetInterface $asset) {
+	}
 }

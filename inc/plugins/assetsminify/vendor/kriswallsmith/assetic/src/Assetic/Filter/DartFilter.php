@@ -13,55 +13,55 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Compiles Dart into Javascript.
  *
  * @link http://dartlang.org/
  */
-class DartFilter extends BaseProcessFilter
-{
-    private $dartBin;
+class DartFilter extends BaseProcessFilter {
+	private $dartBin;
 
-    public function __construct($dartBin = '/usr/bin/dart2js')
-    {
-        $this->dartBin = $dartBin;
-    }
+	public function __construct($dartBin = '/usr/bin/dart2js') {
+		$this->dartBin = $dartBin;
+	}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $input  = tempnam(sys_get_temp_dir(), 'assetic_dart');
-        $output = tempnam(sys_get_temp_dir(), 'assetic_dart');
+	public function filterLoad(AssetInterface $asset) {
+		$input  = FilesystemUtils::createTemporaryFile('dart');
+		$output = FilesystemUtils::createTemporaryFile('dart');
 
-        file_put_contents($input, $asset->getContent());
+		file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder()
-            ->add($this->dartBin)
-            ->add('-o'.$output)
-            ->add($input)
-        ;
+		$pb = $this->createProcessBuilder()
+		           ->add($this->dartBin)
+		           ->add('-o' . $output)
+		           ->add($input);
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($input);
+		$proc = $pb->getProcess();
+		$code = $proc->run();
+		unlink($input);
 
-        if (0 !== $code) {
-            if (file_exists($output)) {
-                unlink($output);
-            }
+		if(0 !== $code) {
+			$this->cleanup($output);
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+			throw FilterException::fromProcess($proc);
+		}
 
-        if (!file_exists($output)) {
-            throw new \RuntimeException('Error creating output file.');
-        }
+		if( ! file_exists($output)) {
+			throw new \RuntimeException('Error creating output file.');
+		}
 
-        $asset->setContent(file_get_contents($output));
-        unlink($output);
-    }
+		$asset->setContent(file_get_contents($output));
+		$this->cleanup($output);
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+	private function cleanup($file) {
+		foreach(glob($file . '*') as $related) {
+			unlink($related);
+		}
+	}
+
+	public function filterDump(AssetInterface $asset) {
+	}
 }

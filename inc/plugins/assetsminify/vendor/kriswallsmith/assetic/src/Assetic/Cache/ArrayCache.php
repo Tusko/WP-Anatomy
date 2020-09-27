@@ -16,43 +16,38 @@ namespace Assetic\Cache;
  *
  * @author Michael Mifsud <xzyfer@gmail.com>
  */
-class ArrayCache implements CacheInterface
-{
-    private $cache = array();
+class ArrayCache implements CacheInterface {
+	private $cache = array();
 
-    /**
-     * @see CacheInterface::has()
-     */
-    public function has($key)
-    {
-        return isset($this->cache[$key]);
-    }
+	/**
+	 * @see CacheInterface::get()
+	 */
+	public function get($key) {
+		if( ! $this->has($key)) {
+			throw new \RuntimeException('There is no cached value for ' . $key);
+		}
 
-    /**
-     * @see CacheInterface::get()
-     */
-    public function get($key)
-    {
-        if (!$this->has($key)) {
-            throw new \RuntimeException('There is no cached value for '.$key);
-        }
+		return $this->cache[ $key ];
+	}
 
-        return $this->cache[$key];
-    }
+	/**
+	 * @see CacheInterface::has()
+	 */
+	public function has($key) {
+		return isset($this->cache[ $key ]);
+	}
 
-    /**
-     * @see CacheInterface::set()
-     */
-    public function set($key, $value)
-    {
-        $this->cache[$key] = $value;
-    }
+	/**
+	 * @see CacheInterface::set()
+	 */
+	public function set($key, $value) {
+		$this->cache[ $key ] = $value;
+	}
 
-    /**
-     * @see CacheInterface::remove()
-     */
-    public function remove($key)
-    {
-        unset($this->cache[$key]);
-    }
+	/**
+	 * @see CacheInterface::remove()
+	 */
+	public function remove($key) {
+		unset($this->cache[ $key ]);
+	}
 }

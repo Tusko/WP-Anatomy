@@ -1,92 +1,91 @@
-$yellow: #f46277;
-$green: #089ea4;
-$blue: #f46277;
-$red: #089ea4;
+$yellow : #F46277;
+$green  : #089EA4;
+$blue   : #F46277;
+$red    : #089EA4;
 
 // scaling... any units
-$width: 36px;
+$width  : 36px;
 
 .showbox {
-    -webkit-transition: all .5s ease;
-    transition: all .5s ease;
-    display: inline-block;
-    vertical-align: top;
-    visibility: hidden;
-    opacity: 0;
-    margin: 0;
-    &.is-loading {
-        visibility: visible;
-        opacity: 1
-    }
+	-webkit-transition : all .5s ease;
+	transition         : all .5s ease;
+	display            : inline-block;
+	vertical-align     : top;
+	visibility         : hidden;
+	opacity            : 0;
+	margin             : 0;
+	&.is-loading {
+		visibility : visible;
+		opacity    : 1
+	}
 }
 
 .loader {
-  position: relative;
-  margin: 0px auto;
-  width: $width;
-  &:before {
-    content:'';
-    display: block;
-    padding-top: 100%;
-  }
+	position : relative;
+	margin   : 0px auto;
+	width    : $width;
+	&:before {
+		content     : '';
+		display     : block;
+		padding-top : 100%;
+	}
 }
 
 .circular {
-  -webkit-animation: rotate 2s linear infinite;
-  animation: rotate 2s linear infinite;
-  height: 100%;
-  transform-origin: center center;
-  width: 100%;
-  position: absolute;
-  top: 0; bottom: 0; left: 0; right: 0;
-  margin: auto;
+	-webkit-animation : rotate 2s linear infinite;
+	animation         : rotate 2s linear infinite;
+	height            : 100%;
+	transform-origin  : center center;
+	width             : 100%;
+	position          : absolute;
+	top               : 0;
+	bottom            : 0;
+	left              : 0;
+	right             : 0;
+	margin            : auto;
 }
 
 
 .path {
-  stroke-dasharray: 1,200;
-  stroke-dashoffset: 0;
-  -webkit-animation:
-   dash 1.5s ease-in-out infinite,
-   color 6s ease-in-out infinite
-  ;
-  animation:
-   dash 1.5s ease-in-out infinite,
-   color 6s ease-in-out infinite
-  ;
-  stroke-linecap: round;
+	stroke-dasharray  : 1, 200;
+	stroke-dashoffset : 0;
+	-webkit-animation : dash 1.5s ease-in-out infinite,
+	color 6s ease-in-out infinite;
+	animation         : dash 1.5s ease-in-out infinite,
+	color 6s ease-in-out infinite;
+	stroke-linecap    : round;
 }
 
-@keyframes rotate{
- 100%{
-  transform: rotate(360deg);
- }
+@keyframes rotate {
+	100% {
+		transform : rotate(360deg);
+	}
 }
-@keyframes dash{
- 0%{
-  stroke-dasharray: 1,200;
-  stroke-dashoffset: 0;
- }
- 50%{
-  stroke-dasharray: 89,200;
-  stroke-dashoffset: -35px;
- }
- 100%{
-  stroke-dasharray: 89,200;
-  stroke-dashoffset: -124px;
- }
+@keyframes dash {
+	0% {
+		stroke-dasharray  : 1, 200;
+		stroke-dashoffset : 0;
+	}
+	50% {
+		stroke-dasharray  : 89, 200;
+		stroke-dashoffset : -35px;
+	}
+	100% {
+		stroke-dasharray  : 89, 200;
+		stroke-dashoffset : -124px;
+	}
 }
-@keyframes color{
-  100%, 0%{
-    stroke: $red;
-  }
-  40%{
-    stroke: $blue;
-  }
-  66%{
-    stroke: $green;
-  }
-  80%, 90%{
-    stroke: $yellow;
-  }
+@keyframes color {
+	100%, 0% {
+		stroke : $red;
+	}
+	40% {
+		stroke : $blue;
+	}
+	66% {
+		stroke : $green;
+	}
+	80%, 90% {
+		stroke : $yellow;
+	}
 }

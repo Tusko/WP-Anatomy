@@ -14,103 +14,122 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\CssUtils;
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 /**
  * Loads SCSS files using the PHP implementation of scss, scssphp.
  *
  * Scss files are mostly compatible, but there are slight differences.
  *
- * @link http://leafo.net/scssphp/
+ * @link   http://leafo.net/scssphp/
  *
  * @author Bart van den Burg <bart@samson-it.nl>
  */
-class ScssphpFilter implements DependencyExtractorInterface
-{
-    private $importPaths = array();
-    private $customFunctions = array();
-    private $formatter;
-    private $variables = array();
+class ScssphpFilter implements DependencyExtractorInterface {
+	private $compass = false;
+	private $importPaths = array();
+	private $customFunctions = array();
+	private $formatter;
+	private $variables = array();
 
-    public function setFormatter($formatter)
-    {
-        $this->formatter = $formatter;
-    }
+	public function enableCompass($enable = true) {
+		$this->compass = (Boolean) $enable;
+	}
 
-    public function setVariables(array $variables)
-    {
-        $this->variables = $variables;
-    }
+	public function isCompassEnabled() {
+		return $this->compass;
+	}
 
-    public function addVariable($variable)
-    {
-        $this->variables[] = $variable;
-    }
+	public function setFormatter($formatter) {
+		$legacyFormatters = array(
+			'scss_formatter'            => 'ScssPhp\ScssPhp\Formatter\Expanded',
+			'scss_formatter_nested'     => 'ScssPhp\ScssPhp\Formatter\Nested',
+			'scss_formatter_compressed' => 'ScssPhp\ScssPhp\Formatter\Compressed',
+			'scss_formatter_crunched'   => 'ScssPhp\ScssPhp\Formatter\Crunched',
+		);
 
-    public function setImportPaths(array $paths)
-    {
-        $this->importPaths = $paths;
-    }
+		if(isset($legacyFormatters[ $formatter ])) {
+			@trigger_error(sprintf('The scssphp formatter `%s` is deprecated. Use `%s` instead.', $formatter, $legacyFormatters[ $formatter ]), E_USER_DEPRECATED);
 
-    public function addImportPath($path)
-    {
-        $this->importPaths[] = $path;
-    }
+			$formatter = $legacyFormatters[ $formatter ];
+		}
 
-    public function registerFunction($name,$callable)
-    {
-        $this->customFunctions[$name] = $callable;
-    }
+		$this->formatter = $formatter;
+	}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $sc = new Compiler();
+	public function setVariables(array $variables) {
+		$this->variables = $variables;
+	}
 
-        if ($dir = $asset->getSourceDirectory()) {
-            $sc->addImportPath($dir);
-        }
+	public function addVariable($variable) {
+		$this->variables[] = $variable;
+	}
 
-        foreach ($this->importPaths as $path) {
-            $sc->addImportPath($path);
-        }
+	public function setImportPaths(array $paths) {
+		$this->importPaths = $paths;
+	}
 
-        foreach ($this->customFunctions as $name => $callable) {
-            $sc->registerFunction($name, $callable);
-        }
+	public function addImportPath($path) {
+		$this->importPaths[] = $path;
+	}
 
-        if ($this->formatter) {
-            $sc->setFormatter($this->formatter);
-        }
+	public function registerFunction($name, $callable) {
+		$this->customFunctions[ $name ] = $callable;
+	}
 
-        if (!empty($this->variables)) {
-            $sc->setVariables($this->variables);
-        }
+	public function filterLoad(AssetInterface $asset) {
+		$sc = new Compiler();
 
-        $asset->setContent($sc->compile($asset->getContent()));
-    }
+		if($this->compass) {
+			new \scss_compass($sc);
+		}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+		if($dir = $asset->getSourceDirectory()) {
+			$sc->addImportPath($dir);
+		}
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        $sc = new Compiler();
-        $sc->addImportPath($loadPath);
-        foreach ($this->importPaths as $path) {
-            $sc->addImportPath($path);
-        }
+		foreach($this->importPaths as $path) {
+			$sc->addImportPath($path);
+		}
 
-        $children = array();
-        foreach (CssUtils::extractImports($content) as $match) {
-            $file = $sc->findImport($match);
-            if ($file) {
-                $children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
-                $child->load();
-                $children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
-            }
-        }
+		foreach($this->customFunctions as $name => $callable) {
+			$sc->registerFunction($name, $callable);
+		}
 
-        return $children;
-    }
+		if($this->formatter) {
+			$sc->setFormatter($this->formatter);
+		}
+
+		if( ! empty($this->variables)) {
+			$sc->setVariables($this->variables);
+		}
+
+		$asset->setContent($sc->compile($asset->getContent()));
+	}
+
+	public function filterDump(AssetInterface $asset) {
+	}
+
+	public function getChildren(AssetFactory $factory, $content, $loadPath = null) {
+		$sc = new Compiler();
+		if($loadPath !== null) {
+			$sc->addImportPath($loadPath);
+		}
+
+		foreach($this->importPaths as $path) {
+			$sc->addImportPath($path);
+		}
+
+		$children = array();
+		foreach(CssUtils::extractImports($content) as $match) {
+			$file = $sc->findImport($match);
+			if($file) {
+				$children[] = $child = $factory->createAsset($file, array(), array('root' => $loadPath));
+				$child->load();
+				$children = array_merge($children, $this->getChildren($factory, $child->getContent(), $loadPath));
+			}
+		}
+
+		return $children;
+	}
 }

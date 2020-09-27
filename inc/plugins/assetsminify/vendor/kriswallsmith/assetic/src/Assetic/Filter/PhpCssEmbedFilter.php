@@ -19,34 +19,29 @@ use CssEmbed\CssEmbed;
  * A filter that embed url directly into css
  *
  * @author Pierre Tachoire <pierre.tachoire@gmail.com>
- * @link https://github.com/krichprollsch/phpCssEmbed
+ * @link   https://github.com/krichprollsch/phpCssEmbed
  */
-class PhpCssEmbedFilter implements DependencyExtractorInterface
-{
-    private $presets = array();
+class PhpCssEmbedFilter implements DependencyExtractorInterface {
+	private $presets = array();
 
-    public function setPresets(array $presets)
-    {
-        $this->presets = $presets;
-    }
+	public function setPresets(array $presets) {
+		$this->presets = $presets;
+	}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-        $pce = new CssEmbed();
-        if ($dir = $asset->getSourceDirectory()) {
-            $pce->setRootDir($dir);
-        }
+	public function filterLoad(AssetInterface $asset) {
+		$pce = new CssEmbed();
+		if($dir = $asset->getSourceDirectory()) {
+			$pce->setRootDir($dir);
+		}
 
-        $asset->setContent($pce->embedString($asset->getContent()));
-    }
+		$asset->setContent($pce->embedString($asset->getContent()));
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
+	public function filterDump(AssetInterface $asset) {
+	}
 
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        // todo
-        return array();
-    }
+	public function getChildren(AssetFactory $factory, $content, $loadPath = null) {
+		// todo
+		return array();
+	}
 }

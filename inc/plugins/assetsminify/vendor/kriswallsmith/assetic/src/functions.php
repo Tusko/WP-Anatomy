@@ -12,8 +12,8 @@
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\TraversableString;
 
-if (function_exists('assetic_init')) {
-    return;
+if(function_exists('assetic_init')) {
+	return;
 }
 
 /**
@@ -21,12 +21,11 @@ if (function_exists('assetic_init')) {
  *
  * @param AssetFactory $factory The asset factory
  */
-function assetic_init(AssetFactory $factory)
-{
-    global $_assetic;
+function assetic_init(AssetFactory $factory) {
+	global $_assetic;
 
-    $_assetic = new stdClass();
-    $_assetic->factory = $factory;
+	$_assetic          = new stdClass();
+	$_assetic->factory = $factory;
 }
 
 /**
@@ -38,13 +37,12 @@ function assetic_init(AssetFactory $factory)
  *
  * @return array An array of javascript URLs
  */
-function assetic_javascripts($inputs = array(), $filters = array(), array $options = array())
-{
-    if (!isset($options['output'])) {
-        $options['output'] = 'js/*.js';
-    }
+function assetic_javascripts($inputs = array(), $filters = array(), array $options = array()) {
+	if( ! isset($options['output'])) {
+		$options['output'] = 'js/*.js';
+	}
 
-    return _assetic_urls($inputs, $filters, $options);
+	return _assetic_urls($inputs, $filters, $options);
 }
 
 /**
@@ -56,13 +54,12 @@ function assetic_javascripts($inputs = array(), $filters = array(), array $optio
  *
  * @return array An array of stylesheet URLs
  */
-function assetic_stylesheets($inputs = array(), $filters = array(), array $options = array())
-{
-    if (!isset($options['output'])) {
-        $options['output'] = 'css/*.css';
-    }
+function assetic_stylesheets($inputs = array(), $filters = array(), array $options = array()) {
+	if( ! isset($options['output'])) {
+		$options['output'] = 'css/*.css';
+	}
 
-    return _assetic_urls($inputs, $filters, $options);
+	return _assetic_urls($inputs, $filters, $options);
 }
 
 /**
@@ -74,15 +71,14 @@ function assetic_stylesheets($inputs = array(), $filters = array(), array $optio
  *
  * @return string An image URL
  */
-function assetic_image($input, $filters = array(), array $options = array())
-{
-    if (!isset($options['output'])) {
-        $options['output'] = 'images/*';
-    }
+function assetic_image($input, $filters = array(), array $options = array()) {
+	if( ! isset($options['output'])) {
+		$options['output'] = 'images/*';
+	}
 
-    $urls = _assetic_urls($input, $filters, $options);
+	$urls = _assetic_urls($input, $filters, $options);
 
-    return current($urls);
+	return current($urls);
 }
 
 /**
@@ -94,32 +90,31 @@ function assetic_image($input, $filters = array(), array $options = array())
  *
  * @return array An array of URLs
  */
-function _assetic_urls($inputs = array(), $filters = array(), array $options = array())
-{
-    global $_assetic;
+function _assetic_urls($inputs = array(), $filters = array(), array $options = array()) {
+	global $_assetic;
 
-    if (!is_array($inputs)) {
-        $inputs = array_filter(array_map('trim', explode(',', $inputs)));
-    }
+	if( ! is_array($inputs)) {
+		$inputs = array_filter(array_map('trim', explode(',', $inputs)));
+	}
 
-    if (!is_array($filters)) {
-        $filters = array_filter(array_map('trim', explode(',', $filters)));
-    }
+	if( ! is_array($filters)) {
+		$filters = array_filter(array_map('trim', explode(',', $filters)));
+	}
 
-    $coll = $_assetic->factory->createAsset($inputs, $filters, $options);
+	$coll = $_assetic->factory->createAsset($inputs, $filters, $options);
 
-    $debug = isset($options['debug']) ? $options['debug'] : $_assetic->factory->isDebug();
-    $combine = isset($options['combine']) ? $options['combine'] : !$debug;
+	$debug   = isset($options['debug']) ? $options['debug'] : $_assetic->factory->isDebug();
+	$combine = isset($options['combine']) ? $options['combine'] : ! $debug;
 
-    $one = $coll->getTargetPath();
-    if ($combine) {
-        $many = array($one);
-    } else {
-        $many = array();
-        foreach ($coll as $leaf) {
-            $many[] = $leaf->getTargetPath();
-        }
-    }
+	$one = $coll->getTargetPath();
+	if($combine) {
+		$many = array($one);
+	} else {
+		$many = array();
+		foreach($coll as $leaf) {
+			$many[] = $leaf->getTargetPath();
+		}
+	}
 
-    return new TraversableString($one, $many);
+	return new TraversableString($one, $many);
 }

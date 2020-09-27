@@ -9,8 +9,24 @@
 	<meta name="MobileOptimized" content="width"/>
 	<meta name="HandheldFriendly" content="True"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui"/>
+
+	<link rel="dns-prefetch" href="//connect.facebook.net"/>
+	<link rel="dns-prefetch" href="//googletagmanager.com"/>
+	<link rel="dns-prefetch" href="//google-analytics.com"/>
+	<link rel="dns-prefetch" href="//youtube.com"/>
+	<link rel="dns-prefetch" href="//google.com"/>
+	<link rel="dns-prefetch" href="//gstatic.com"/>
 	<?php wp_head(); ?>
 	<style>
+		* {
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			min-width: 1px;
+			padding: 0;
+			margin: 0;
+		}
 		body {
 			opacity: 0
 		}

@@ -6,7 +6,7 @@ global $post; ?>
 		<h2>test cache 224</h2>
 		<article class="animatedParent animatedOnce">
 			<?php the_post_thumbnail('full', array(
-					'class' => 'animated fadeInUp ac'
+				'class' => 'animated fadeInUp ac'
 			)); ?>
 
 			<?php if(have_posts()) : while(have_posts()) : the_post();

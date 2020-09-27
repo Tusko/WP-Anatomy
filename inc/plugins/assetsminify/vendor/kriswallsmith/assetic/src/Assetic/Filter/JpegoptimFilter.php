@@ -13,6 +13,7 @@ namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through Jpegoptim.
@@ -20,61 +21,55 @@ use Assetic\Exception\FilterException;
  * @link   http://www.kokkonen.net/tjko/projects.html
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegoptimFilter extends BaseProcessFilter
-{
-    private $jpegoptimBin;
-    private $stripAll;
-    private $max;
+class JpegoptimFilter extends BaseProcessFilter {
+	private $jpegoptimBin;
+	private $stripAll;
+	private $max;
 
-    /**
-     * Constructor.
-     *
-     * @param string $jpegoptimBin Path to the jpegoptim binary
-     */
-    public function __construct($jpegoptimBin = '/usr/bin/jpegoptim')
-    {
-        $this->jpegoptimBin = $jpegoptimBin;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param string $jpegoptimBin Path to the jpegoptim binary
+	 */
+	public function __construct($jpegoptimBin = '/usr/bin/jpegoptim') {
+		$this->jpegoptimBin = $jpegoptimBin;
+	}
 
-    public function setStripAll($stripAll)
-    {
-        $this->stripAll = $stripAll;
-    }
+	public function setStripAll($stripAll) {
+		$this->stripAll = $stripAll;
+	}
 
-    public function setMax($max)
-    {
-        $this->max = $max;
-    }
+	public function setMax($max) {
+		$this->max = $max;
+	}
 
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
+	public function filterLoad(AssetInterface $asset) {
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-        $pb = $this->createProcessBuilder(array($this->jpegoptimBin));
+	public function filterDump(AssetInterface $asset) {
+		$pb = $this->createProcessBuilder(array($this->jpegoptimBin));
 
-        if ($this->stripAll) {
-            $pb->add('--strip-all');
-        }
+		if($this->stripAll) {
+			$pb->add('--strip-all');
+		}
 
-        if ($this->max) {
-            $pb->add('--max='.$this->max);
-        }
+		if($this->max) {
+			$pb->add('--max=' . $this->max);
+		}
 
-        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim'));
-        file_put_contents($input, $asset->getContent());
+		$pb->add($input = FilesystemUtils::createTemporaryFile('jpegoptim'));
+		file_put_contents($input, $asset->getContent());
 
-        $proc = $pb->getProcess();
-        $proc->run();
+		$proc = $pb->getProcess();
+		$proc->run();
 
-        if (false !== strpos($proc->getOutput(), 'ERROR')) {
-            unlink($input);
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+		if(false !== strpos($proc->getOutput(), 'ERROR')) {
+			unlink($input);
+			throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+		}
 
-        $asset->setContent(file_get_contents($input));
+		$asset->setContent(file_get_contents($input));
 
-        unlink($input);
-    }
+		unlink($input);
+	}
 }

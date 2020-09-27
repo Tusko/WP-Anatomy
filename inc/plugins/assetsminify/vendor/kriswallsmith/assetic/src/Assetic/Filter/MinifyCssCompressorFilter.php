@@ -18,18 +18,15 @@ use Assetic\Asset\AssetInterface;
  *
  * All credit for the filter itself is mentioned in the file itself.
  *
- * @link https://raw.githubusercontent.com/mrclay/minify/master/min/lib/Minify/CSS/Compressor.php
+ * @link   https://raw.githubusercontent.com/mrclay/minify/master/min/lib/Minify/CSS/Compressor.php
  * @author Stephen Clay <steve@mrclay.org>
  * @author http://code.google.com/u/1stvamp/ (Issue 64 patch)
  */
-class MinifyCssCompressorFilter implements FilterInterface
-{
-    public function filterLoad(AssetInterface $asset)
-    {
-    }
+class MinifyCssCompressorFilter implements FilterInterface {
+	public function filterLoad(AssetInterface $asset) {
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-        $asset->setContent(\Minify_CSS_Compressor::process($asset->getContent()));
-    }
+	public function filterDump(AssetInterface $asset) {
+		$asset->setContent(\Minify_CSS_Compressor::process($asset->getContent()));
+	}
 }

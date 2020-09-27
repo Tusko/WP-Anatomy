@@ -6,7 +6,7 @@
  * It is expected that theme authors would copy and paste this code into their
  * functions.php file, and amend to suit.
  *
- * @see http://tgmpluginactivation.com/configuration/ for detailed documentation.
+ * @see        http://tgmpluginactivation.com/configuration/ for detailed documentation.
  *
  * @package    TGM-Plugin-Activation
  * @subpackage Example
@@ -31,9 +31,9 @@
  * Plugin:
  * require_once dirname( __FILE__ ) . '/path/to/class-tgm-plugin-activation.php';
  */
-require_once dirname( __FILE__ ) . '/class-tgm-plugin-activation.php';
+require_once dirname(__FILE__) . '/class-tgm-plugin-activation.php';
 
-add_action( 'tgmpa_register', 'wpa_register_required_plugins' );
+add_action('tgmpa_register', 'wpa_register_required_plugins');
 
 /**
  * Register the required plugins for this theme.
@@ -56,24 +56,24 @@ function wpa_register_required_plugins() {
 
 	$plugins = array(
 		array(
-			'name'      => 'Optimus – WordPress Image Optimizer',
-			'slug'      => 'optimus',
-			'required'  => false,
+			'name'     => 'Optimus – WordPress Image Optimizer',
+			'slug'     => 'optimus',
+			'required' => false,
 		),
 		array(
-			'name'      => 'TinyMCE Advanced',
-			'slug'      => 'tinymce-advanced',
-			'required'  => false,
+			'name'     => 'TinyMCE Advanced',
+			'slug'     => 'tinymce-advanced',
+			'required' => false,
 		),
 		array(
-			'name'      => 'WP Migrate DB',
-			'slug'      => 'wp-migrate-db',
-			'required'  => false,
+			'name'     => 'WP Migrate DB',
+			'slug'     => 'wp-migrate-db',
+			'required' => false,
 		),
 		array(
-			'name'      => 'Yoast SEO',
-			'slug'      => 'wordpress-seo',
-			'required'  => false,
+			'name'        => 'Yoast SEO',
+			'slug'        => 'wordpress-seo',
+			'required'    => false,
 			'is_callable' => 'wpseo_init',
 		),
 		array(
@@ -87,17 +87,17 @@ function wpa_register_required_plugins() {
 			'external_url'       => 'http://www.advancedcustomfields.com/pro/', // If set, overrides default API URL and points to an external URL.
 		),
 		array(
-			'name'               => 'Gravity Forms',
-			'slug'               => 'gravityforms',
-			'source'             => get_stylesheet_directory() . '/inc/plugins/gravityforms.zip',
-			'required'           => false,
-			'external_url'       => 'https://gravityforms.com', // If set, overrides default API URL and points to an external URL.
+			'name'         => 'Gravity Forms',
+			'slug'         => 'gravityforms',
+			'source'       => get_stylesheet_directory() . '/inc/plugins/gravityforms.zip',
+			'required'     => false,
+			'external_url' => 'https://gravityforms.com', // If set, overrides default API URL and points to an external URL.
 		),
 		array(
-			'name'               => 'GravityWP – CSS Selector',
-			'slug'               => 'gravitywp-css-selector',
-			'required'           => false,
-			'is_callable'        => 'gf_upgrade'
+			'name'        => 'GravityWP – CSS Selector',
+			'slug'        => 'gravitywp-css-selector',
+			'required'    => false,
+			'is_callable' => 'gf_upgrade'
 		)
 	);
 
@@ -114,5 +114,5 @@ function wpa_register_required_plugins() {
 		'is_automatic' => true,                   // Automatically activate plugins after installation or not.
 		'message'      => '',                      // Message to output right before the plugins table.
 	);
-	tgmpa( $plugins, $config );
+	tgmpa($plugins, $config);
 }

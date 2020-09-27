@@ -19,120 +19,124 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class AssetReference implements AssetInterface
-{
-    private $am;
-    private $name;
-    private $filters = array();
+class AssetReference implements AssetInterface {
+	private $am;
+	private $name;
+	private $filters = array();
+	private $clone = false;
+	private $asset;
 
-    public function __construct(AssetManager $am, $name)
-    {
-        $this->am = $am;
-        $this->name = $name;
-    }
+	public function __construct(AssetManager $am, $name) {
+		$this->am   = $am;
+		$this->name = $name;
+	}
 
-    public function ensureFilter(FilterInterface $filter)
-    {
-        $this->filters[] = $filter;
-    }
+	public function __clone() {
+		$this->clone = true;
 
-    public function getFilters()
-    {
-        $this->flushFilters();
+		if($this->asset) {
+			$this->asset = clone $this->asset;
+		}
+	}
 
-        return $this->callAsset(__FUNCTION__);
-    }
+	public function ensureFilter(FilterInterface $filter) {
+		$this->filters[] = $filter;
+	}
 
-    public function clearFilters()
-    {
-        $this->filters = array();
-        $this->callAsset(__FUNCTION__);
-    }
+	public function getFilters() {
+		$this->flushFilters();
 
-    public function load(FilterInterface $additionalFilter = null)
-    {
-        $this->flushFilters();
+		return $this->callAsset(__FUNCTION__);
+	}
 
-        return $this->callAsset(__FUNCTION__, array($additionalFilter));
-    }
+	private function flushFilters() {
+		$asset = $this->resolve();
 
-    public function dump(FilterInterface $additionalFilter = null)
-    {
-        $this->flushFilters();
+		while($filter = array_shift($this->filters)) {
+			$asset->ensureFilter($filter);
+		}
+	}
 
-        return $this->callAsset(__FUNCTION__, array($additionalFilter));
-    }
+	private function resolve() {
+		if($this->asset) {
+			return $this->asset;
+		}
 
-    public function getContent()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+		$asset = $this->am->get($this->name);
 
-    public function setContent($content)
-    {
-        $this->callAsset(__FUNCTION__, array($content));
-    }
+		if($this->clone) {
+			$asset = $this->asset = clone $asset;
+		}
 
-    public function getSourceRoot()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+		return $asset;
+	}
 
-    public function getSourcePath()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+	private function callAsset($method, $arguments = array()) {
+		$asset = $this->resolve();
 
-    public function getSourceDirectory()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+		return call_user_func_array(array($asset, $method), $arguments);
+	}
 
-    public function getTargetPath()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+	public function clearFilters() {
+		$this->filters = array();
+		$this->callAsset(__FUNCTION__);
+	}
 
-    public function setTargetPath($targetPath)
-    {
-        $this->callAsset(__FUNCTION__, array($targetPath));
-    }
+	public function load(FilterInterface $additionalFilter = null) {
+		$this->flushFilters();
 
-    public function getLastModified()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+		return $this->callAsset(__FUNCTION__, array($additionalFilter));
+	}
 
-    public function getVars()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+	public function dump(FilterInterface $additionalFilter = null) {
+		$this->flushFilters();
 
-    public function getValues()
-    {
-        return $this->callAsset(__FUNCTION__);
-    }
+		return $this->callAsset(__FUNCTION__, array($additionalFilter));
+	}
 
-    public function setValues(array $values)
-    {
-        $this->callAsset(__FUNCTION__, array($values));
-    }
+	public function getContent() {
+		return $this->callAsset(__FUNCTION__);
+	}
 
-    // private
+	public function setContent($content) {
+		$this->callAsset(__FUNCTION__, array($content));
+	}
 
-    private function callAsset($method, $arguments = array())
-    {
-        $asset = $this->am->get($this->name);
+	public function getSourceRoot() {
+		return $this->callAsset(__FUNCTION__);
+	}
 
-        return call_user_func_array(array($asset, $method), $arguments);
-    }
+	public function getSourcePath() {
+		return $this->callAsset(__FUNCTION__);
+	}
 
-    private function flushFilters()
-    {
-        $asset = $this->am->get($this->name);
+	public function getSourceDirectory() {
+		return $this->callAsset(__FUNCTION__);
+	}
 
-        while ($filter = array_shift($this->filters)) {
-            $asset->ensureFilter($filter);
-        }
-    }
+	public function getTargetPath() {
+		return $this->callAsset(__FUNCTION__);
+	}
+
+	public function setTargetPath($targetPath) {
+		$this->callAsset(__FUNCTION__, array($targetPath));
+	}
+
+	public function getLastModified() {
+		return $this->callAsset(__FUNCTION__);
+	}
+
+	// private
+
+	public function getVars() {
+		return $this->callAsset(__FUNCTION__);
+	}
+
+	public function getValues() {
+		return $this->callAsset(__FUNCTION__);
+	}
+
+	public function setValues(array $values) {
+		$this->callAsset(__FUNCTION__, array($values));
+	}
 }

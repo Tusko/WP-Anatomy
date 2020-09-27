@@ -1,5 +1,4 @@
 <?php
-
 function wpa_html_lang($echo = true) {
 	$lang = get_locale();
 	if(function_exists('qtranxf_getLanguage')) {
@@ -18,10 +17,18 @@ function wpa_html_lang($echo = true) {
 }
 
 if(defined('QTX_VERSION')) {
-	remove_action('wp_head', 'qtranxf_wp_head_meta_generator');
-	remove_action('wp_head', 'qtranxf_head', 10, 0);
-	remove_action('wp_head', 'qtranxf_wp_head', 10, 0);
-	remove_action('wp_head', 'qtrans_header', 10, 0);
+	if(function_exists('qtranxf_wp_head_meta_generator')) {
+		remove_action('wp_head', 'qtranxf_wp_head_meta_generator', 10);
+	}
+	if(function_exists('qtranxf_head')) {
+		remove_action('wp_head', 'qtranxf_head', 10);
+	}
+	if(function_exists('qtranxf_wp_head')) {
+		remove_action('wp_head', 'qtranxf_wp_head', 10);
+	}
+	if(function_exists('qtrans_header')) {
+		remove_action('wp_head', 'qtrans_header', 10);
+	}
 
 	// Custom Links fix
 	add_filter('walker_nav_menu_start_el', 'qtrans_in_nav_el', 10, 4);

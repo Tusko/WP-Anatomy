@@ -14,53 +14,49 @@ namespace Assetic\Filter;
 use Assetic\Asset\AssetInterface;
 use Assetic\Exception\FilterException;
 use Assetic\Factory\AssetFactory;
+use Assetic\Util\FilesystemUtils;
 
 /**
  * Runs assets through Sprockets.
  *
  * Requires Sprockets 1.0.x.
  *
- * @link http://getsprockets.org/
- * @link http://github.com/sstephenson/sprockets/tree/1.0.x
+ * @link   http://getsprockets.org/
+ * @link   http://github.com/sstephenson/sprockets/tree/1.0.x
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorInterface
-{
-    private $sprocketsLib;
-    private $rubyBin;
-    private $includeDirs;
-    private $assetRoot;
+class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorInterface {
+	private $sprocketsLib;
+	private $rubyBin;
+	private $includeDirs;
+	private $assetRoot;
 
-    /**
-     * Constructor.
-     *
-     * @param string $sprocketsLib Path to the Sprockets lib/ directory
-     * @param string $rubyBin      Path to the ruby binary
-     */
-    public function __construct($sprocketsLib = null, $rubyBin = '/usr/bin/ruby')
-    {
-        $this->sprocketsLib = $sprocketsLib;
-        $this->rubyBin = $rubyBin;
-        $this->includeDirs = array();
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param string $sprocketsLib Path to the Sprockets lib/ directory
+	 * @param string $rubyBin      Path to the ruby binary
+	 */
+	public function __construct($sprocketsLib = null, $rubyBin = '/usr/bin/ruby') {
+		$this->sprocketsLib = $sprocketsLib;
+		$this->rubyBin      = $rubyBin;
+		$this->includeDirs  = array();
+	}
 
-    public function addIncludeDir($directory)
-    {
-        $this->includeDirs[] = $directory;
-    }
+	public function addIncludeDir($directory) {
+		$this->includeDirs[] = $directory;
+	}
 
-    public function setAssetRoot($assetRoot)
-    {
-        $this->assetRoot = $assetRoot;
-    }
+	public function setAssetRoot($assetRoot) {
+		$this->assetRoot = $assetRoot;
+	}
 
-    /**
-     * Hack around a bit, get the job done.
-     */
-    public function filterLoad(AssetInterface $asset)
-    {
-        static $format = <<<'EOF'
+	/**
+	 * Hack around a bit, get the job done.
+	 */
+	public function filterLoad(AssetInterface $asset) {
+		static $format = <<<'EOF'
 #!/usr/bin/env ruby
 
 require %s
@@ -75,63 +71,52 @@ print secretary.concatenation
 
 EOF;
 
-        $more = '';
+		$more = '';
 
-        foreach ($this->includeDirs as $directory) {
-            $more .= 'options[:load_path] << '.var_export($directory, true)."\n";
-        }
+		foreach($this->includeDirs as $directory) {
+			$more .= 'options[:load_path] << ' . var_export($directory, true) . "\n";
+		}
 
-        if (null !== $this->assetRoot) {
-            $more .= 'options[:asset_root] = '.var_export($this->assetRoot, true)."\n";
-        }
+		if(null !== $this->assetRoot) {
+			$more .= 'options[:asset_root] = ' . var_export($this->assetRoot, true) . "\n";
+		}
 
-        if ($more) {
-            $more .= "\n";
-        }
+		if($more) {
+			$more .= "\n";
+		}
 
-        $tmpAsset = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
-        file_put_contents($tmpAsset, $asset->getContent());
+		$tmpAsset = FilesystemUtils::createTemporaryFile('sprockets_asset');
+		file_put_contents($tmpAsset, $asset->getContent());
 
-        $input = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
-        file_put_contents($input, sprintf($format,
-            $this->sprocketsLib
-                ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
-                : '\'sprockets\'',
-            $this->getHack($asset),
-            var_export($tmpAsset, true),
-            $more
-        ));
+		$input = FilesystemUtils::createTemporaryFile('sprockets_in');
+		file_put_contents($input, sprintf($format,
+			$this->sprocketsLib
+				? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
+				: '\'sprockets\'',
+			$this->getHack($asset),
+			var_export($tmpAsset, true),
+			$more
+		));
 
-        $pb = $this->createProcessBuilder(array(
-            $this->rubyBin,
-            $input,
-        ));
+		$pb = $this->createProcessBuilder(array(
+			$this->rubyBin,
+			$input,
+		));
 
-        $proc = $pb->getProcess();
-        $code = $proc->run();
-        unlink($tmpAsset);
-        unlink($input);
+		$proc = $pb->getProcess();
+		$code = $proc->run();
+		unlink($tmpAsset);
+		unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
-        }
+		if(0 !== $code) {
+			throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+		}
 
-        $asset->setContent($proc->getOutput());
-    }
+		$asset->setContent($proc->getOutput());
+	}
 
-    public function filterDump(AssetInterface $asset)
-    {
-    }
-
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        // todo
-        return array();
-    }
-
-    private function getHack(AssetInterface $asset)
-    {
-        static $format = <<<'EOF'
+	private function getHack(AssetInterface $asset) {
+		static $format = <<<'EOF'
 
 module Sprockets
   class Preprocessor
@@ -144,8 +129,16 @@ end
 
 EOF;
 
-        if ($dir = $asset->getSourceDirectory()) {
-            return sprintf($format, var_export($dir, true));
-        }
-    }
+		if($dir = $asset->getSourceDirectory()) {
+			return sprintf($format, var_export($dir, true));
+		}
+	}
+
+	public function filterDump(AssetInterface $asset) {
+	}
+
+	public function getChildren(AssetFactory $factory, $content, $loadPath = null) {
+		// todo
+		return array();
+	}
 }

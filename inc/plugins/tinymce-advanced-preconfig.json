@@ -1,1 +1,18 @@
-{"settings":{"toolbar_1":"formatselect,fontsizeselect,bold,italic,underline,blockquote,subscript,superscript,bullist,numlist,alignleft,aligncenter,alignjustify,alignright,link,unlink,undo,redo","toolbar_2":"outdent,indent,pastetext,removeformat,charmap,wp_more,forecolor,table,wp_help,anchor,backcolor,tadv_mark,searchreplace,hr","toolbar_3":"","toolbar_4":"","toolbar_classic_block":"formatselect,bold,italic,blockquote,bullist,numlist,alignleft,aligncenter,alignright,link,forecolor,backcolor,table,wp_help","toolbar_block":"core\/image","toolbar_block_side":"tadv\/sup,tadv\/sub,core\/strikethrough,core\/code,tadv\/mark,tadv\/removeformat","panels_block":"tadv\/color-panel,tadv\/background-color-panel","options":"menubar_block,menubar,merge_toolbars,advlist,fontsize_formats","plugins":"anchor,table,searchreplace,advlist"},"admin_settings":{"options":"classic_paragraph_block,block_editor_no_autop,no_autop,table_grid,table_tab_navigation,table_advtab","disabled_editors":""}}
+{
+	"settings": {
+		"toolbar_1": "formatselect,fontsizeselect,bold,italic,underline,blockquote,subscript,superscript,bullist,numlist,alignleft,aligncenter,alignjustify,alignright,link,unlink,undo,redo",
+		"toolbar_2": "outdent,indent,pastetext,removeformat,charmap,wp_more,forecolor,table,wp_help,anchor,backcolor,tadv_mark,searchreplace,hr",
+		"toolbar_3": "",
+		"toolbar_4": "",
+		"toolbar_classic_block": "formatselect,bold,italic,blockquote,bullist,numlist,alignleft,aligncenter,alignright,link,forecolor,backcolor,table,wp_help",
+		"toolbar_block": "core\/image",
+		"toolbar_block_side": "tadv\/sup,tadv\/sub,core\/strikethrough,core\/code,tadv\/mark,tadv\/removeformat",
+		"panels_block": "tadv\/color-panel,tadv\/background-color-panel",
+		"options": "menubar_block,menubar,merge_toolbars,advlist,fontsize_formats",
+		"plugins": "anchor,table,searchreplace,advlist"
+	},
+	"admin_settings": {
+		"options": "classic_paragraph_block,block_editor_no_autop,no_autop,table_grid,table_tab_navigation,table_advtab",
+		"disabled_editors": ""
+	}
+}

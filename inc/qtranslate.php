@@ -82,4 +82,34 @@ if(defined('QTX_VERSION')) {
 	}
 
 	add_action('wp_footer', 'acf_qtranslate_strings', 10);
+
+	function yoast_seo_qtrans() {
+		if(defined('WPSEO_VERSION')) {
+			add_filter('wpseo_metadesc', function($str) {
+				return __($str);
+			}, 10, 1);
+
+			add_filter('wpseo_opengraph_title', function($str) {
+				return __($str);
+			}, 10, 1);
+
+			add_filter('wpseo_opengraph_desc', function($str) {
+				return __($str);
+			}, 10, 1);
+		}
+	}
+
+	add_action('init', 'yoast_seo_qtrans', 1, 10);
+
+	function wpseo_breadcrumb_add_woo_shop_link($links) {
+		$newList = array();
+		foreach($links as $link) {
+			$link['text'] = __($link['text']);
+			$newList[]    = $link;
+		}
+
+		return $newList;
+	}
+
+	add_filter('wpseo_breadcrumb_links', 'wpseo_breadcrumb_add_woo_shop_link');
 }

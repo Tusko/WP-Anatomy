@@ -3356,14 +3356,14 @@ if( ! function_exists('tgmpa_load_bulk_installer')) {
 					 * @see      Plugin_Upgrader::bulk_upgrade()
 					 * @see      https://core.trac.wordpress.org/browser/tags/4.2.1/src/wp-admin/includes/class-wp-upgrader.php#L838
 					 * (/
-					public function bulk_install( $plugins, $args = array() ) {
+					public function bulk_install($plugins, $args = array()) {
 					// [TGMPA + ] Hook auto-activation in.
-					add_filter( 'upgrader_post_install', array( $this, 'auto_activate' ), 10 );
+					add_filter('upgrader_post_install', array($this, 'auto_activate'), 10);
 
 					$defaults    = array(
 					'clear_update_cache' => true,
 					);
-					$parsed_args = wp_parse_args( $args, $defaults );
+					$parsed_args = wp_parse_args($args, $defaults);
 
 					$this->init();
 					$this->bulk = true;
@@ -3380,6 +3380,7 @@ if( ! function_exists('tgmpa_load_bulk_installer')) {
 				$res = $this->fs_connect(array(WP_CONTENT_DIR, WP_PLUGIN_DIR));
 				if(! $res) {
 				$this->skin->footer();
+
 				return false;
 				}
 

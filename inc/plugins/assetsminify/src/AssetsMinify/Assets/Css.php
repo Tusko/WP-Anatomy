@@ -2,8 +2,8 @@
 
 namespace AssetsMinify\Assets;
 
-use Assetic\Filter\MinifyCssCompressorFilter;
 use Assetic\Filter\CssRewriteFilter;
+use Assetic\Filter\MinifyCssCompressorFilter;
 
 /**
  * Css Factory.
@@ -139,6 +139,6 @@ class Css extends Factory {
 	 * @param string $media    The media attribute - Default = all
 	 */
 	protected function dump($filename, $media = 'all') {
-		echo '<noscript id="wf_ds"><link rel="stylesheet" type="text/css" href="' . $this->cache->getUrl() . $filename . '"/></noscript>' . "\r\n";
+		echo '<link id="__wp_defer_css" rel="preload" as="style" type="text/css" href="' . $this->cache->getUrl() . $filename . '"/><noscript><link rel="stylesheet" type="text/css" href="' . $this->cache->getUrl() . $filename . '"/></noscript>' . "\r\n";
 	}
 }

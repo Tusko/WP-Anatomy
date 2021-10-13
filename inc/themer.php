@@ -93,7 +93,7 @@ function tinymce_custom_settings() {
 	global $current_screen;
 	if($current_screen && $current_screen->id == 'settings_page_tinymce-advanced') {
 		$json_string = file_get_contents('plugins/tinymce-advanced-preconfig.json', true); ?>
-		<script type="text/javascript">jQuery(function($) {
+		<script type="text/javascript">jQuery(function ($) {
         var tcs_json = '<?php echo trim($json_string); ?>';
         $('textarea#tadv-import').val(tcs_json);
       });</script>
@@ -268,7 +268,7 @@ function wpa_body_classes($classes) {
 //Custom SEO Title
 function wpa_title() {
 	global $post;
-	if( ! defined('WPSEO_VERSION')) {
+	if(defined('WPSEO_VERSION') || defined('WPSEO_FILE')) {
 		if(is_404()) {
 			echo '404 Page not found - ';
 		} elseif((is_single() || is_page()) && $post->post_parent) {

@@ -268,7 +268,7 @@ function wpa_body_classes($classes) {
 //Custom SEO Title
 function wpa_title() {
 	global $post;
-	if(defined('WPSEO_VERSION') || defined('WPSEO_FILE')) {
+	if( ! defined('WPSEO_VERSION') || ! defined('WPSEO_FILE')) {
 		if(is_404()) {
 			echo '404 Page not found - ';
 		} elseif((is_single() || is_page()) && $post->post_parent) {

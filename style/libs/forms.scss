@@ -1,8 +1,10 @@
 @import '../components/mixins';
 
+//@use "sass:map";
+
 form {
 	label {
-		color       : $default;
+		color       : map-get($colors, "default");
 		font-family : $font;
 		font-size   : 16px;
 		font-weight : 500;
@@ -30,44 +32,6 @@ form {
 		.instruction {
 			font-size : 100% !important
 		}
-
-		.ginput_container_fileupload {
-			& + .gfield_description {
-				@extend .ani;
-				box-sizing    : border-box !important;
-				border        : 2px dashed rgba($default, .2);
-				background    : rgba($default, .1);
-				position      : absolute;
-				text-align    : center;
-				top           : 30px;
-				width         : auto;
-				right         : 16px;
-				padding       : 10px;
-				border-radius : 5px;
-				z-index       : -1;
-				left          : 0;
-			}
-			&.dragover {
-				& + .gfield_description {
-					border     : 2px dashed rgba($active, .4);
-					background : rgba($active, .2);
-				}
-			}
-			input[type="file"] {
-				max-height : none !important;
-				display    : block !important;
-				width      : 100% !important;
-				cursor     : pointer;
-				height     : 45px;
-				opacity    : 0;
-			}
-			.ginput_preview {
-				margin : 20px 0 0;
-				> img {
-					margin : 0 4px 0 0;
-				}
-			}
-		}
 	}
 
 	input[type="text"],
@@ -79,17 +43,17 @@ form {
 	textarea {
 		@include border-radius(0);
 		border        : 0 !important;
-		border-bottom : 1px solid $default !important;
+		border-bottom : 1px solid map-get($colors, "default") !important;
 		font          : 500 16px $font;
 		padding       : 0 !important;
 		margin        : 0 auto 20px;
-		color         : $default;
+		color         : map-get($colors, "default");
 		display       : block;
 		background    : none;
 		height        : 32px;
 		width         : 100%;
 		&:focus {
-			border-bottom : 1px solid $red !important;
+			border-bottom : 1px solid map-get($colors, "active") !important;
 		}
 	}
 
@@ -123,7 +87,7 @@ form {
 
 					&:before {
 						@extend .ani;
-						border   : 1px solid $default;
+						border   : 1px solid map-get($colors, "default");
 						position : absolute;
 						height   : 20px;
 						width    : 20px;
@@ -138,8 +102,8 @@ form {
 
 					&:checked + label {
 						&:before {
-							border-color : $active;
-							background   : $active;
+							border-color : map-get($colors, "active");
+							background   : map-get($colors, "active");
 						}
 					}
 				}
@@ -154,9 +118,9 @@ form {
 	}
 
 	div.validation_error {
-		border-bottom-color : $red !important;
-		border-top-color    : $red !important;
-		color               : $red !important;
+		border-bottom-color : map-get($colors, "active") !important;
+		border-top-color    : map-get($colors, "active") !important;
+		color               : map-get($colors, "active") !important;
 	}
 
 	.gform_ajax_spinner {
@@ -175,9 +139,9 @@ input[type="submit"] {
 	text-transform  : uppercase;
 	padding         : 12px 20px;
 	position        : relative;
-	background      : $default;
+	background      : map-get($colors, "default");
 	cursor          : pointer;
-	color           : $white;
+	color           : map-get($colors, "white");
 	text-align      : center;
 	min-width       : 250px;
 	text-decoration : none;
@@ -186,12 +150,12 @@ input[type="submit"] {
 	border          : 0;
 
 	&:hover {
-		background : $active;
+		background : map-get($colors, "active");
 	}
 
 	&.white {
-		color      : $active;
-		background : $white;
+		color      : map-get($colors, "active");
+		background : map-get($colors, "white");
 
 		&:hover {
 			opacity : .75
@@ -199,11 +163,11 @@ input[type="submit"] {
 	}
 
 	&.empty {
-		color      : $default;
+		color      : map-get($colors, "default");
 		background : none;
 		min-width  : 1px;
 		&:hover {
-			color : $active
+			color : map-get($colors, "active")
 		}
 	}
 }
@@ -218,7 +182,7 @@ input[type="submit"] {
 		height        : auto;
 		.select2-selection__rendered {
 			font         : 500 15px/40px $font;
-			color        : $default;
+			color        : map-get($colors, "default");
 			height       : 40px;
 			padding-left : 0;
 		}
@@ -251,18 +215,18 @@ input[type="submit"] {
 	.select2-results {
 		li.select2-results__option {
 			font    : 300 15px/40px $font;
-			color   : $default;
+			color   : map-get($colors, "default");
 			padding : 0 10px;
 			&:hover,
 			&.select2-results__option--highlighted {
-				background : $active;
-				color      : $white;
+				background : map-get($colors, "active");
+				color      : map-get($colors, "white");
 			}
 
 		}
 		li.select2-results__option[aria-selected="true"] {
-			background : $active;
-			color      : $white;
+			background : map-get($colors, "active");
+			color      : map-get($colors, "white");
 		}
 	}
 }

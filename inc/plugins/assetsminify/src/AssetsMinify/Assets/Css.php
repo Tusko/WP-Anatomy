@@ -139,6 +139,8 @@ class Css extends Factory {
 	 * @param string $media    The media attribute - Default = all
 	 */
 	protected function dump($filename, $media = 'all') {
-		echo '<link id="__wp_defer_css" rel="preload" as="style" type="text/css" href="' . $this->cache->getUrl() . $filename . '"/><noscript><link rel="stylesheet" type="text/css" href="' . $this->cache->getUrl() . $filename . '"/></noscript>' . "\r\n";
+		$src = $this->cache->getUrl() . $filename;
+		echo '<link id="__wp_defer_css" rel="preload" as="style" type="text/css" href="' . $src . '"/>' . "\r\n" .
+		     '<noscript><link rel="stylesheet" type="text/css" href="' . $src . '"/></noscript>' . "\r\n";
 	}
 }

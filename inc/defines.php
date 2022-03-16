@@ -18,13 +18,6 @@ if(class_exists('GFForms')) {
 	define('WPA_SPINNER', "https://arsmoon.com/brand-wp-admin/spin.php?color=000");
 }
 
-if(class_exists('Optimus_HQ')) {
-	$optimus_HQ_key = get_site_option('optimus_key');
-	if( ! $optimus_HQ_key) {
-		update_site_option('optimus_key', '1CD4IJ468PD7KI0RBJPKI7P0');
-	}
-}
-
 if(class_exists('Tribe__Events__Pro__Main')) {
 	$eventsCalendarPro = get_site_option('pue_install_key_events_calendar_pro');
 	if( ! $eventsCalendarPro) {
@@ -32,8 +25,8 @@ if(class_exists('Tribe__Events__Pro__Main')) {
 	}
 }
 
-function wpa__prelicense() {
-	if( ! acf_pro_is_license_active()) {
+function wpa__acf_prelicense() {
+	if(function_exists('acf_pro_is_license_active') && ! acf_pro_is_license_active()) {
 		$args = array(
 			'_nonce'      => wp_create_nonce('activate_pro_licence'),
 			'acf_license' => base64_encode('order_id=37918|type=personal|date=2014-08-21 15:02:59'),
@@ -53,8 +46,8 @@ function wpa__prelicense() {
 	}
 }
 
-if(function_exists('acf_pro_is_license_active')) {
-	add_action('acf/init', 'wpa__prelicense', 99);
+if(function_exists('wpa__acf_prelicense')) {
+	add_action('acf/init', 'wpa__acf_prelicense', 99);
 }
 
 /* END: Theme config params */

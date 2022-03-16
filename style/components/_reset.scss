@@ -196,8 +196,8 @@ a {
 //selection
 ::-moz-selection,
 ::selection {
-	background : $active;
-	color      : $white;
+	background : map-get($colors, "active");
+	color      : map-get($colors, "white");
 }
 
 :focus {

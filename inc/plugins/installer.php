@@ -56,11 +56,6 @@ function wpa_register_required_plugins() {
 
 	$plugins = array(
 		array(
-			'name'     => 'Optimus – WordPress Image Optimizer',
-			'slug'     => 'optimus',
-			'required' => false,
-		),
-		array(
 			'name'     => 'TinyMCE Advanced',
 			'slug'     => 'tinymce-advanced',
 			'required' => false,

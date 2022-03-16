@@ -13,12 +13,13 @@
 namespace ScssPhp\ScssPhp\Formatter;
 
 use ScssPhp\ScssPhp\Formatter;
-use ScssPhp\ScssPhp\Formatter\OutputBlock;
 
 /**
  * Compressed formatter
  *
  * @author Leaf Corcoran <leafot@gmail.com>
+ *
+ * @internal
  */
 class Compressed extends Formatter {
 	/**
@@ -46,8 +47,6 @@ class Compressed extends Formatter {
 		foreach($block->lines as $index => $line) {
 			if(substr($line, 0, 2) === '/*' && substr($line, 2, 1) !== '!') {
 				unset($block->lines[ $index ]);
-			} elseif(substr($line, 0, 3) === '/*!') {
-				$block->lines[ $index ] = '/*' . substr($line, 3);
 			}
 		}
 
@@ -64,6 +63,8 @@ class Compressed extends Formatter {
 	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
 	 */
 	protected function blockSelectors(OutputBlock $block) {
+		assert(! empty($block->selectors));
+
 		$inner = $this->indentStr();
 
 		$this->write(

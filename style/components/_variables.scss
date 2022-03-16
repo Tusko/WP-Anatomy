@@ -4,7 +4,9 @@ $font      : 'Museo Sans Cyrl', $system-ui;
 $container : 1180px;
 $font-base : 50px;
 
-$active    : #3498DB;
-$default   : #333;
-$red       : #F65445;
-$white     : #FFF;
+$colors    : (
+	active : #3498DB,
+	default : #333,
+	red : #F65445,
+	white : #FFF
+)

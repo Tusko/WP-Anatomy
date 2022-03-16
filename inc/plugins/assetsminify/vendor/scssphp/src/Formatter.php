@@ -19,10 +19,12 @@ use ScssPhp\ScssPhp\SourceMap\SourceMapGenerator;
  * Base formatter
  *
  * @author Leaf Corcoran <leafot@gmail.com>
+ *
+ * @internal
  */
 abstract class Formatter {
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	public $indentLevel;
 
@@ -57,7 +59,7 @@ abstract class Formatter {
 	public $assignSeparator;
 
 	/**
-	 * @var boolean
+	 * @var bool
 	 */
 	public $keepSemicolons;
 
@@ -67,17 +69,17 @@ abstract class Formatter {
 	protected $currentBlock;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $currentLine;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $currentColumn;
 
 	/**
-	 * @var \ScssPhp\ScssPhp\SourceMap\SourceMapGenerator
+	 * @var \ScssPhp\ScssPhp\SourceMap\SourceMapGenerator|null
 	 */
 	protected $sourceMapGenerator;
 
@@ -145,9 +147,18 @@ abstract class Formatter {
 
 		ob_start();
 
-		$this->block($block);
+		try {
+			$this->block($block);
+		} catch(\Exception $e) {
+			ob_end_clean();
+			throw $e;
+		} catch(\Throwable $e) {
+			ob_end_clean();
+			throw $e;
+		}
 
 		$out = ob_get_clean();
+		assert($out !== false);
 
 		return $out;
 	}
@@ -157,7 +168,7 @@ abstract class Formatter {
 	 *
 	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function testEmptyChildren($block) {
 		$isEmpty = empty($block->lines);
@@ -180,9 +191,24 @@ abstract class Formatter {
 	}
 
 	/**
+	 * Output block children
+	 *
+	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
+	 *
+	 * @return void
+	 */
+	protected function blockChildren(OutputBlock $block) {
+		foreach($block->children as $child) {
+			$this->block($child);
+		}
+	}
+
+	/**
 	 * Output non-empty block
 	 *
 	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
+	 *
+	 * @return void
 	 */
 	protected function block(OutputBlock $block) {
 		if(empty($block->lines) && empty($block->children)) {
@@ -223,6 +249,41 @@ abstract class Formatter {
 	}
 
 	/**
+	 * Output block selectors
+	 *
+	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
+	 *
+	 * @return void
+	 */
+	protected function blockSelectors(OutputBlock $block) {
+		assert(! empty($block->selectors));
+
+		$inner = $this->indentStr();
+
+		$this->write($inner
+		             . implode($this->tagSeparator, $block->selectors)
+		             . $this->open . $this->break);
+	}
+
+	/**
+	 * Output lines inside a block
+	 *
+	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
+	 *
+	 * @return void
+	 */
+	protected function blockLines(OutputBlock $block) {
+		$inner = $this->indentStr();
+		$glue  = $this->break . $inner;
+
+		$this->write($inner . implode($glue, $block->lines));
+
+		if( ! empty($block->children)) {
+			$this->write($this->break);
+		}
+	}
+
+	/**
 	 * Return indentation (whitespace)
 	 *
 	 * @return string
@@ -232,22 +293,11 @@ abstract class Formatter {
 	}
 
 	/**
-	 * Output block selectors
-	 *
-	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
-	 */
-	protected function blockSelectors(OutputBlock $block) {
-		$inner = $this->indentStr();
-
-		$this->write($inner
-		             . implode($this->tagSeparator, $block->selectors)
-		             . $this->open . $this->break);
-	}
-
-	/**
 	 * Output content
 	 *
 	 * @param string $str
+	 *
+	 * @return void
 	 */
 	protected function write($str) {
 		if( ! empty($this->strippedSemicolon)) {
@@ -272,51 +322,45 @@ abstract class Formatter {
 		}
 
 		if($this->sourceMapGenerator) {
-			$this->sourceMapGenerator->addMapping(
-				$this->currentLine,
-				$this->currentColumn,
-				$this->currentBlock->sourceLine,
-				//columns from parser are off by one
-				$this->currentBlock->sourceColumn > 0 ? $this->currentBlock->sourceColumn - 1 : 0,
-				$this->currentBlock->sourceName
-			);
-
-			$lines             = explode("\n", $str);
-			$lineCount         = \count($lines);
-			$this->currentLine += $lineCount - 1;
-
+			$lines    = explode("\n", $str);
 			$lastLine = array_pop($lines);
 
-			$this->currentColumn = ($lineCount === 1 ? $this->currentColumn : 0) + \strlen($lastLine);
+			foreach($lines as $line) {
+				// If the written line starts is empty, adding a mapping would add it for
+				// a non-existent column as we are at the end of the line
+				if($line !== '') {
+					assert($this->currentBlock->sourceLine !== null);
+					assert($this->currentBlock->sourceName !== null);
+					$this->sourceMapGenerator->addMapping(
+						$this->currentLine,
+						$this->currentColumn,
+						$this->currentBlock->sourceLine,
+						//columns from parser are off by one
+						$this->currentBlock->sourceColumn > 0 ? $this->currentBlock->sourceColumn - 1 : 0,
+						$this->currentBlock->sourceName
+					);
+				}
+
+				$this->currentLine++;
+				$this->currentColumn = 0;
+			}
+
+			if($lastLine !== '') {
+				assert($this->currentBlock->sourceLine !== null);
+				assert($this->currentBlock->sourceName !== null);
+				$this->sourceMapGenerator->addMapping(
+					$this->currentLine,
+					$this->currentColumn,
+					$this->currentBlock->sourceLine,
+					//columns from parser are off by one
+					$this->currentBlock->sourceColumn > 0 ? $this->currentBlock->sourceColumn - 1 : 0,
+					$this->currentBlock->sourceName
+				);
+			}
+
+			$this->currentColumn += \strlen($lastLine);
 		}
 
 		echo $str;
-	}
-
-	/**
-	 * Output lines inside a block
-	 *
-	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
-	 */
-	protected function blockLines(OutputBlock $block) {
-		$inner = $this->indentStr();
-		$glue  = $this->break . $inner;
-
-		$this->write($inner . implode($glue, $block->lines));
-
-		if( ! empty($block->children)) {
-			$this->write($this->break);
-		}
-	}
-
-	/**
-	 * Output block children
-	 *
-	 * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
-	 */
-	protected function blockChildren(OutputBlock $block) {
-		foreach($block->children as $child) {
-			$this->block($child);
-		}
 	}
 }

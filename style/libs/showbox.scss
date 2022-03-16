@@ -1,10 +1,10 @@
-$yellow : #F46277;
-$green  : #089EA4;
-$blue   : #F46277;
-$red    : #089EA4;
+$sb_green  : #008744;
+$sb_blue   : #0057E7;
+$sb_red    : #D62D20;
+$sb_yellow : #FFA700;
 
 // scaling... any units
-$width  : 36px;
+$sb_width  : 36px;
 
 .showbox {
 	-webkit-transition : all .5s ease;
@@ -23,7 +23,7 @@ $width  : 36px;
 .loader {
 	position : relative;
 	margin   : 0px auto;
-	width    : $width;
+	width    : $sb_width;
 	&:before {
 		content     : '';
 		display     : block;
@@ -77,15 +77,15 @@ $width  : 36px;
 }
 @keyframes color {
 	100%, 0% {
-		stroke : $red;
+		stroke : $sb_red;
 	}
 	40% {
-		stroke : $blue;
+		stroke : $sb_blue;
 	}
 	66% {
-		stroke : $green;
+		stroke : $sb_green;
 	}
 	80%, 90% {
-		stroke : $yellow;
+		stroke : $sb_yellow;
 	}
 }

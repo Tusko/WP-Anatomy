@@ -13,15 +13,11 @@ function remove_block_css() {
 
 // custom js/stylesheet
 function tt_add_jscss() {
-	if( ! is_admin()) {
-		wp_deregister_script('jquery');
-	}
 
 	if(defined('QTX_VERSION')) {
 		wp_deregister_style('qtranslate-style');
 	}
 
-	wp_enqueue_script('jquery', get_stylesheet_directory_uri() . '/js/libs/_jquery.js', false, null, false);
 	if(defined('GOOGLEMAPS')) {
 		wp_enqueue_script('defer-google-maps', get_stylesheet_directory_uri() . '/js/libs/_defer-google-maps.js', array('jquery'), null, false);
 	}

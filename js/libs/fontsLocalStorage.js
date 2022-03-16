@@ -4,17 +4,17 @@
  *
  * Make sure to edit md5 and path to your fonts json!
  */
-(function(window, document) {
+(function (window, document) {
   'use strict';
   var isModernBrowser = (
       'querySelector' in document && 'localStorage' in window && 'addEventListener' in window
     ),
     app = document.body.dataset,
-    md5 = app.hash,
+    md5 = app.hash.toString(),
     key = 'fonts',
     cache;
-  if(!isModernBrowser) {
-    // Sorry, browser is too old!
+  if (!isModernBrowser) {
+    console.warn('Sorry, browser is too old!');
     return;
   }
 
@@ -27,9 +27,9 @@
   // PRE-RENDER
   try {
     cache = window.localStorage.getItem(key);
-    if(cache) {
+    if (cache) {
       cache = JSON.parse(cache);
-      if(cache.md5 == md5) {
+      if (cache.md5.toString() === md5) {
         insertFont(cache.value);
       } else {
         // Busting cache when md5 doesn't match
@@ -37,23 +37,23 @@
         cache = null;
       }
     }
-  } catch(e) {
+  } catch (e) {
     // Most likely LocalStorage disabled, so hopeless...
     return;
   }
   // POST-RENDER
-  if(!cache) {
-    window.addEventListener('load', function() {
+  if (!cache) {
+    window.addEventListener('load', function () {
       var request = new XMLHttpRequest(),
         response;
-      request.open('GET', app.a + '?action=wpa_fontbase64', true);
-      request.onload = function() {
-        if(this.status == 200) {
+      request.open('GET', app.a + '&action=wpa_fontbase64', true);
+      request.onload = function () {
+        if (this.status === 200) {
           try {
             response = JSON.parse(this.response);
             insertFont(response.value);
             window.localStorage.setItem(key, this.response);
-          } catch(e) {
+          } catch (e) {
             // LocalStorage is probably full
           }
         }

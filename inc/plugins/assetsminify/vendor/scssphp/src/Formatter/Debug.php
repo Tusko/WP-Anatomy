@@ -17,13 +17,19 @@ use ScssPhp\ScssPhp\Formatter;
 /**
  * Debug formatter
  *
- * @author Anthon Pang <anthon.pang@gmail.com>
+ * @author     Anthon Pang <anthon.pang@gmail.com>
+ *
+ * @deprecated since 1.4.0.
+ *
+ * @internal
  */
 class Debug extends Formatter {
 	/**
 	 * {@inheritdoc}
 	 */
 	public function __construct() {
+		@trigger_error('The Debug formatter is deprecated since 1.4.0.', E_USER_DEPRECATED);
+
 		$this->indentLevel     = 0;
 		$this->indentChar      = '';
 		$this->break           = "\n";
@@ -53,13 +59,6 @@ class Debug extends Formatter {
 		}
 
 		$this->indentLevel--;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function indentStr() {
-		return str_repeat('  ', $this->indentLevel);
 	}
 
 	/**
@@ -110,5 +109,12 @@ class Debug extends Formatter {
 		foreach($block->lines as $index => $line) {
 			$this->write("{$indent}block->lines[{$index}]: $line\n");
 		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function indentStr() {
+		return str_repeat('  ', $this->indentLevel);
 	}
 }

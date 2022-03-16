@@ -16,17 +16,23 @@ namespace ScssPhp\ScssPhp\Exception;
  * Parser Exception
  *
  * @author Oleksandr Savchenko <traveltino@gmail.com>
+ *
+ * @internal
  */
 class ParserException extends \Exception implements SassException {
 	/**
-	 * @var array
+	 * @var array|null
+	 * @phpstan-var array{string, int, int}|null
 	 */
 	private $sourcePosition;
 
 	/**
 	 * Get source position
 	 *
+	 * @return array|null
+	 * @phpstan-return array{string, int, int}|null
 	 * @api
+	 *
 	 */
 	public function getSourcePosition() {
 		return $this->sourcePosition;
@@ -35,8 +41,11 @@ class ParserException extends \Exception implements SassException {
 	/**
 	 * Set source position
 	 *
-	 * @param array $sourcePosition
+	 * @param array                           $sourcePosition
 	 *
+	 * @return void
+	 *
+	 * @phpstan-param array{string, int, int} $sourcePosition
 	 * @api
 	 *
 	 */

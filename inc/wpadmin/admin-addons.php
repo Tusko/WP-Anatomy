@@ -41,12 +41,12 @@ add_action('print_media_templates', function() { ?>
 		</label>
 	</script>
 	<script>
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
       _.extend(wp.media.gallery.defaults, {
         wpa_slideshow: false
       });
       wp.media.view.Settings.Gallery = wp.media.view.Settings.Gallery.extend({
-        template: function(view) {
+        template: function (view) {
           return wp.media.template('gallery-settings')(view) + wp.media.template('custom-gallery-setting')(view);
         }
       });
@@ -64,7 +64,7 @@ function wpa_slideshow_from_gallery($output, $attr) {
 		$attachments = explode(',', $attr['ids']);
 		$output      = apply_filters('gallery_style', "");
 		$i           = 0;
-		$output      .= '<div id="wpa-slideshow-' . $instance . '" class="wpa_slideshow swiper-container"><div class="swiper-wrapper">';
+		$output      .= '<div id="wpa-slideshow-' . $instance . '" class="wpa_slideshow swiper"><div class="swiper-wrapper">';
 
 		foreach($attachments as $id) {
 			$img     = wp_get_attachment_image_src($id, $size);
@@ -88,7 +88,10 @@ function wpa_slideshow_from_gallery($output, $attr) {
 			$output .= '<div class="swiper-lazy-preloader"></div></div>';
 		}
 
-		$output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';
+		$output .= '</div>'; // end .swiper-container
+		$output .= '<div class="swiper-pagination"></div>';
+		$output .= '<div class="swiper-button-prev"></div><div class="swiper-button-next"></div>';
+		$output .= '</div>';
 	}
 
 	return $output;

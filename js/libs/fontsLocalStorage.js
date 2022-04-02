@@ -46,7 +46,7 @@
     window.addEventListener('load', function () {
       var request = new XMLHttpRequest(),
         response;
-      request.open('GET', app.a + '&action=wpa_fontbase64', true);
+      request.open('GET', app.a + '?action=wpa_fontbase64', true);
       request.onload = function () {
         if (this.status === 200) {
           try {

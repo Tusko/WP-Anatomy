@@ -11,28 +11,6 @@
     </div>
 </footer>
 
-<script>
-    (function (w, k) {
-        w[k] = {
-            companyId: '14419',
-            widgetId: '1',
-            hash: '9eb1bbe2-2856-41c2-b510-3dae0e1efa27',
-            locale: 'ua',
-        };
-
-        var d = w.document,
-            s = d.createElement('script');
-
-        s.async = true;
-        s.id = k + 'Script';
-        s.src = 'https://static.salesdrive.me/chat-widget/assets/js/widget.js' + '?' + (Date.now() / 3600000 | 0);
-
-        var head = d.head || d.getElementsByTagName("head")[0];
-        head.appendChild(s);
-
-    }(window, 'salesDriveChatButton'));
-</script>
-
 <?php wp_footer(); ?>
 </body>
 </html>

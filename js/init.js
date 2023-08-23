@@ -1,14 +1,3 @@
-window.lazySizesConfig = window.lazySizesConfig || {};
-window.lazySizesConfig.loadMode = 1;
-window.lazySizesConfig.expand = 300;
-
-document.addEventListener('lazybeforeunveil', function (e) {
-  var bg = e.target.getAttribute('data-bg');
-  if (bg) {
-    e.target.style.backgroundImage = 'url(' + bg + ')';
-  }
-});
-
 var selectEl;
 
 (function ($, window) {
@@ -63,10 +52,6 @@ var selectEl;
         });
 
         is_numeric_input();
-      })
-
-      .on("pageshow visibilitychange", function () {
-        $(window).triggerHandler('resize');
       });
 
 //  hamburger menu
@@ -115,68 +100,18 @@ var selectEl;
       var t = $(this),
         p = t.parent();
       if (p.is('p') && !p.hasClass('fullframe')) {
-        p.addClass('fullframe');
+          p.addClass('fullframe');
       }
     });
 
-    $('.wp-video').each(function () {
-      $('.mejs-video .mejs-inner', this).addClass('fullframe');
-    });
-
-    cssDeffered().then(function () {
-      setTimeout(function () {
-        $(window).triggerHandler('defer.cssLoad');
-        $('body').fadeTo(350, 1);
-      }, 350);
-    });
+      $('.wp-video').each(function () {
+          $('.mejs-video .mejs-inner', this).addClass('fullframe');
+      });
 
   });
 
-  $(window).on('defer.cssLoad', function () {
-    'use strict';
+    $(window).on('load', function () {
+        'use strict';
 
-    AOS.init();
-
-    //  WP Gallery extension
-    window.WPASwiper = [];
-    $('.wpa_slideshow').each(function (i) {
-      var t = this,
-        checklength = ($('.swiper-slide', t).length > 1),
-        isPagin = false;
-      if (checklength) {
-        isPagin = {
-          el: $('.swiper-pagination', t)[0],
-          type: 'bullets',
-          clickable: true
-        };
-      }
-      setTimeout(function () {
-        window.WPASwiper[i] = new Swiper(t, {
-          navigation: {
-            nextEl: $('.swiper-button-next', t)[0],
-            prevEl: $('.swiper-button-prev', t)[0]
-          },
-          simulateTouch: isPagin,
-          pagination: isPagin,
-          roundLengths: true,
-          observer: true,
-          observeParents: true,
-          grabCursor: checklength,
-          autoHeight: true,
-          speed: 500,
-          preloadImages: false,
-          lazy: {
-            loadPrevNext: true
-          }
-        });
-      }, 250 * i);
     });
-  })
-    .bind('orientationchange resize', function () {
-      'use strict';
-      // window.console.log('resize');
-    }).on('resizeend', function () {
-    'use strict';
-    // window.console.log('resizeEnd');
-  });
 })(jQuery, window);

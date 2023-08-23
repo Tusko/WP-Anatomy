@@ -1,6 +1,3 @@
-<?php if(defined('WP_DEBUG') && true !== WP_DEBUG && ! isset($_REQUEST['debug'])) {
-	ob_start('ob_html_compress');
-} ?>
 <!DOCTYPE html>
 <html lang="<?php wpa_html_lang() ?>">
 <head>
@@ -26,9 +23,6 @@
 			min-width: 1px;
 			padding: 0;
 			margin: 0;
-		}
-		body {
-			opacity: 0
 		}
 		.h100 {
 			min-height: 100vh;

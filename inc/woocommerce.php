@@ -1,32 +1,64 @@
 <?php
+function content_badge($atts)
+{
+    extract(shortcode_atts(array(
+        'icon' => theme('images/new.svg')
+    ), $atts));
 
-add_theme_support('woocommerce');
-
-function content_badge($atts) {
-	extract(shortcode_atts(array(
-		'icon' => theme('images/new.svg')
-	), $atts));
-
-	return '<img data-src="' . theme('images/' . $icon . '.svg') . '" class="aligncenter badge-icon lazyload" />';
+    return '<img data-src="' . theme('images/' . $icon . '.svg') . '" class="aligncenter badge-icon lazyload" />';
 }
 
 add_shortcode("badge", "content_badge");
 
-// Or just remove them all in one line
+add_action('wp_print_scripts', 'wc_disable_password_strength_meter', 100);
+function wc_disable_password_strength_meter()
+{
+    global $wp;
+    $wp_check = isset($wp->query_vars['lost-password']) || (isset($_GET['action']) && $_GET['action'] === 'lostpassword') || is_page('lost_password');
+    $wc_check = (class_exists('WooCommerce') && (is_account_page() || is_checkout()));
+
+    if (!$wp_check && !$wc_check) {
+        if (wp_script_is('zxcvbn-async', 'enqueued')) {
+            wp_dequeue_script('zxcvbn-async');
+        }
+
+        if (wp_script_is('password-strength-meter', 'enqueued')) {
+            wp_dequeue_script('password-strength-meter');
+        }
+
+        if (wp_script_is('wc-password-strength-meter', 'enqueued')) {
+            wp_dequeue_script('wc-password-strength-meter');
+        }
+    }
+}
+
+add_filter('show_recent_comments_widget_style', '__return_false');
+add_filter('woocommerce_allow_marketplace_suggestions', '__return_false', 999);
+add_filter('jetpack_just_in_time_msgs', '__return_false', 20);
+add_filter('jetpack_show_promotions', '__return_false', 20);
+
 add_filter('woocommerce_enqueue_styles', '__return_false');
 add_filter('woocommerce_enqueue_styles', '__return_empty_array');
 
-function woocleaner_css_and_js() {
+add_action('admin_menu', 'wc_remove_admin_addon_submenu', 999);
+function wc_remove_admin_addon_submenu()
+{
+    remove_submenu_page('woocommerce', 'wc-addons');
+    remove_submenu_page('woocommerce', 'wc-addons&section=helper');
+}
 
-	//remove generator meta tag
-	remove_action('wp_head', array($GLOBALS['woocommerce'], 'generator'));
-	remove_action('wp_head', 'wc_generator_tag');
+function wc_cleaner_css_and_js()
+{
 
-	//first check that woo exists to prevent fatal errors
-	if(function_exists('is_woocommerce')) {
-		//dequeue scripts and styles
-		if( ! is_woocommerce() && ! is_cart() && ! is_checkout()) {
-			wp_dequeue_style('woocommerce-general');
+    //remove generator meta tag
+    remove_action('wp_head', array($GLOBALS['woocommerce'], 'generator'));
+    remove_action('wp_head', 'wc_generator_tag');
+
+    //first check that woo exists to prevent fatal errors
+    if (function_exists('is_woocommerce')) {
+        //dequeue scripts and styles
+        if (!is_woocommerce() && !is_cart() && !is_checkout()) {
+            wp_dequeue_style('woocommerce-general');
 			wp_dequeue_style('woocommerce-layout');
 			wp_dequeue_style('woocommerce-smallscreen');
 			wp_dequeue_style('woocommerce_frontend_styles');
@@ -50,6 +82,7 @@ function woocleaner_css_and_js() {
 			wp_dequeue_script('fancybox');
 			wp_dequeue_script('jqueryui');
 			wp_dequeue_script('wc-add-to-cart-variation');
+
 		}
 		wp_dequeue_style('select2');
 		wp_deregister_style('select2');
@@ -59,37 +92,7 @@ function woocleaner_css_and_js() {
 
 }
 
-add_action('wp_enqueue_scripts', 'woocleaner_css_and_js', 99);
-
-remove_action('woocommerce_before_shop_loop_item_title', 'woocommerce_template_loop_product_thumbnail', 10);
-add_action('woocommerce_before_shop_loop_item_title', 'woocommerce_template_loop_product_thumbnail', 10);
-
-/**
- * WooCommerce Loop Product Thumbs
- **/
-if( ! function_exists('woocommerce_template_loop_product_thumbnail')) {
-	function woocommerce_template_loop_product_thumbnail() {
-		echo woocommerce_get_product_thumbnail();
-	}
-}
-/**
- * WooCommerce Product Thumbnail
- **/
-if( ! function_exists('woocommerce_get_product_thumbnail')) {
-	function woocommerce_get_product_thumbnail($size = 'large', $placeholder_width = 0, $placeholder_height = 0) {
-		global $post, $woocommerce;
-
-		$output = '';
-
-		if(has_post_thumbnail()) {
-			$output .= get_the_post_thumbnail($post->ID, $size);
-		} else {
-			$output .= '<img src="' . woocommerce_placeholder_img_src() . '" alt="' . get_alt($post->ID) . '" />';
-		}
-
-		return $output;
-	}
-}
+add_action('wp_enqueue_scripts', 'wc_cleaner_css_and_js', 99);
 
 function get_parent_terms($term) {
 	if($term->parent > 0) {
@@ -127,15 +130,6 @@ function woocommerce_clear_cart_url() {
 		$woocommerce->cart->empty_cart();
 	}
 }
-
-//cart item return custom size
-function woo_cart_item_thumbnail($thumb, $cart_item, $cart_item_key) {
-	$product = get_product($cart_item['product_id']);
-
-	return $product->get_image('shop_catalog');
-}
-
-add_filter('woocommerce_cart_item_thumbnail', 'woo_cart_item_thumbnail', 10, 3);
 
 function woocommerce_header_add_to_cart_fragment($fragments) {
 	ob_start();
@@ -326,28 +320,3 @@ function woo_rename_tabs($tabs) {
 }
 
 add_filter('woocommerce_product_tabs', 'woo_rename_tabs', 98);
-
-function custom_override_checkout_fields($fields) {
-	foreach($fields['billing'] as $key => $val) {
-		if(isset($val['label'])) {
-			$fields['billing'][ $key ]['placeholder'] = $val['label'];
-		}
-		$fields['billing'][ $key ]['clear'] = null;
-		$fields['billing'][ $key ]['label'] = null;
-	}
-	foreach($fields['shipping'] as $key => $val) {
-		if(isset($val['label'])) {
-			$fields['shipping'][ $key ]['placeholder'] = $val['label'];
-		}
-		$fields['shipping'][ $key ]['clear'] = null;
-		$fields['shipping'][ $key ]['label'] = null;
-	}
-	$fields['account']['account_password']['label']    =
-	$fields['order']['order_comments']['label'] = null;
-	$fields['billing']['billing_city']['placeholder']  = __('Town/City');
-	$fields['billing']['billing_state']['placeholder'] = __('State');
-
-	return $fields;
-}
-
-add_filter('woocommerce_checkout_fields', 'custom_override_checkout_fields');

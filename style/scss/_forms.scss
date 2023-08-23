@@ -1,0 +1,243 @@
+@import '../components/mixins';
+
+//@use "sass:map";
+
+form {
+  label {
+    color: map-get($colors, "default");
+    font-family: $font;
+    font-size: 16px;
+    font-weight: 500;
+
+    span.gfield_required {
+      color: #F00
+    }
+  }
+
+  li.gfield {
+    padding-left: 0 !important;
+
+    &.gfield_error {
+      padding-bottom: 0 !important;
+      background: none !important;
+      padding-top: 0 !important;
+      border: 0 !important;
+    }
+
+    &:before {
+      display: none !important
+    }
+
+    .description,
+    .gfield_description,
+    .gsection_description,
+    .instruction {
+      font-size: 100% !important
+    }
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="password"],
+  textarea {
+    @include border-radius(0);
+    border: 0 !important;
+    border-bottom: 1px solid map-get($colors, "default") !important;
+    font: 500 16px $font;
+    padding: 0 !important;
+    margin: 0 auto 20px;
+    color: map-get($colors, "default");
+    display: block;
+    background: none;
+    height: 32px;
+    width: 100%;
+
+    &:focus {
+      border-bottom: 1px solid map-get($colors, "active") !important;
+    }
+  }
+
+  textarea {
+    @include transition(none);
+    padding-top: .75em !important;
+    overflow: hidden;
+    min-height: 240px;
+    line-height: 24px;
+    resize: none;
+
+    &.small {
+      min-height: 1px
+    }
+  }
+
+  input.datepicker {
+    width: 100% !important
+  }
+
+  .ginput_container_radio,
+  .ginput_container_checkbox {
+    ul {
+      li {
+        margin-bottom: 16px !important;
+
+        label {
+          padding-left: 30px !important;
+          position: relative;
+          cursor: pointer;
+          font-size: 18px;
+
+          &:before {
+            @extend .ani;
+            border: 1px solid map-get($colors, "default");
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            content: '';
+            top: 3px;
+            left: 0;
+          }
+        }
+
+        input {
+          display: none !important;
+
+          &:checked + label {
+            &:before {
+              border-color: map-get($colors, "active");
+              background: map-get($colors, "active");
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ginput_container_radio {
+    ul li label:before {
+      @include border-radius(50%);
+    }
+  }
+
+  div.validation_error {
+    border-bottom-color: map-get($colors, "active") !important;
+    border-top-color: map-get($colors, "active") !important;
+    color: map-get($colors, "active") !important;
+  }
+
+  .gform_ajax_spinner {
+    height: auto;
+    width: 50px;
+  }
+}
+
+.button,
+.alm-load-more-btn,
+input[type="submit"] {
+  @include user-select(none);
+  @include border-radius(0);
+  font: 500 18px/22px $font;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  position: relative;
+  background: map-get($colors, "default");
+  cursor: pointer;
+  color: map-get($colors, "white");
+  text-align: center;
+  min-width: 250px;
+  text-decoration: none;
+  outline: none;
+  margin: 0;
+  border: 0;
+
+  &:hover {
+    background: map-get($colors, "active");
+  }
+
+  &.white {
+    color: map-get($colors, "active");
+    background: map-get($colors, "white");
+
+    &:hover {
+      opacity: .75
+    }
+  }
+
+  &.empty {
+    color: map-get($colors, "default");
+    background: none;
+    min-width: 1px;
+
+    &:hover {
+      color: map-get($colors, "active")
+    }
+  }
+}
+
+.select2.select2-container {
+  width: auto !important;
+  display: block;
+
+  .select2-selection--single {
+    @include border-radius(0);
+    border: 0;
+    border-bottom: 1px solid #CCC;
+    height: auto;
+
+    .select2-selection__rendered {
+      font: 500 15px/40px $font;
+      color: map-get($colors, "default");
+      height: 40px;
+      padding-left: 0;
+    }
+
+    .select2-selection__arrow {
+      @include justify-content(center);
+      @include align-items(center);
+      @include flexbox();
+      height: 100%;
+      font-size: 24px;
+    }
+  }
+}
+
+.select2-dropdown {
+  @include border-radius(0);
+  z-index: 999992;
+  border-color: #CCC;
+}
+
+.select2-container--default {
+  .select2-search--dropdown {
+    .select2-search__field {
+      border: 1px solid #F5F5F5;
+      padding: 0 10px;
+      font-size: 15px;
+      height: 32px;
+      font-weight: 300;
+    }
+  }
+
+  .select2-results {
+    li.select2-results__option {
+      font: 300 15px/40px $font;
+      color: map-get($colors, "default");
+      padding: 0 10px;
+
+      &:hover,
+      &.select2-results__option--highlighted {
+        background: map-get($colors, "active");
+        color: map-get($colors, "white");
+      }
+
+    }
+
+    li.select2-results__option[aria-selected="true"] {
+      background: map-get($colors, "active");
+      color: map-get($colors, "white");
+    }
+  }
+}

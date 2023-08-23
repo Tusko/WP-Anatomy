@@ -6,13 +6,9 @@ if(extension_loaded('zlib')) {
 
 require_once 'qtranslate.php';
 require_once 'search_query.php';
-require_once 'plugins/colors.inc.php';
 
 // Auto-install recommended plugins
 require_once 'plugins/installer.php';
-
-// Custom Posts Duplicator
-require_once 'plugins/duplicator.php';
 
 // Include custom assets
 require_once 'assets.php';
@@ -41,10 +37,6 @@ function wpa_defer_scripts($url) {
 
 add_action('after_switch_theme', 'wpa_activate_theme');
 function wpa_activate_theme() {
-	if(class_exists('AssetsMinify')) {
-		update_option('am_async_flag', 0);
-	}
-
 	update_option('image_default_link_type', 'none');
 	update_option('uploads_use_yearmonth_folders', 0);
 	update_option('permalink_structure', '/%category%/%postname%/');
@@ -67,10 +59,6 @@ function wpa_pre_plugins() {
 	// Check for a constant:
 	//	if (!defined('MY_PLUGIN_CONSTANT')) {
 
-	if( ! class_exists('AssetsMinify')) {
-		include_once('plugins/assetsminify/plugin.php');
-	}
-
 	if( ! function_exists('ctl_schedule_conversion')) {
 		include_once('plugins/cyr-to-lat.php');
 	}
@@ -82,25 +70,7 @@ function wpa_pre_plugins() {
 	if( ! function_exists('jr_uploadresize_options_page')) {
 		include_once('plugins/min-max-img-dimentions.php');
 	}
-
-	if( ! function_exists('wpa_media_field_input')) {
-		include_once('plugins/ars-alt-editor/alt.php');
-	}
-
 }
-
-function tinymce_custom_settings() {
-	global $current_screen;
-	if($current_screen && $current_screen->id == 'settings_page_tinymce-advanced') {
-		$json_string = file_get_contents('plugins/tinymce-advanced-preconfig.json', true); ?>
-		<script type="text/javascript">jQuery(function ($) {
-        var tcs_json = '<?php echo trim($json_string); ?>';
-        $('textarea#tadv-import').val(tcs_json);
-      });</script>
-	<?php }
-}
-
-add_action('admin_head', 'tinymce_custom_settings', 10);
 
 //Remove embeds rewrites
 function disable_embeds_rewrites($rules) {
@@ -128,18 +98,6 @@ function wpa_remove_wp_ver_css_js($src) {
 	}
 
 	return $src;
-}
-
-// Compress HTML
-function ob_html_compress($buf) {
-	$preResult = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/', ' ', $buf);
-	$out       = preg_replace(
-		array('/<!--(?>(?!\[).)(.*)(?>(?!\]).)-->/Uis', '/[[:blank:]]+/'),
-		array('', ' '),
-		str_replace(array("\n", "\r", "\t"), '', $preResult)
-	);
-
-	return nl2br($out);
 }
 
 //custom wp_nav_menu classes

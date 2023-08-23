@@ -27,6 +27,7 @@
 		.h100 {
 			min-height: 100vh;
 		}
+
 		.cover {
 			background-position: 50% 50%;
 			background-repeat: no-repeat;
@@ -36,16 +37,17 @@
 		}
 	</style>
 </head>
-<body <?php body_class(); ?> data-hash="<?php wpa_fontbase64(true); ?>" data-a="<?php echo admin_url('admin-ajax.php'); ?>">
+<body <?php body_class(); ?> data-a="<?php echo admin_url('admin-ajax.php'); ?>">
 <div id="wrap">
 	<header class="lazyload" data-lazyload-children=".lazyload">
 		<div class="row">
 			<a href="<?php echo site_url(); ?>" class="logo">
-				<img class="lazyload" data-src="<?php echo theme('images/logo.svg'); ?>" alt="<?php bloginfo('name'); ?>">
+				<img class="lazyload" data-src="<?php echo theme('images/logo.svg'); ?>"
+					 alt="<?php bloginfo('name'); ?>">
 			</a>
 			<a class="nav-icon" href=""><i></i><i></i><i></i></a>
 			<nav>
-				<?php if(has_nav_menu('primary_menu')) {
+				<?php if (has_nav_menu('primary_menu')) {
 					wp_nav_menu(array('container' => false, 'items_wrap' => '<ul id="%1$s">%3$s</ul>', 'theme_location' => 'primary_menu'));
 				} ?>
 			</nav>
